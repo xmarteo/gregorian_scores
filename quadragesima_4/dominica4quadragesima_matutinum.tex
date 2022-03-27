@@ -1,0 +1,838 @@
+% !TEX TS-program = lualatex
+% !TEX encoding = UTF-8
+
+\documentclass[11pt, twoside]{book}
+
+%%%%%%%%%%%%%%% STANDARD PACKAGES %%%%%%%%%%%%%%%
+
+\usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
+
+\usepackage{fontspec}
+\usepackage[latin.medieval]{babel}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{expl3}
+\usepackage{hyperref}
+\usepackage{refcount}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{enumitem}
+
+%%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
+
+%% This should mimic the layout of the recent Solesmes books.
+\geometry{
+inner=15mm,
+outer=10mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%% General scale of all graphical elements.
+%% Values different from 1 are largely untested.
+%% Used in those commands (e.g. everything FontSpec) that use a scale parameter.
+\newcommand{\customscale}{1}
+
+%% Provide the command \fpeval as a copy of the code-level \fp_eval:n.
+%% \fpeval allows to evaluate floating point calculation for scaled parameters, e.g. \setSomeStretchFactor{\fpeval{0,6 * \customscale}}
+\ExplSyntaxOn
+\cs_new_eq:NN \fpeval \fp_eval:n
+\ExplSyntaxOff
+
+%% No indentation of paragraphs
+\setlength{\parindent}{0mm}
+
+%% We want to allow large inter-words space 
+%% to avoid overfull boxes in two-columns rubrics.
+\sloppy
+
+%%%%%%%%%%%%%%% INDICES %%%%%%%%%%%%%%%
+
+\usepackage{imakeidx}
+
+\indexsetup{level=\section*,toclevel=section,noclearpage,othercode=\footnotesize}
+\makeindex[name=I,title=Index Invitatorium,columns=2,columnseprule]
+\makeindex[name=H,title=Index Hymnorum,columns=1]
+\makeindex[name=A,title=Index Antiphonarum,columns=2,columnseprule]
+\makeindex[name=R,title=Index Responsoriorum,columns=2,columnseprule]
+\makeindex[name=P,title=Index Psalmorum,columns=2,columnseprule]
+\makeindex[name=T,title=Toni Communes,columns=1]
+\makeindex[name=F,title=Index Festorum, columns=1]
+
+%%%%%%%%%%%%%%% GREGORIO CONFIG %%%%%%%%%%%%%%%
+
+\usepackage[autocompile]{gregoriotex}
+
+%% text above lines shall be of color gregoriocolor
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+%% fine-tuning of space beween the staff and the text above lines
+\newcommand{\altraise}{-2.4mm} %% default is -0.1cm
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+%% fine-tuning of space between the staff and the lyrics
+\newcommand{\textraise}{2.8ex} %% default is 3.48471 ex
+\grechangedim{spacelinestext}{\textraise}{scalable}
+
+%% fine-tuning of space between the initial and the annotations
+\newcommand{\annraise}{0mm} %% default is -0.2mm
+\grechangedim{annotationraise}{\annraise}{scalable}
+
+%% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
+%% storing the result into \result.
+
+\newcommand{\result}{}
+\newcommand{\lookup}[3]{%
+  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+}%
+\newcommand{\officepartannotation}[1]{%
+  \renewcommand{\result}{#1}%
+  \lookup{#1}{T}{}%
+  \lookup{#1}{H}{Hymn.}%
+  \lookup{#1}{A}{Ant.}%
+  \lookup{#1}{P}{}%
+  \lookup{#1}{R}{Resp.}%
+  \lookup{#1}{I}{Invit.}%
+  \result%
+}%
+
+%% header capture setup for the mode
+\gresetheadercapture{mode}{greannotation}{string}
+
+%% outputs a score with no label, indexing, initials or annotations
+%% for 
+\newcommand{\unindexedscore}[1]{
+  \gresetinitiallines{0}
+  %% the use of a directory called "gabc" is linked
+  %% to the management of gabc files by the website: do not change 
+  %% without also changing the website static files structure
+  \gregorioscore{\subfix{gabc/#1}}
+  \gresetinitiallines{1}
+}
+
+%% outputs a score with label, indexing, and annotations. no initials if [n] is passed
+\newcommand{\gscore}[5][y]{
+  %% #1 (passed as option) : y = initial, n = no initial
+  %% #2 : name of the score file, should be a code, e.g. Q4F4A3 or 1225N1R1
+  %% #3 : office-part among the values: T, H, A, P, R, I (toni communes, hy., ant., psalmus, resp., invit.)
+  %% #4 : if applicable, a number between 1 and 9 (rank of the ant./resp.) - else: empty
+  %% #5 : the indexed name of the piece
+  
+  %% this prevents page breaks between the phantom section and its label, and the actual score.
+  \needspace{4\baselineskip} 
+  \phantomsection
+  \label{#2}
+  \greannotation{\officepartannotation{#3}#4}
+  \index[#3]{#5}
+  \ifx n#1\gresetinitiallines{0}\fi
+  %% the use of a directory called "gabc" is linked
+  %% to the management of gabc files by the website: do not change 
+  %% without also changing the website static files structure
+  \gregorioscore{\subfix{gabc/#2}}
+  \ifx n#1\gresetinitiallines{1}\fi
+}
+
+%%%%%%%%%%%%%%% FONTS %%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% Main font
+\setmainfont[Ligatures=TeX, Scale=\customscale]{Charis SIL}
+%\setmainfont[Ligatures=TeX, Scale=\customscale]{TeXGyreBonum-Regular}
+\setstretch{\fpeval{1.05 * \customscale}}
+
+%%%%%%%%%%%%%%% Score initials
+%% \initialsize resizes the initials, with one argument (size in points)
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+}
+%% default initial size is 32 points
+\newcommand{\defaultinitialsize}{28}
+\initialsize{\defaultinitialsize}
+
+%% spacing before and after initials to kern the Zallman Caps.
+%% this should be changed if we move away from Zallman Caps.
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+%% default space before and after initials is 0cm.
+\newcommand{\defaultinitialspace}{0cm}
+\initialspace{\defaultinitialspace}
+
+%%%%%%%%%%%%%%% Score annotations
+\grechangestyle{annotation}{\small}
+
+%%%%%%%%%%%%%%% GRAPHICAL ELEMENTS %%%%%%%%%%%%%%%
+
+%% V/, R/, A/ and + signs for in-line use (\vv \rr \aa \cc) and in-score use (<sp>V/ R/ A/ +</sp>)
+\newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/
+\newcommand{\vv}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.\hspace{\specialcharhsep}}}
+\newcommand{\rr}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.\hspace{\specialcharhsep}}}
+\renewcommand{\aa}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.\hspace{\specialcharhsep}}}
+\newcommand{\cc}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}\symbol{"2720}~}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
+\gresetspecial{+}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}†~}}
+
+%% Roman Numerals
+\usepackage{modroman}
+\newcommand{\Rnum}[1]{\nbRoman{#1}}
+\newcommand{\rnum}[1]{\nbshortroman{#1}}
+
+%% Macro to print versicles
+\newcommand{\versiculus}[2]{\rr #1 \\ \vv #2}
+
+\newcommand{\versiculustpall}[2]
+	{\versiculus{#1 \rubric{(T.P.} Allelúja. \rubric{)}}{#2 \rubric{(T.P.} Allelúja. \rubric{)}}}
+
+%% Macro to print rubrics
+\newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macro to print the name of a score in normal characters inside a \rubric
+\newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
+\newcommand{\scorename}[1]{\normaltext{\nameref{#1}}}
+
+%% Macro to print the common rubric that signals the Te Deum
+\newcommand{\tedeumrubric}{\rubric{Lectione ultima peracta Hymnus \normaltext{Te Deum} cantatur.}}
+
+%% No bullets in enums
+\renewcommand\labelitemi{}
+\setlist[itemize]{itemsep=0mm, leftmargin=*, parsep=0mm}
+
+%%%%%%%%%%%%%%% COLUMN MANAGEMENT %%%%%%%%%%%%%%%
+
+\usepackage{multicol}
+\usepackage{parcolumns}
+\setlength\columnseprule{0.4pt}
+
+%% Macro to print a psalm on two columns.
+\newcommand{\psalmus}[2]{
+	\needspace{4\baselineskip}
+	\phantomsection
+	\label{Psalm#1_#2}
+	\index[P]{#1}
+	{\centering Psalmus #1\par}
+	\begin{multicols}{2}
+	\begin{itemize}[
+		label=\null, 
+		leftmargin=0pt, 
+		itemindent=0pt, 
+		labelsep=0pt, 
+		labelwidth=0pt, 
+		rightmargin=0pt, 
+		parsep=0pt, 
+		itemsep=0pt]
+	\input{psalmi/#1_#2.tex}
+	\end{itemize}
+	\end{multicols}
+}
+
+%%%%%%%%%%%%%%% HEADER STYLES %%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\fancyhead[RO]{\small\rightmark\hspace{1cm}\thepage}
+\fancyhead[LE]{\small\thepage\hspace{1cm}\leftmark}
+
+\newcommand{\setheaders}[2]{
+	\renewcommand{\rightmark}{{\sc#2}}
+	\renewcommand{\leftmark}{{\sc#1}}
+}
+\setheaders{}{}
+
+%%%%%%%%%%%%%%% TITLE STYLES %%%%%%%%%%%%%%%
+
+%% Titles are centered and small-caps
+\titleformat{\chapter}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\section}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+%% Fine-tuning of space around titles
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+%% Typesets all titles throughout the NR except Nocturn titles and a few special titles.
+%% Using a continuation is necessary because there are 10 arguments.
+%% Only \feast should ever be used.
+\newcommand{\feast}[6]{
+  %% #1: feast code, e.g. 1225 or A1F1
+  %% #2: feast title
+  %% #3: left header title
+  %% #4: right header title
+  %% #5: title level
+    %% title level 1 : full page width, a few major feasts + titles of temporale, sanctorale, etc.
+	%% title level 2 : all feasts, sundays and major ferias
+	%% title level 3 : used for ferias and "nth nocturn" titles
+  %% #6: incipit date (goes above feast title)
+  %% cont'd #1: 1954 rank
+  %% cont'd #2: 1960 rank
+  %% cont'd #3: 1945 feast-wide rubrics
+  %% cont'd #4: 1960 feast-wide rubrics
+
+  %% needspace: should be barely more than the vertical space for the titles, rubrics excluded.
+  %% this is to ensure that the page does not get cut after the title or the phantomsection.
+  \needspace{6\baselineskip}
+  %% phantomsection is to allow the label to attach to the title and not the previous counter object.
+  \phantomsection
+  \label{#1}
+  \index[F]{#2}
+  \begin{center}
+  %% we typeset a line for the date if the date is not blank
+  \ifblank{#6}{}{
+    {\large #6}\\%
+  }%
+  %% the actual title
+  {\Large #2}
+  \end{center}
+  
+  %% we define the header titles manually
+  \setheaders{#3}{#4}
+  
+  %% moving on to a continuation macro to unpack the last 4 arguments
+  \feastcontinued
+}
+\newcommand{\feastcontinued}[4]
+{
+  %% we name the last 4 arguments
+  \def\oldrank{#1}%
+  \def\newrank{#2}%
+  \def\oldrubric{#3}%
+  \def\newrubric{#4}%
+
+  %% we typeset a two-column rank & rubrics block if one rank is filled in
+  \ifblank{#1}{}{%
+    \begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+      {\centering \oldrank
+	  
+	  } \rubric{\oldrubric}
+	}
+	\colchunk{%
+	  {\centering \newrank
+	  
+	  } \rubric{\newrubric} 
+    }
+	\end{parcolumns}
+  }
+}
+
+\newcommand{\nocturn}[1]{
+  \needspace{8\baselineskip}
+  \begin{center}
+  {\Large In \Rnum{#1} Nocturno}
+  \end{center}
+}
+
+%%%%%%%%%%%%%%% SUBFILES %%%%%%%%%%%%%%%
+
+\usepackage{xr}
+\usepackage{subfiles}
+\externaldocument[M-]{\subfix{nocturnale-romanum}}
+
+%% When we start a new subfile (new chapter), 
+%% we start on a new page (with blank filling on the previous page) and create a corresponding label.
+\newcommand{\customsubfile}[1]{\newpage\label{#1}\thispagestyle{empty}\subfile{#1}}
+
+\begin{document}
+
+  \begin{center}
+  {\Huge Dominica IV in Quadragesima\\~\\Ad Matutinum\\~\\}
+  
+  {\Large Ad invitatorium}
+  \end{center}
+
+\gregorioscore{i}
+
+\begin{center}{\Large Hymnus}\end{center}
+
+\gregorioscore{h}
+
+\nocturn{1}
+
+\gregorioscore{a1}
+\gregorioscore{p1}
+\begin{itemize}
+\item Sed in lege Dómini volúntas \textbf{e}jus,~* et in lege ejus meditábitur di\textit{e} \textit{ac} \textbf{noc}te.
+
+\item Et erit tamquam lignum, quod plantátum est secus decúrsus a\textbf{quá}rum,~* quod fructum suum dabit in tém\textit{po}\textit{re} \textbf{su}o:
+
+\item Et fólium ejus non \textbf{dé}fluet:~* et ómnia quæcúmque fáciet, pro\textit{spe}\textit{ra}\textbf{bún}tur.
+
+\item Non sic ímpii, \textbf{non} sic:~* sed tamquam pulvis, quem prójicit ventus a fá\textit{ci}\textit{e} \textbf{ter}ræ.
+
+\item Ideo non resúrgent ímpii in ju\textbf{dí}cio:~* neque peccatóres in concíli\textit{o} \textit{jus}\textbf{tó}rum.
+
+\item Quóniam novit Dóminus viam jus\textbf{tó}rum:~* et iter impió\textit{rum} \textit{per}\textbf{í}bit.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{itemize}
+
+\gregorioscore{a2}
+\gregorioscore{p2}
+\begin{itemize}
+\item Astitérunt reges terræ, et príncipes conve\textbf{né}runt in \textbf{u}num~* advérsus Dóminum, et advérsus \textbf{Chris}tum \textbf{e}jus.
+
+\item Dirumpámus víncu\textbf{la} e\textbf{ó}rum:~* et projiciámus a nobis \textbf{ju}gum ip\textbf{só}rum.
+
+\item Qui hábitat in cælis, irri\textbf{dé}bit \textbf{e}os:~* et Dóminus subsan\textbf{ná}bit \textbf{e}os.
+
+\item Tunc loquétur ad eos in \textbf{i}ra \textbf{su}a,~* et in furóre suo contur\textbf{bá}bit \textbf{e}os.
+
+\item Ego autem constitútus sum Rex ab eo super Sion montem \textbf{sanc}tum \textbf{e}jus,~* prǽdicans præ\textbf{cép}tum \textbf{e}jus.
+
+\item Dóminus \textbf{di}xit \textbf{ad} me:~* Fílius meus es tu, ego hódie \textbf{gé}nu\textbf{i} te.
+
+\item Póstula a me, et dabo tibi Gentes heredi\textbf{tá}tem \textbf{tu}am,~* et possessiónem tuam \textbf{tér}minos \textbf{ter}ræ.
+
+\item Reges eos in \textbf{vir}ga \textbf{fér}rea,~* et tamquam vas fíguli con\textbf{frín}ges \textbf{e}os.
+
+\item Et nunc, reges, \textbf{in}tel\textbf{lí}gite:~* erudímini, qui judi\textbf{cá}tis \textbf{ter}ram.
+
+\item Servíte Dómino \textbf{in} ti\textbf{mó}re:~* et exsultáte ei \textbf{cum} tre\textbf{mó}re.
+
+\item Apprehéndite disciplínam, nequándo iras\textbf{cá}tur \textbf{Dó}minus,~* et pereátis de \textbf{vi}a \textbf{jus}ta.
+
+\item Cum exárserit in brevi \textbf{i}ra \textbf{e}jus:~* beáti omnes qui con\textbf{fí}dunt in \textbf{e}o.
+
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
+
+
+\end{itemize}
+
+\gregorioscore{a3}
+\gregorioscore{p3}
+\begin{itemize}
+\item Multi dicunt áni\textit{mæ} \textbf{me}æ:~* Non est salus ipsi in \textit{De}\textit{o} \textbf{e}jus.
+
+\item Tu autem, Dómine, suscép\textit{tor} \textbf{me}us es,~* glória mea, et exáltans \textit{ca}\textit{put} \textbf{me}um.
+
+\item Voce mea ad Dóminum \textit{cla}\textbf{má}vi:~* et exaudívit me de monte \textit{sanc}\textit{to} \textbf{su}o.
+
+\item Ego dormívi, et so\textit{po}\textbf{rá}tus sum:~* et exsurréxi, quia Dómi\textit{nus} \textit{su}\textbf{scé}pit me.
+
+\item Non timébo míllia pópuli cir\textit{cum}\textbf{dán}tis me:~* exsúrge, Dómine, salvum me fac, \textit{De}\textit{us} \textbf{me}us.
+
+\item Quóniam tu percussísti omnes adversántes mihi si\textit{ne} \textbf{cau}sa:~* dentes peccatórum \textit{con}\textit{tri}\textbf{vís}ti.
+
+\item Dómini \textit{est} \textbf{sa}lus:~* et super pópulum tuum benedíc\textit{ti}\textit{o} \textbf{tu}a.
+
+\item Glória Patri, \textit{et} \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, \textit{et} \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{itemize}
+
+\vv Ipse liberávit me de láqueo venántium.
+\rr Et a verbo áspero.
+
+Pater noster...
+
+\vv Et ne nos indúcas in tentatiónem:
+\rr Sed líbera nos a malo.
+
+\rubric{Absolutio} Exáudi, Dómine Jesu Christe, preces servórum tuórum, et miserére nobis: 
+Qui cum Patre et Spíritu Sancto vivis et regnas in sǽcula sæculórum. Amen.
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Benedictióne perpétua benedícat nos Pater ætérnus. Amen.
+
+{\centering Lectio de libro Exodi \rubric{Ex. 3 : 1-15}\par}
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Móyses autem pascébat oves Jethro sóceri sui sacerdótis Mádian; cumque minásset gregem ad interióra desérti, venit ad montem Dei Horeb.
+
+Apparuítque ei Dóminus in flamma ignis de médio rubi; et vidébat quod rubus ardéret et non comburerétur.
+
+Dixit ergo Móyses: Vadam, et vidébo visiónem hanc magnam, quare non comburátur rubus.
+
+Cernens autem Dóminus quod pérgeret ad vidéndum, vocávit eum de médio rubi, et ait: Móyses, Móyses! Qui respóndit: Adsum.
+
+At ille: Ne apprópies, inquit, huc: solve calceaméntum de pédibus tuis; locus enim, in quo stas, terra sancta est.
+
+Et ait: Ego sum Deus patris tui, Deus Abraham, Deus Isaac, et Deus Jacob. Abscóndit Móyses fáciem suam: non enim audébat aspícere contra Deum.
+	}
+	\colchunk{%
+Moïse était berger du troupeau de son beau-père Jéthro, prêtre de Madiane. Il mena le troupeau au-delà du désert et parvint à la montagne de Dieu, à l’Horeb.
+
+L’ange du Seigneur lui apparut dans la flamme d’un buisson en feu. Moïse regarda : le buisson brûlait sans se consumer.
+
+Moïse se dit alors : « Je vais faire un détour pour voir cette chose extraordinaire : pourquoi le buisson ne se consume-t-il pas ? »
+
+Le Seigneur vit qu’il avait fait un détour pour voir, et Dieu l’appela du milieu du buisson : « Moïse ! Moïse ! » Il dit : « Me voici ! »
+
+Dieu dit alors : « N’approche pas d’ici ! Retire les sandales de tes pieds, car le lieu où tu te tiens est une terre sainte ! »
+
+Et il déclara : « Je suis le Dieu de ton père, le Dieu d’Abraham, le Dieu d’Isaac, le Dieu de Jacob.~» Moïse se voila le visage car il craignait de porter son regard sur Dieu.
+    }
+\end{parcolumns}
+
+\gregorioscore{r1}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Unigénitus Dei Fílius nos benedícere et adjuváre dignétur. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Cui ait Dóminus: Vidi afflictiónem pópuli mei in Ægýpto, et clamórem ejus audívi propter durítiam eórum qui præsunt opéribus:
+
+Et sciens dolórem ejus, descéndi ut líberem eum de mánibus Ægyptiórum, et edúcam de terra illa in terram bonam et spatiósam, in terram quæ fluit lacte et melle, ad loca Chananǽi, et Hethǽi, et Amorrhǽi, et Pherezǽi, et Hevǽi, et Jebusǽi.
+
+Clamor ergo filiórum Israël venit ad me: vidíque afflictiónem eórum, qua ab Ægýptiis opprimúntur.
+
+Sed veni, et mittam te ad Pharaónem, ut edúcas pópulum meum, fílios Israël de Ægýpto.
+	}
+	\colchunk{%
+Le Seigneur dit : « J’ai vu, oui, j’ai vu la misère de mon peuple qui est en Égypte, et j’ai entendu ses cris sous les coups des surveillants. Oui, je connais ses souffrances.
+
+Je suis descendu pour le délivrer de la main des Égyptiens et le faire monter de ce pays vers un beau et vaste pays, vers un pays, ruisselant de lait et de miel, vers le lieu où vivent le Cananéen, le Hittite, l’Amorite, le Perizzite, le Hivvite et le Jébuséen.
+
+Maintenant, le cri des fils d’Israël est parvenu jusqu’à moi, et j’ai vu l’oppression que leur font subir les Égyptiens.
+
+Maintenant donc, va ! Je t’envoie chez Pharaon : tu feras sortir d’Égypte mon peuple, les fils d’Israël. »
+    }
+\end{parcolumns}
+
+\gregorioscore{r2}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Spíritus Sancti grátia illúminet sensus et corda nostra. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Dixítque Móyses ad Deum: Quis sum ego, ut vadam ad Pharaónem, et edúcam fílios Israël de Ægýpto?
+
+Qui dixit ei: Ego ero tecum: et hoc habébis signum, quod míserim te: Cum edúxeris pópulum de Ægýpto, immolábis Deo super montem istum.
+
+Ait Móyses ad Deum: Ecce, ego vadam ad fílios Israël, et dicam eis: Deus patrum vestrórum misit me ad vos. Si díxerint mihi: Quod est nomen ejus? quid dicam eis?
+
+Dixit Deus ad Móysen: Ego sum qui sum. Ait: Sic dices fíliis Israël: Qui est, misit me ad vos.
+
+Dixítque íterum Deus ad Móysen: Hæc dices fíliis Israël: Dóminus Deus patrum vestrórum, Deus Abraham, Deus Isaac, et Deus Jacob, misit me ad vos; hoc nomen mihi est in ætérnum, et hoc memoriále meum in generatiónem et generatiónem.
+	}
+	\colchunk{%
+Moïse dit à Dieu : « Qui suis-je pour aller trouver Pharaon, et pour faire sortir d’Égypte les fils d’Israël ? »
+
+Dieu lui répondit : « Je suis avec toi. Et tel est le signe que c’est moi qui t’ai envoyé : quand tu auras fait sortir d’Égypte mon peuple, vous rendrez un culte à Dieu sur cette montagne. »
+
+Moïse répondit à Dieu : « J’irai donc trouver les fils d’Israël, et je leur dirai : “Le Dieu de vos pères m’a envoyé vers vous.” Ils vont me demander quel est son nom ; que leur répondrai-je ? »
+
+Dieu dit à Moïse : « Je suis qui je suis. Tu parleras ainsi aux fils d’Israël : “Celui qui m’a envoyé vers vous, c’est : JE-SUIS”. »
+
+Dieu dit encore à Moïse : « Tu parleras ainsi aux fils d’Israël : “Celui qui m’a envoyé vers vous, c’est LE SEIGNEUR, le Dieu de vos pères, le Dieu d’Abraham, le Dieu d’Isaac, le Dieu de Jacob”. C’est là mon nom pour toujours, c’est par lui que vous ferez mémoire de moi, d’âge en âge.
+
+Va, rassemble les anciens d’Israël. Tu leur diras : “Le Seigneur, le Dieu de vos pères, le Dieu d’Abraham, d’Isaac et de Jacob, m’est apparu. Il m’a dit : Je vous ai visités et ainsi j’ai vu comment on vous traite en Égypte.
+
+    }
+\end{parcolumns}
+
+\gregorioscore{r3}
+
+\nocturn{2}
+
+\gregorioscore{a4}
+\gregorioscore{p4}
+\begin{itemize}
+\item Quóniam eleváta est magnifi\textbf{cén}tia \textbf{tu}a,~* \textit{su}\textit{per} \textbf{cæ}los.
+
+\item Ex ore infántium et lacténtium perfecísti laudem propter ini\textbf{mí}cos \textbf{tu}os,~* ut déstruas inimícum \textit{et} \textit{ul}\textbf{tó}rem.
+
+\item Quóniam vidébo cælos tuos, ópera digi\textbf{tó}rum tu\textbf{ó}rum:~* lunam et stellas, quæ \textit{tu} \textit{fun}\textbf{dás}ti.
+
+\item Quid est homo quod \textbf{me}mor es \textbf{e}jus?~* aut fílius hóminis, quóniam ví\textit{si}\textit{tas} \textbf{e}um?
+
+\item Minuísti eum paulo minus ab Angelis,~† glória et honóre coro\textbf{nás}ti \textbf{e}um:~* et constituísti eum super ópera mánu\textit{um} \textit{tu}\textbf{á}rum.
+
+\item Omnia subjecísti sub \textbf{pé}dibus \textbf{e}jus,~* oves et boves univérsas: ínsuper et pé\textit{co}\textit{ra} \textbf{cam}pi.
+
+\item Vólucres cæli, et \textbf{pi}sces \textbf{ma}ris,~* qui perámbulant sé\textit{mi}\textit{tas} \textbf{ma}ris.
+
+\item Dómine, \textbf{Dó}minus \textbf{nos}ter,~* quam admirábile est nomen tuum in uni\textit{vér}\textit{sa} \textbf{ter}ra!
+
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{itemize}
+
+\gregorioscore{a5}
+\gregorioscore{p5}
+\begin{itemize}
+\item Lætábor et exsultábo \textbf{in} te:~* psallam nómini tu\textit{o}, \textit{Al}\textbf{tís}sime.
+
+\item In converténdo inimícum meum re\textbf{trór}sum:~* infirmabúntur, et períbunt a fá\textit{ci}\textit{e} \textbf{tu}a.
+
+\item Quóniam fecísti judícium meum et causam \textbf{me}am:~* sedísti super thronum, qui júdi\textit{cas} \textit{jus}\textbf{tí}tiam.
+
+\item Increpásti Gentes, et périit \textbf{ím}pius:~* nomen eórum delésti in ætérnum, et in sǽ\textit{cu}\textit{lum} \textbf{sǽ}culi.
+
+\item Inimíci defecérunt frámeæ in \textbf{fi}nem:~* et civitátes eórum \textit{de}\textit{stru}\textbf{xís}ti.
+
+\item Périit memória eórum cum \textbf{só}nitu:~* et Dóminus in æ\textit{tér}\textit{num} \textbf{pér}manet.
+
+\item Parávit in judício thronum \textbf{su}um:~* et ipse judicábit orbem terræ in æquitáte, judicábit pópulos \textit{in} \textit{jus}\textbf{tí}tia.
+
+\item Et factus est Dóminus refúgium \textbf{páu}peri:~* adjútor in opportunitátibus, in tribu\textit{la}\textit{ti}\textbf{ó}ne.
+
+\item Et sperent in te qui novérunt nomen \textbf{tu}um:~* quóniam non dereliquísti quærén\textit{tes} \textit{te}, \textbf{Dó}mine.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{itemize}
+
+\gregorioscore{a6}
+\gregorioscore{p6}
+\begin{itemize}
+\item Quóniam requírens sánguinem eórum \textbf{re}cor\textbf{dá}tus est:~* non est oblítus cla\textit{mó}\textit{rem} \textbf{páu}perum.
+
+\item Miserére \textbf{me}i, \textbf{Dó}mine:~* vide humilitátem meam de ini\textit{mí}\textit{cis} \textbf{me}is.
+
+\item Qui exáltas me de \textbf{por}tis \textbf{mor}tis,~* ut annúntiem omnes laudatiónes tuas in portis fí\textit{li}\textit{æ} \textbf{Si}on.
+
+\item Exsultábo in salu\textbf{tá}ri \textbf{tu}o:~* infíxæ sunt Gentes in intéritu, \textit{quem} \textit{fe}\textbf{cé}runt.
+
+\item In láqueo isto, quem \textbf{abs}con\textbf{dé}runt,~* comprehénsus est \textit{pes} \textit{e}\textbf{ó}rum.
+
+\item Cognoscétur Dóminus ju\textbf{dí}cia \textbf{fá}ciens:~* in opéribus mánuum suárum comprehénsus \textit{est} \textit{pec}\textbf{cá}tor.
+
+\item Convertántur peccatóres \textbf{in} in\textbf{fér}num,~* omnes Gentes quæ oblivis\textit{cún}\textit{tur} \textbf{De}um.
+
+\item Quóniam non in finem oblívio \textbf{e}rit \textbf{páu}peris:~* patiéntia páuperum non perí\textit{bit} \textit{in} \textbf{fi}nem.
+
+\item Exsúrge, Dómine, non confor\textbf{té}tur \textbf{ho}mo:~* judicéntur Gentes in con\textit{spéc}\textit{tu} \textbf{tu}o.
+
+\item Constítue, Dómine, legislatórem \textbf{su}per \textbf{e}os:~* ut sciant Gentes quóniam \textit{hó}\textit{mi}\textbf{nes} sunt.
+
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+
+
+\end{itemize}
+
+\vv Scápulis suis obumbrábit tibi.
+\rr Et sub pennis ejus sperábis.
+
+Pater noster...
+
+\vv Et ne nos indúcas in tentatiónem:
+\rr Sed líbera nos a malo.
+
+\rubric{Absolutio} Ipsíus píetas et misericórdia nos ádjuvet, qui cum Patre et Spíritu Sancto vivit et regnat in sǽcula sæculórum. Amen.
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Deus Pater omnípotens sit nobis propítius et clemens. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Sermo sancti Basílii Magni
+
+\rubric{Homilia 1 de jejúnio, ante med.}
+
+Móysen per jejunium nóvimus in montem ascendísse: neque enim áliter ausus esset vérticem fumántem adire, atque in calíginem íngredi, nisi jejúnio munítus. Per jejunium mandáta digito Dei in tábulis conscripta suscépit. Item supra montem jejunium legis latæ conciliator fuit: inférius vero, gula ad idololatríam pópulum dedúxit, ac contaminávit. Sedit, inquit, pópulus manducare et bíbere, et surrexérunt lúdere. Quadragínta diérum labórem ac perseverantiam, Dei servo continuo jejunante ac orante, una tantum pópuli ebríetas cassam irritamque réddidit. Quas enim tabulas Dei dígito conscriptas jejunium accepit, has ebríetas contrívit: Prophéta sanctíssimo indignum existimante, vinoléntum pópulum a Deo legem accípere.
+	}
+	\colchunk{%
+Sermon de saint Basile le Grand
+
+Nous savons que Moïse gravit la montagne grâce au jeûne, car il n’aurait pas osé approcher de ce sommet fumant et entrer dans la nuée, s’il n’avait été fortifié par le jeûne. C’est grâce au jeûne qu’il reçut les lois gravées par le doigt de Dieu sur des tables. De même, sur la montagne, le jeûne obtint le don de la loi, mais au pied de cette montagne, la gourmandise fit tomber le peuple dans l’idolâtrie et le souilla de péché. « La foule s’assit pour manger et pour boire ; puis ils se levèrent pour se divertir. » L’effort et la persévérance des quarante jours que le serviteur de Dieu avait passés dans la prière et le jeûne continuels, une seule ivresse du peuple les rendit inutiles et vains. Ces tables, en effet, gravées par le doigt de Dieu, que le jeûne avait accueillies, l’ivresse les brisa : le très saint prophète jugea qu’un peuple plein de vin était indigne de recevoir de Dieu une loi.
+    }
+\end{parcolumns}
+
+\gregorioscore{r4}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Christus perpétuæ det nobis gáudia vitæ. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Uno témporis momento ob gulam pópulus ille per maxima prodígia Dei cultum edoctus, in Ægyptíacam idololatríam turpíssime devolutus est. Ex quo si utrumque simul cónferas, vidére licet, jejunium ad Deum ducere, delicias vero salútem pérdere. Quid Esau inquinávit, servumque fratris réddidit? nonne esca una, propter quam primogenita vendidit? Samuelem vero nonne per jejunium orátio largíta est matri? Quid fortíssimum Samsónem inexpugnábilem réddidit? nonne jejunium, cum quo in matris ventre concéptus est? Jejunium concépit, jejunium nutrívit, jejunium virum effécit. Quod sane Angelus matri præcepit, monens quæcúmque ex vite procéderent, ne attíngeret, non vinum, non síceram bíberet. Jejunium prophétas génuit, poténtes confírmat atque róborat.
+	}
+	\colchunk{%
+En un moment de temps, à cause de sa gourmandise, ce peuple que les plus grands prodiges avaient instruit du culte à rendre à Dieu, versa de la façon la plus honteuse dans l’idolâtrie des Égyptiens. Si l’on compare ces deux faits, on peut voir que le jeûne conduit à Dieu, tandis que les délices anéantissent le salut. Qu’est-ce qui corrompit Ésaü et le rendit serviteur de son frère ? N’est-ce pas un seul mets pour lequel il vendit son droit d’aînesse ? Et Samuel ? N’est-ce pas au contraire par le jeûne qu’il fut accordé à la prière de sa mère ? Qu’est-ce donc qui a rendu invincible le très fort Samson, sinon le jeûne avec lequel il fut conçu dans le sein de sa mère ? Le jeûne le conçut, le jeûne le nourrit, le jeûne en fit un homme. Un ange l’a sûrement prescrit à sa mère, l’avertissant de s’abstenir de tout ce qui provient de la vigne, de ne boire ni vin ni boisson fermentée. Le jeûne engendre les prophètes, affermit et fortifie les puissants.
+    }
+	
+\end{parcolumns}
+
+\gregorioscore{r5}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Ignem sui amóris accéndat Deus in córdibus nostris. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Jejunium legislatóres sapiéntes facit: ánimæ optima custódia, corporis socius securus, fortibus viris muniméntum et arma, athlétis et certántibus exercitátio. Hoc præterea tentatiónes propulsat, ad pietátem armat, cum sobrietáte hábitat, temperantiæ ópifex est: in bellis fortitúdinem affert, in pace quietem docet: nazaræum sanctificat, sacerdotem pérficit: neque enim fas est sine jejúnio sacrifícium attíngere, non solum in mystica nunc et vera Dei adoratióne, sed nec in illa, in qua sacrifícium secúndum legem in figura offerebátur. Jejunium Elíam magnæ visiónis spectatórem fecit: quadragínta namque diérum jejúnio cum ánimam purgasset, in spelúnca meruit, quantum fas est homini, Deum vidére. Móyses íterum legem accípiens, íterum jejunia secutus est. Ninivítæ, nisi cum illis et bruta jejunassent, ruínæ minas nequáquam evasissent. In desérto autem quorúmnam membra cecidérunt? nonne illórum, qui carnes appetivére?
+	}
+	\colchunk{%
+Le jeûne rend les législateurs sages ; il est pour l’âme la meilleure sauvegarde ; pour le corps, un compagnon sûr ; pour les hommes courageux, une protection et une arme ; pour les athlètes et les combattants, un entraînement. En outre, il écarte les tentations, dispose à la piété, habite avec la sobriété, est artisan de la tempérance. Dans la guerre, il apporte le courage ; dans la paix, il apprend la tranquillité. Il sanctifie le nazir, rend le prêtre parfait, car il n’est pas permis d’aborder le sacrifice sans être à jeun, et cela, non seulement aujourd’hui, en cette adoration sacramentelle et véritable de Dieu, mais même dans celle où, en figure, le sacrifice était offert selon la loi. C’est le jeûne qui rendit Élie digne de contempler sa grande vision ; car, après avoir purifié son âme par un jeûne de quarante jours, il mérite, dans une caverne, de voir Dieu autant que cela est permis à un homme. Lorsque Moïse reçut de nouveau la loi, il observa de nouveau un jeûne. Les Ninivites n’auraient échappé en aucune manière à la destruction qui les menaçait s’ils n’avaient jeûné et fait jeûner avec eux jusqu’aux animaux. Dans le désert, par contre, qui vit fléchir ses membres, sinon ceux qui eurent envie de viandes ?
+    }
+\end{parcolumns}
+
+\gregorioscore{r6}
+
+\nocturn{3}
+
+\gregorioscore{a7}
+\gregorioscore{p7}
+\begin{itemize}
+\item Dum supérbit ímpius, incénditur \textbf{pau}per:~* comprehendúntur in consíliis qui\textit{bus} \textbf{có}gitant.
+
+\item Quóniam laudátur peccátor in desidériis ánimæ \textbf{su}æ:~* et iníquus be\textit{ne}\textbf{dí}citur.
+
+\item Exacerbávit Dóminum pec\textbf{cá}tor,~* secúndum multitúdinem iræ suæ \textit{non} \textbf{quæ}ret.
+
+\item Non est Deus in conspéctu \textbf{e}jus:~* inquinátæ sunt viæ illíus in om\textit{ni} \textbf{tém}pore.
+
+\item Auferúntur judícia tua a fácie \textbf{e}jus:~* ómnium inimicórum suórum do\textit{mi}\textbf{ná}bitur.
+
+\item Dixit enim in corde \textbf{su}o:~* Non movébor a generatióne in generatiónem si\textit{ne} \textbf{ma}lo.
+
+\item Cujus maledictióne os plenum est, et amaritúdine, et \textbf{do}lo:~* sub lingua ejus labor \textit{et} \textbf{do}lor.
+
+\item Sedet in insídiis cum divítibus in oc\textbf{cúl}tis:~* ut interfíciat in\textit{no}\textbf{cén}tem.
+
+\item Oculi ejus in páuperem re\textbf{spí}ciunt:~* insidiátur in abscóndito, quasi leo in spelún\textit{ca} \textbf{su}a.
+
+\item Insidiátur ut rápiat \textbf{páu}perem:~* rápere páuperem, dum áttra\textit{hit} \textbf{e}um.
+
+\item In láqueo suo humiliábit \textbf{e}um:~* inclinábit se, et cadet, cum dominátus fúe\textit{rit} \textbf{páu}perum.
+
+\item Dixit enim in corde suo: Oblítus est \textbf{De}us,~* avértit fáciem suam ne vídeat \textit{in} \textbf{fi}nem.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirítu\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæculó\textit{rum}. \textbf{A}men.
+\end{itemize}
+
+\gregorioscore{a8}
+\gregorioscore{p8}
+\begin{itemize}
+\item Propter quid irritávit ímpius \textbf{De}um?~* dixit enim in corde suo: \textbf{Non} re\textbf{quí}ret.
+
+\item Vides quóniam tu labórem et dolórem con\textbf{sí}deras:~* ut tradas eos in \textbf{ma}nus \textbf{tu}as.
+
+\item Tibi derelíctus est \textbf{pau}per:~* órphano tu \textbf{e}ris ad\textbf{jú}tor.
+
+\item Cóntere bráchium peccatóris et ma\textbf{lí}gni:~* quærétur peccátum illíus, et non in\textbf{ve}ni\textbf{é}tur.
+
+\item Dóminus regnábit in ætérnum, et in sǽculum \textbf{sǽ}culi:~* períbitis, Gentes, de \textbf{ter}ra il\textbf{lí}us.
+
+\item Desidérium páuperum exaudívit \textbf{Dó}minus:~* præparatiónem cordis eórum audívit \textbf{au}ris \textbf{tu}a.
+
+\item Judicáre pupíllo et \textbf{hú}mili,~* ut non appónat ultra magnificáre se homo \textbf{su}per \textbf{ter}ram.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
+\end{itemize}
+
+\gregorioscore{a9}
+\gregorioscore{p9}
+\begin{itemize}
+\item Quóniam ecce peccatóres intendérunt arcum,~† paravérunt sagíttas \textbf{su}as in \textbf{phá}retra,~* ut sagíttent in obscúro \textit{rec}\textit{tos} \textbf{cor}de.
+
+\item Quóniam quæ perfecísti, \textbf{de}stru\textbf{xé}runt:~* justus au\textit{tem} \textit{quid} \textbf{fe}cit?
+
+\item Dóminus in templo \textbf{sanc}to \textbf{su}o,~* Dóminus in cælo \textit{se}\textit{des} \textbf{e}jus.
+
+\item Oculi ejus in páupe\textbf{rem} re\textbf{spí}ciunt:~* pálpebræ ejus intérrogant fí\textit{li}\textit{os} \textbf{hó}minum.
+
+\item Dóminus intérrogat \textbf{jus}tum et \textbf{ím}pium:~* qui autem díligit iniquitátem, odit á\textit{ni}\textit{mam} \textbf{su}am.
+
+\item Pluet super pecca\textbf{tó}res \textbf{lá}queos:~* ignis, et sulphur, et spíritus procellárum pars cáli\textit{cis} \textit{e}\textbf{ó}rum.
+
+\item Quóniam justus Dóminus, et justíti\textbf{as} di\textbf{lé}xit:~* æquitátem vidit \textit{vul}\textit{tus} \textbf{e}jus.
+
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+
+
+\end{itemize}
+
+\vv Scuto circúmdabit te véritas ejus.
+\rr Non timébis a timóre noctúrno.
+
+Pater noster...
+
+\vv Et ne nos indúcas in tentatiónem:
+\rr Sed líbera nos a malo.
+
+\rubric{Absolutio} A vínculis peccatórum nostrórum absólvat nos omnípotens et miséricors Dóminus. Amen.
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Evangélica léctio sit nobis salus et protéctio. Amen.
+
+{\centering Léctio sancti Evangélii secúndum Joánnem \rubric{Joannes 6 : 1-15}\par}
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+In illo témpore: Abiit Jesus trans mare Galilǽæ, quod est Tiberíadis: et sequebátur eum multitúdo magna, quia vidébant signa, quæ faciébat super his qui infirmabántur. Et réliqua.
+
+Homilía sancti Augustíni Epíscopi \rubric{Tract. 24 in Joánnem}
+
+Mirácula, quæ fecit Dóminus noster Jesus Christus, sunt quidem divína ópera, et ad intellegéndum Deum de visibílibus ádmonent humánam méntem. Quia enim ille non est talis substántia, quæ vidéri óculis possit; et mirácula ejus, quibus totum mundum regit, universámque creatúram adminístrat, assiduitáte viluérunt, ita ut pene nemo dignétur atténdere ópera Dei mira et stupénda in quólibet séminis grano: secúndum ipsam suam misericórdiam, servávit sibi quædam, quæ fáceret opportúno témpore præter usitátum cursum ordinémque natúræ; ut non majóra, sed insólita vidéndo stupérent, quibus quotidiána vilúerant.
+	}
+	\colchunk{%
+En ce temps-là, Jésus s’en alla au delà de la mer de Galilée, ou de Tibériade ; et une multitude nombreuse le suivait, parce qu’ils voyaient les miracles qu’il opérait sur les malades. Et le reste.
+
+Homélie de saint Augustin, évêque
+
+Les miracles accomplis par notre Seigneur Jésus-Christ sont vraiment des œuvres divines et ils invitent l’esprit humain à s’élever des événements visibles à la connaissance de Dieu. Dieu, en effet, n’est pas de telle substance qu’il puisse être vu des yeux du corps. D’autre part, ses miracles, grâce auxquels il régit le monde entier et prend soin de toute la création, sont, par leur fréquence, devenus communs, au point que personne, pour ainsi dire, ne daigne prêter attention à l’action admirable et étonnante de Dieu dans n’importe quelle semence. C’est pourquoi, en sa miséricorde même, il s’est réservé d’opérer, en temps opportun, certains prodiges en dehors du cours habituel et ordinaire de la nature : ainsi la vue de faits, non plus grands, mais insolites, frappera tout de même d’étonnement ceux pour qui les miracles quotidiens sont devenus quelconques.
+    }
+\end{parcolumns}
+
+\gregorioscore{r7}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Divínum auxílium máneat semper nobíscum. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Majus enim miraculum est gubernátio totius mundi, quam saturátio quinque millium hóminum de quinque pánibus. Et tamen hoc nemo mirátur: illud mirántur hómines, non quia majus est, sed quia rárum est. Quis enim et nunc pascit univérsum mundum, nisi ille, qui de paucis granis ségetes creat? Fecit ergo quo modo Deus. Unde enim multiplicat de paucis granis ségetes, inde in mánibus suis multiplicávit quinque panes: potéstas enim erat in mánibus Christi. Panes autem illi quinque, quasi semina erant, non quidem terræ mandata, sed ab eo, qui terram fecit, multiplicata.
+	}
+	\colchunk{%
+Car c’est un plus grand miracle de gouverner le monde entier que de rassasier de cinq pains cinq mille personnes. Et pourtant, nul ne s’étonne du premier prodige, tandis que l’on est rempli d’admiration pour le second, non parce qu’il est plus grand, mais parce qu’il est rare. Qui, en effet, maintenant encore, nourrit le monde entier, sinon celui qui, de quelques grains, fait sortir les moissons ? Jésus a donc agi à la manière de Dieu. En effet, par cette même puissance qui d’un petit nombre de grains multiplie les moissons, il a multiplié entre ses mains les cinq pains. Car la puissance était entre les mains du Christ. Ces cinq pains étaient comme des semences non plus confiées à la terre, mais multipliées par celui qui a fait la terre.
+    }
+\end{parcolumns}
+
+\gregorioscore{r8}
+
+\vv Jube, domne, benedícere.
+\rubric{Benedictio} Ad societátem cívium supernórum perdúcat nos Rex Angelórum. Amen.
+
+\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+Hoc ergo admótum est sensibus, quo erigerétur mens: et exhíbitum óculis, ubi exercerétur intelléctus: ut invisibilem Deum per visibília ópera mirarémur, et erécti ad fidem, et purgáti per fidem, étiam ipsum invisibilem vidére cuperemus, quem de rebus visibílibus invisibilem nosceremus. Nec tamen sufficit hæc intuéri in miraculis Christi. Interrogémus ipsa miracula, quid nobis loquántur de Christo: habent enim, si intelligántur, linguam suam. Nam quia ipse Christus Verbum Dei est: étiam factum Verbi, verbum nobis est.
+	}
+	\colchunk{%
+Ce prodige a donc été présenté à nos sens pour élever notre esprit ; il a été placé sous nos yeux pour exercer notre intelligence. Alors, admirant le Dieu invisible à travers ses œuvres visibles, élevés jusqu’à la foi et purifiés par la foi, nous désirerons même voir l’Invisible en personne ; cet Invisible que nous connaissons à partir des choses visibles. Et pourtant, il ne suffit pas de considérer cela dans les miracles du Christ. Demandons aux miracles eux-mêmes ce qu’ils nous disent du Christ ; en effet, si nous les comprenons, ils ont leur langage. Car le Christ en soi est la Parole de Dieu, l’action de la Parole aussi est parole pour nous.
+    }
+\end{parcolumns}
+
+\gregorioscore{r9}
+
+\vv Dómine, exáudi oratiónem meam.\\
+\rr Et clamor meus ad te véniat.
+
+\vv Orémus.\\
+Concéde, quǽsumus, omnípotens Deus: ut, qui ex mérito nostræ actiónis afflígimur, tuæ grátiæ consolatióne respirémus.
+Per Dóminum nostrum Jesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.\\
+\rr Amen.
+
+\vv Dómine, exáudi oratiónem meam.\\
+\rr Et clamor meus ad te véniat.
+
+\gregorioscore{b.gabc}
+
+\vv Fidélium ánimæ per misericórdiam Dei requiéscant in pace.
+\rr Amen.
+
+\end{document}
+

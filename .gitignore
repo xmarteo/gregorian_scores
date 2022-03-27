@@ -1,0 +1,7 @@
+*.aux
+*.log
+*.out
+*.idx
+*.gtex
+*.gaux
+*.glog
