@@ -1,0 +1,401 @@
+% !TEX TS-program = lualatex
+% !TEX encoding = UTF-8
+
+\documentclass[twoside]{book}
+
+%%%%%%%%%%%%%%% STANDARD PACKAGES %%%%%%%%%%%%%%%
+
+\usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
+
+\usepackage{fontspec}
+\usepackage[medievallatin, french]{babel}
+\usepackage{fancyhdr}
+\usepackage{paracol}
+\usepackage{expl3}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{tableof}
+\usepackage{setspace}
+\usepackage{alltt}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{refcount}
+%%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
+
+%% This should mimic the layout of the recent Solesmes books.
+\geometry{
+inner=15mm,
+outer=10mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%% General scale of all graphical elements.
+%% Values different from 1 are largely untested.
+%% Used in those commands (e.g. everything FontSpec) that use a scale parameter.
+\newcommand{\customscale}{1}
+
+%% Provide the command \fpeval as a copy of the code-level \fp_eval:n.
+%% \fpeval allows to evaluate floating point calculation for scaled parameters, e.g. \setSomeStretchFactor{\fpeval{0,6 * \customscale}}
+\ExplSyntaxOn
+\cs_new_eq:NN \fpeval \fp_eval:n
+\ExplSyntaxOff
+
+%% No indentation of paragraphs
+\setlength{\parindent}{0mm}
+
+%% We want to allow large inter-words space 
+%% to avoid overfull boxes in two-columns rubrics.
+\sloppy
+
+%%%%%%%%%%%%%%% GREGORIO CONFIG %%%%%%%%%%%%%%%
+
+\usepackage[autocompile]{gregoriotex}
+
+%% text above lines shall be of color gregoriocolor
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+%% fine-tuning of space beween the staff and the text above lines
+\newcommand{\altraise}{-2.4mm} %% default is -0.1cm
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+%% fine-tuning of space between the staff and the lyrics
+\newcommand{\textraise}{2.8ex} %% default is 3.48471 ex
+\grechangedim{spacelinestext}{\textraise}{scalable}
+
+%% fine-tuning of space between the initial and the annotations
+\newcommand{\annraise}{0mm} %% default is -0.2mm
+\grechangedim{annotationraise}{\annraise}{scalable}
+
+%% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
+%% storing the result into \result.
+
+\newcommand{\result}{}
+\newcommand{\lookup}[3]{%
+  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+}%
+\newcommand{\officepartannotation}[1]{%
+  \renewcommand{\result}{#1}%
+  \lookup{#1}{T}{}%
+  \lookup{#1}{H}{Hymn.}%
+  \lookup{#1}{A}{Ant.}%
+  \lookup{#1}{P}{}%
+  \lookup{#1}{R}{Resp.}%
+  \lookup{#1}{I}{Invit.}%
+  \lookup{#1}{M}{Ad Mag.}%
+  \lookup{#1}{B}{Ad Ben.}%
+  \result%
+}%
+
+%% header capture setup for the mode
+\gresetheadercapture{mode}{greannotation}{string}
+
+%% outputs a score with no initials or annotations
+%% for 
+\newcommand{\smallscore}[1]{
+  \gresetinitiallines{0}
+  %% the use of a directory called "gabc" is linked
+  %% to the management of gabc files by the website: do not change 
+  %% without also changing the website static files structure
+  \gregorioscore{partitions/#1}
+  \gresetinitiallines{1}
+}
+
+%% outputs a score with annotations. no initials if [n] is passed
+\newcommand{\gscore}[3]{
+  %% #1 (passed as option) : y = initial, n = no initial
+  %% #2 : name of the score file, should be a code, e.g. Q4F4A3 or 1225N1R1
+  %% #4 : if applicable, a number between 1 and 9 (rank of the ant./resp.) - else: empty
+  
+  %% this prevents orphans
+  \needspace{4\baselineskip} 
+  \greannotation{\officepartannotation{#2}#3}
+  \gregorioscore{partitions/#1}
+}
+
+%%%%%%%%%%%%%%% FONTS %%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% Main font
+\setmainfont[Ligatures=TeX, Scale=\customscale]{Charis SIL}
+%\setmainfont[Ligatures=TeX, Scale=\customscale]{TeXGyreBonum-Regular}
+\setstretch{\fpeval{1.05 * \customscale}}
+
+%%%%%%%%%%%%%%% Score initials
+%% \initialsize resizes the initials, with one argument (size in points)
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+}
+%% default initial size is 32 points
+\newcommand{\defaultinitialsize}{32}
+\initialsize{\defaultinitialsize}
+
+%% spacing before and after initials to kern the Zallman Caps.
+%% this should be changed if we move away from Zallman Caps.
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+%% default space before and after initials is 0cm.
+\newcommand{\defaultinitialspace}{0.9mm}
+\initialspace{\defaultinitialspace}
+
+%%%%%%%%%%%%%%% Score annotations
+\grechangestyle{annotation}{\small}
+
+%%%%%%%%%%%%%%% GRAPHICAL ELEMENTS %%%%%%%%%%%%%%%
+
+%% V/, R/, A/ and + signs for in-line use (\vv \rr \aa \cc) and in-score use (<sp>V/ R/ A/ +</sp>)
+\newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/
+\newcommand{\vv}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.\hspace{\specialcharhsep}}}
+\newcommand{\rr}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.\hspace{\specialcharhsep}}}
+\renewcommand{\aa}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.\hspace{\specialcharhsep}}}
+\newcommand{\cc}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}\symbol{"2720}~}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
+\gresetspecial{+}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}†~}}
+
+%% Roman Numerals
+\usepackage{modroman}
+\newcommand{\Rnum}[1]{\nbRoman{#1}}
+\newcommand{\rnum}[1]{\nbshortroman{#1}}
+
+%% Macro to print versicles
+\newcommand{\versiculus}[2]{\rr #1 \\ \vv #2}
+
+\newcommand{\versiculustpall}[2]
+	{\versiculus{#1 \rubric{(T.P.} Allelúja. \rubric{)}}{#2 \rubric{(T.P.} Allelúja. \rubric{)}}}
+
+%% Macro to print rubrics
+\newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macro to print the name of a score in normal characters inside a \rubric
+\newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
+\newcommand{\scorename}[1]{\normaltext{\nameref{#1}}}
+
+%% Macro to print the common rubric that signals the Te Deum
+\newcommand{\tedeumrubric}{\rubric{Lectione ultima peracta Hymnus \normaltext{Te Deum} cantatur.}}
+
+%% Macro to print translations
+\newcommand{\trans}[1]{	\emph{#1}}
+
+%%%%%%%%%%%%%%% COLUMN MANAGEMENT %%%%%%%%%%%%%%%
+
+\usepackage{multicol}
+\usepackage{parcolumns}
+\setlength\columnseprule{0.4pt}
+
+%% Macro to print a psalm on two columns.
+\newcommand{\psalmus}[2]{
+	\needspace{4\baselineskip}
+	~\\
+	{\centering\scshape Psaume #1\par}
+	\smallscore{#2}
+	\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\begin{itemize}[%
+			label=\null, %
+			leftmargin=0pt, %
+			itemindent=0pt, %
+			labelsep=0pt, %
+			labelwidth=0pt, %
+			rightmargin=0pt, %
+			parsep=0pt, %
+			topsep=0pt, %
+			itemsep=0pt]%
+		\input{psaumes/#1_la.tex}%
+		\end{itemize}%
+	}%
+	\colchunk{%
+		\begin{itemize}[%
+			label=\null, %
+			leftmargin=0pt, %
+			itemindent=0pt, %
+			labelsep=0pt, %
+			labelwidth=0pt, %
+			rightmargin=0pt, %
+			parsep=0pt, %
+			topsep=0pt, %
+			itemsep=0pt]%
+		\input{psaumes/#1_fr.tex} %
+		\end{itemize} %
+	}%
+	\end{parcolumns}
+}
+
+%%%%%%%%%%%%%%% HEADER STYLES %%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\fancyhead[RO]{\small\rightmark\hspace{1cm}\thepage}
+\fancyhead[LE]{\small\thepage\hspace{1cm}\leftmark}
+
+\newcommand{\setheaders}[2]{
+	\renewcommand{\rightmark}{{\sc#2}}
+	\renewcommand{\leftmark}{{\sc#1}}
+}
+\setheaders{}{}
+
+%%%%%%%%%%%%%%% TITLE STYLES %%%%%%%%%%%%%%%
+
+%% Titles are centered and small-caps
+\titleformat{\chapter}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\section}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+%% Fine-tuning of space around titles
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+
+\newcommand{\officiumtitulum}[1]{
+  \pagebreak
+  \begin{center}
+  {\scshape\LARGE #1}\par
+  \end{center}
+}
+
+\newcommand{\nocturnumtitulum}[1]{
+  %% needspace: should be barely more than the vertical space for the titles, rubrics excluded.
+  %% this is to ensure that the page does not get cut after the title
+  \needspace{6\baselineskip}
+  \begin{center}
+  {\scshape\Large #1}\par
+  \end{center}
+}
+
+\begin{document}
+
+% ceci est pour conserver une numérotation ordinaire malgré paracol
+\twosided[pb]
+
+\begin{titlepage}
+\centering\null
+
+\vspace{1cm}
+
+{\scshape\LARGE Officium Defunctorum}
+
+\vspace{2cm}
+{\scshape\Large juxta usum antiquior rituum romanum}
+
+\vspace{5cm}
+
+{\scshape\LARGE L'Office des Morts}
+
+\vspace{2cm}
+{\scshape\Large selon l'usage ancien du rite romain}
+
+
+\end{titlepage}
+
+\thispagestyle{empty}\null\newpage
+
+% tolérance infinie sur les sauts de lignes pour les colonnes étroites
+\sloppy
+
+\officiumtitulum{À Vêpres}
+
+\rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
+
+\gscore{VA1}{A}{1}
+\trans{Je plairai au Seigneur dans la terre des vivants.}
+
+\gscore{VA2}{A}{2}
+\trans{Malheur à moi car mon exil s'est prolongé.}
+
+\gscore{VA3}{A}{3}
+\trans{Le Seigneur te garde de tout mal, que le Seigneur garde ton âme.}
+
+\gscore{VA4}{A}{4}
+\trans{Si Tu retiens les fautes, Seigneur, Seigneur, qui subsistera ?}
+
+\gscore{VA5}{A}{5}
+\trans{Ne méprise pas, Seigneur, les œuvres de Tes mains.}
+
+\gscore{VAM}{M}{}
+\trans{Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
+
+\rubric{On dit le Notre Père tout bas. Puis :}
+
+\officiumtitulum{À Matines}
+
+\rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
+
+\nocturnumtitulum{Premier Nocturne}
+\rubric{Si l'on chante un seul nocturne, ce nocturne se chante les dimanche, lundi et jeudi.}
+
+\gscore{MA1}{A}{1}
+\trans{Redresse, Seigneur mon Dieu, Ton chemin devant moi.}
+\psalmus{5}{MP1}
+
+
+\gscore{MA2}{A}{2}
+\trans{Reviens, Seigneur, délivre mon âme : car, dans la mort, nul souvenir de Toi.}
+
+
+\gscore{MA3}{A}{3}
+\trans{Qu'ils ne m'égorgent pas, tous ces fauves, ne me déchirent pas, sans que personne me délivre.}
+
+
+
+\nocturnumtitulum{Deuxième Nocturne}
+\rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mardi et vendredi.}
+
+\gscore{MA4}{A}{4}
+\trans{Sur des prés d'herbe fraîche, Il me fait reposer.}
+
+
+\gscore{MA5}{A}{5}
+\trans{Oublie les péchés de ma jeunesse, ne Te rappelle pas mes erreurs, Seigneur.}
+
+
+\gscore{MA6}{A}{6}
+\trans{J'en suis sûr, je verrai les bontés du Seigneur sur la terre des vivants.}
+
+
+
+\nocturnumtitulum{Troisième Nocturne}
+\rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mercredi et samedi.}
+
+\gscore{MA7}{A}{7}
+\trans{Daigne, Seigneur, me délivrer ; Seigneur, viens vite à mon secours !}
+
+
+\gscore{MA8}{A}{8}
+\trans{Pitié pour moi, Seigneur, guéris-moi, car j'ai péché contre Toi.}
+
+
+\gscore{MA9}{A}{9}
+\trans{Mon âme a soif du Dieu vivant ; quand pourrai-je m'avancer, paraître face à Dieu ?}
+
+
+\officiumtitulum{À Laudes}
+
+\rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
+
+\gscore{LA1}{A}{1}
+\trans{Les os humiliés exulteront dans le Seigneur.}
+
+\gscore{LA2}{A}{2}
+\trans{Seigneur, exauce ma prière ; toute chair viendra à Toi.}
+
+\gscore{LA3}{A}{3}
+\trans{Ta main droite me soutient, Seigneur.}
+
+\gscore{LA4}{A}{4}
+\trans{De la puissance de l'enfer délivre mon âme, Seigneur.}
+
+\gscore{LA5}{A}{5}
+\trans{Que tout être vivant chante louange au Seigneur.}
+
+\gscore{LAB}{B}{}
+\trans{Moi, je suis la résurrection et la vie. Celui qui croit en moi, même s’il meurt, vivra ; quiconque vit et croit en moi ne mourra jamais.}
+
+
+\end{document} 
