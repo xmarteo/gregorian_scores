@@ -188,12 +188,10 @@ headsep=3mm,
 \usepackage{parcolumns}
 \setlength\columnseprule{0.4pt}
 
-%% Macro to print a psalm on two columns.
-\newcommand{\psalmus}[2]{
-	\needspace{4\baselineskip}
-	~\\
-	{\centering\scshape Psaume #1\par}
-	\smallscore{#2}
+%% Macros to print a psalm on two columns.
+%% First, without title and incipitur
+
+\newcommand{\psalmtext}[1]{
 	\begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
 		\vspace{-\baselineskip}
@@ -226,6 +224,15 @@ headsep=3mm,
 		\end{itemize} %
 	}%
 	\end{parcolumns}
+}
+
+%% then, adding a title and incipitur
+\newcommand{\psalmus}[2]{
+	\needspace{4\baselineskip}
+	~\\
+	{\centering\scshape Psaume #1\par}
+	\smallscore{#2}
+	\psalmtext{#1}
 }
 
 %%%%%%%%%%%%%%% HEADER STYLES %%%%%%%%%%%%%%%
@@ -332,7 +339,9 @@ headsep=3mm,
 
 \gscore{VAM}{M}{}
 \trans{Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
-\psalmus{M}{VPM}
+{\centering\scshape Cantique de Marie\par}
+\smallscore{VPM}
+\psalmtext{m}
 \smallscore{VAM}
 
 \rubric{On dit le Notre Père tout bas. Puis :}
@@ -404,32 +413,36 @@ headsep=3mm,
 
 \gscore{LA1}{A}{1}
 \trans{Les os humiliés exulteront dans le Seigneur.}
-
+\psalmus{50}{LP1}
 \smallscore{LA1}
 
 \gscore{LA2}{A}{2}
 \trans{Seigneur, exauce ma prière ; toute chair viendra à Toi.}
-
+\psalmus{64}{LP2}
 \smallscore{LA2}
 
 \gscore{LA3}{A}{3}
 \trans{Ta main droite me soutient, Seigneur.}
-
+\psalmus{62}{LP3}
 \smallscore{LA3}
 
 \gscore{LA4}{A}{4}
 \trans{De la puissance de l'enfer délivre mon âme, Seigneur.}
-
+{\centering\scshape Cantique d'Ézéchias\par}
+\smallscore{LP4}
+\psalmtext{ez}
 \smallscore{LA4}
 
 \gscore{LA5}{A}{5}
 \trans{Que tout être vivant chante louange au Seigneur.}
-
+\psalmus{150}{LP5}
 \smallscore{LA5}
 
 \gscore{LAB}{B}{}
 \trans{Moi, je suis la résurrection et la vie. Celui qui croit en moi, même s’il meurt, vivra ; quiconque vit et croit en moi ne mourra jamais.}
-
+{\centering\scshape Cantique de Zacharie\par}
+\smallscore{LPB}
+\psalmtext{b}
 \smallscore{LAB}
 
 
