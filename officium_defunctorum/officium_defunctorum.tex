@@ -229,8 +229,7 @@ headsep=3mm,
 %% then, adding a title and incipitur
 \newcommand{\psalmus}[2]{
 	\needspace{4\baselineskip}
-	~\\
-	{\centering\scshape Psaume #1\par}
+	\smalltitle{Psaume #1}
 	\smallscore{#2}
 	\psalmtext{#1}
 }
@@ -267,6 +266,11 @@ headsep=3mm,
   \begin{center}
   {\scshape\LARGE #1}\par
   \end{center}
+}
+
+\newcommand{\smalltitle}[1]{
+ ~\\
+ {\centering\scshape #1\par}
 }
 
 \newcommand{\nocturnumtitulum}[1]{
@@ -313,134 +317,213 @@ headsep=3mm,
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
 
 \gscore{VA1}{A}{1}
-\trans{Je plairai au Seigneur dans la terre des vivants.}
+\trans{\aa Je plairai au Seigneur dans la terre des vivants.}
 \psalmus{114}{VP1}
 \smallscore{VA1}
 
 \gscore{VA2}{A}{2}
-\trans{Malheur à moi car mon exil s'est prolongé.}
+\trans{\aa Malheur à moi car mon exil s'est prolongé.}
 \psalmus{119}{VP2}
 \smallscore{VA2}
 
 \gscore{VA3}{A}{3}
-\trans{Le Seigneur te garde de tout mal, que le Seigneur garde ton âme.}
+\trans{\aa Le Seigneur te garde de tout mal, que le Seigneur garde ton âme.}
 \psalmus{120}{VP3}
 \smallscore{VA3}
 
 \gscore{VA4}{A}{4}
-\trans{Si Tu retiens les fautes, Seigneur, Seigneur, qui subsistera ?}
+\trans{\aa Si Tu retiens les fautes, Seigneur, Seigneur, qui subsistera ?}
 \psalmus{129}{VP4}
 \smallscore{VA4}
 
 \gscore{VA5}{A}{5}
-\trans{Ne méprise pas, Seigneur, les œuvres de Tes mains.}
+\trans{\aa Ne méprise pas, Seigneur, les œuvres de Tes mains.}
 \psalmus{137}{VP5}
 \smallscore{VA5}
 
+\smalltitle{Versicule}
+\smallscore{OR_audivi}
+\trans{\vv J'entendis une voix du ciel qui me disait : \\ \rr Bienheureux les morts qui meurent dans le Seigneur.}
+
 \gscore{VAM}{M}{}
-\trans{Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
-{\centering\scshape Cantique de Marie\par}
+\trans{\aa Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
+
+\smalltitle{Cantique de Marie}
 \smallscore{VPM}
 \psalmtext{m}
 \smallscore{VAM}
 
-\rubric{On dit le Notre Père tout bas. Puis :}
+\newpage
+
+\smalltitle{Conclusion}
+
+\rubric{Sauf mention contraire, toutes les réponses se disent sur ce ton :}
+
+\smallscore{OR_tonusversus}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Pater noster...\\
+		\rubric{(en silence jusqu'à :)}\\
+		\vv Et ne nos indúcas in tentatiónem: \\
+		\rr Sed líbera nos a malo.\\
+		\vv A porta ínferi.\\
+		\rr Erue, Dómine, ánimam ejus [ánimas eórum].\\
+		\vv Requiéscat in pace. [Requiéscant in pace.]\\
+		\rr Amen.\\
+		\vv Dómine, exáudi oratiónem meam.\\
+		\rr Et clamor meus ad te véniat.\\
+		\vv Orémus.
+	}
+	\colchunk{%
+		\vv Notre Père...\\
+		\vv Et ne nous laisse pas entrer en tentation.\\
+		\rr Mais délivre-nous du mal.\\
+		\vv De la puissance de l'enfer.\\
+		\rr Délivre, Seigneur, son âme [leurs âmes].\\
+		\vv Qu'il repose en paix. [Qu'ils reposent en paix.]\\
+		\rr Amen.\\
+		\vv Seigneur, entends ma prière.\\
+		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\vv Prions.
+	}
+\end{parcolumns}
+
+\rubric{On dit l'oraison qui correspond à l'occasion, pages suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Réquiem ætérnam dona eis, Dómine.\\
+		\rr Et lux perpétua lúceat eis.
+	}
+	\colchunk{%
+		\vv Seigneur, donne-leur le repos éternel.\\
+		\rr Et fais luire pour eux la lumière sans déclin.
+	}
+\end{parcolumns}
+
+\smallscore{OR_requiescant}
+\trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \officiumtitulum{À Matines}
 
-\rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
+\rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne.  Les leçons sont chantées sans bénédiction ni absolution. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
 
 \nocturnumtitulum{Premier Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les dimanche, lundi et jeudi.}
 
 \gscore{MA1}{A}{1}
-\trans{Redresse, Seigneur mon Dieu, Ton chemin devant moi.}
+\trans{\aa Redresse, Seigneur mon Dieu, Ton chemin devant moi.}
 \psalmus{5}{MP1}
 \smallscore{MA1}
 
 
 \gscore{MA2}{A}{2}
-\trans{Reviens, Seigneur, délivre mon âme : car, dans la mort, nul souvenir de Toi.}
+\trans{\aa Reviens, Seigneur, délivre mon âme : car, dans la mort, nul souvenir de Toi.}
 \psalmus{6}{MP2}
 \smallscore{MA2}
 
 \gscore{MA3}{A}{3}
-\trans{Qu'ils ne m'égorgent pas, tous ces fauves, ne me déchirent pas, sans que personne me délivre.}
+\trans{\aa Qu'ils ne m'égorgent pas, tous ces fauves, ne me déchirent pas, sans que personne me délivre.}
 \psalmus{7}{MP3}
 \smallscore{MA3}
+
+\smalltitle{Versicule}
+\smallscore{MV1}
+\trans{\vv De la puissance de l'enfer.\\ \rr Délivrez, Seigneur, leurs âmes.}
+
+\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
+
 
 
 \nocturnumtitulum{Deuxième Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mardi et vendredi.}
 
 \gscore{MA4}{A}{4}
-\trans{Sur des prés d'herbe fraîche, Il me fait reposer.}
+\trans{\aa Sur des prés d'herbe fraîche, Il me fait reposer.}
 \psalmus{22}{MP4}
 \smallscore{MA4}
 
 \gscore{MA5}{A}{5}
-\trans{Oublie les péchés de ma jeunesse, ne Te rappelle pas mes erreurs, Seigneur.}
+\trans{\aa Oublie les péchés de ma jeunesse, ne Te rappelle pas mes erreurs, Seigneur.}
 \psalmus{24}{MP5}
 \smallscore{MA5}
 
 \gscore{MA6}{A}{6}
-\trans{J'en suis sûr, je verrai les bontés du Seigneur sur la terre des vivants.}
+\trans{\aa J'en suis sûr, je verrai les bontés du Seigneur sur la terre des vivants.}
 \psalmus{26}{MP6}
 \smallscore{MA6}
+
+\smalltitle{Versicule}
+\smallscore{MV2}
+\trans{\vv Le Seigneur les établira avec les princes. \\ \rr Avec les princes de son peuple.}
+
+\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
 
 
 \nocturnumtitulum{Troisième Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mercredi et samedi.}
 
 \gscore{MA7}{A}{7}
-\trans{Daigne, Seigneur, me délivrer ; Seigneur, viens vite à mon secours !}
+\trans{\aa Daigne, Seigneur, me délivrer ; Seigneur, viens vite à mon secours !}
 \psalmus{39}{MP7}
 \smallscore{MA7}
 
 \gscore{MA8}{A}{8}
-\trans{Pitié pour moi, Seigneur, guéris-moi, car j'ai péché contre Toi.}
+\trans{\aa Pitié pour moi, Seigneur, guéris-moi, car j'ai péché contre Toi.}
 \psalmus{40}{MP8}
 \smallscore{MA8}
 
 \gscore{MA9}{A}{9}
-\trans{Mon âme a soif du Dieu vivant ; quand pourrai-je m'avancer, paraître face à Dieu ?}
+\trans{\aa Mon âme a soif du Dieu vivant ; quand pourrai-je m'avancer, paraître face à Dieu ?}
 \psalmus{41}{MP9}
 \smallscore{MA9}
+
+\smalltitle{Versicule}
+\smallscore{MV3}
+\trans{\vv Ne livre pas aux bêtes les âmes qui Te louent.\\ \rr Et les âmes de Tes pauvres, ne les oublie pas à jamais.}
+
+\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
 
 \officiumtitulum{À Laudes}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
 
 \gscore{LA1}{A}{1}
-\trans{Les os humiliés exulteront dans le Seigneur.}
+\trans{\aa Les os humiliés exulteront dans le Seigneur.}
 \psalmus{50}{LP1}
 \smallscore{LA1}
 
 \gscore{LA2}{A}{2}
-\trans{Seigneur, exauce ma prière ; toute chair viendra à Toi.}
+\trans{\aa Seigneur, exauce ma prière ; toute chair viendra à Toi.}
 \psalmus{64}{LP2}
 \smallscore{LA2}
 
 \gscore{LA3}{A}{3}
-\trans{Ta main droite me soutient, Seigneur.}
+\trans{\aa Ta main droite me soutient, Seigneur.}
 \psalmus{62}{LP3}
 \smallscore{LA3}
 
 \gscore{LA4}{A}{4}
-\trans{De la puissance de l'enfer délivre mon âme, Seigneur.}
+\trans{\aa De la puissance de l'enfer délivre mon âme, Seigneur.}
 {\centering\scshape Cantique d'Ézéchias\par}
 \smallscore{LP4}
 \psalmtext{ez}
 \smallscore{LA4}
 
 \gscore{LA5}{A}{5}
-\trans{Que tout être vivant chante louange au Seigneur.}
+\trans{\aa Que tout être vivant chante louange au Seigneur.}
 \psalmus{150}{LP5}
 \smallscore{LA5}
 
+\smalltitle{Versicule}
+\smallscore{OR_audivi}
+\trans{\vv J'entendis une voix du ciel qui me disait : \\ \rr Bienheureux les morts qui meurent dans le Seigneur.}
+
 \gscore{LAB}{B}{}
-\trans{Moi, je suis la résurrection et la vie. Celui qui croit en moi, même s’il meurt, vivra ; quiconque vit et croit en moi ne mourra jamais.}
-{\centering\scshape Cantique de Zacharie\par}
+\trans{\aa Moi, je suis la résurrection et la vie. Celui qui croit en moi, même s’il meurt, vivra ; quiconque vit et croit en moi ne mourra jamais.}
+
+\smalltitle{Cantique de Zacharie}
 \smallscore{LPB}
 \psalmtext{b}
 \smallscore{LAB}
