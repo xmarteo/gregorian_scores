@@ -1,0 +1,1047 @@
+\documentclass[twoside]{book}
+
+\usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
+\usepackage{fontspec}
+%\usepackage[latin1]{inputenc}
+\usepackage[medievallatin, french]{babel}
+\usepackage[strict]{changepage}
+\usepackage{fancyhdr}
+\usepackage{paracol}
+\usepackage{tableof}
+\usepackage{setspace}
+\usepackage{alltt}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{enumitem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Mise ne page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on numérote les nbp par page et non globalement
+\usepackage[perpage]{footmisc}
+
+% définition des en-têtes et pieds de page
+\pagestyle{empty}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{10pt}
+\fancyhead[RO]{\small\thepage}
+\fancyhead[LE]{\small\thepage}
+% la commande titres permet de changer les titres de gauche et de droite.
+\newcommand{\titres}[2]{
+	\renewcommand{\rightmark}{\textcolor{red}{\sc #2}}
+	\renewcommand{\leftmark}{\textcolor{red}{\sc #1}}
+}
+\titres{}{}
+
+% pas d'indentation
+\setlength{\parindent}{0mm}
+
+\geometry{
+inner=25mm,
+outer=12mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Options gregorio %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[forcecompile]{gregoriotex}
+%\usepackage{gregoriotex}
+
+%% style général de gregorio :
+% lignes rouges, commenter pour du noir
+\gresetlinecolor{gregoriocolor}
+
+% texte <alt> (au-dessus de la portée) en rouge et en petit, avec réglage de sa position verticale
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+\newcommand{\altraise}{-2.4mm}
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+% taille des initiales
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+}
+\newcommand{\defaultinitialsize}{32}
+\initialsize{\defaultinitialsize}
+% espace avant et après les initiales
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+\newcommand{\defaultinitialspace}{0cm}
+\initialspace{\defaultinitialspace}
+
+
+% on définit le système qui capture des headers pour générer des annotations
+% cette commande sera appelée pour définir des abréviations ou autres substitutions
+\newcommand{\resultat}{}
+\newcommand{\abbrev}[3]{
+  \IfSubStr{#1}{#2}{ \renewcommand{\resultat}{#3} }{}
+}
+\newcommand{\officepartannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{ntro}{ {Intr.} }
+  \abbrev{#1}{espo}{Resp.}
+  \abbrev{#1}{ll}{All.}
+  \abbrev{#1}{act}{Tract.}
+  \abbrev{#1}{equen}{Seq.}
+  \abbrev{#1}{ffert}{Off.}
+  \abbrev{#1}{ommun}{Co.}
+  \abbrev{#1}{ntip}{Ant.}
+  \abbrev{#1}{ntic}{Cant.}
+  \abbrev{#1}{Toni Communes}{}
+  \abbrev{#1}{yrial}{}
+  \abbrev{#1}{salm}{}
+  \abbrev{#1}{mnus}{}
+  \greannotation{\resultat}
+}
+\newcommand{\modeannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{1}{ {\sc i} }
+  \abbrev{#1}{2}{ {\sc ii} }
+  \abbrev{#1}{3}{ {\sc iii} }
+  \abbrev{#1}{4}{ {\sc iv} }
+  \abbrev{#1}{5}{ {\sc v} }
+  \abbrev{#1}{6}{ {\sc vi} }
+  \abbrev{#1}{7}{ {\sc vii} }
+  \abbrev{#1}{8}{ {\sc viii} }
+  \greannotation{\resultat}
+}
+\gresetheadercapture{office-part}{officepartannotation}{}
+\gresetheadercapture{mode}{modeannotation}{string}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Graphisme %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on définit l'échelle générale
+
+\newcommand{\echelle}{0.85}
+
+% on centre les titres et on ne les numérote pas
+\titleformat{\section}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\paragraph}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+% on diminue l'espace avant les titres
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+% commandes versets, repons et croix
+\newcommand{\vv}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}℣.\hspace{3mm}}}
+\newcommand{\rr}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}℟.\hspace{3mm}}}
+\newcommand{\cc}{\textcolor{red}{\fontspec[Scale=\echelle]{FreeSerif}\symbol{"2720}~}}
+\renewcommand{\aa}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}\Abar.\hspace{3mm}}}
+
+% commandes diverses
+\newcommand{\antiphona}{\textcolor{red}{\noindent Antiphona.\hspace{4mm}}}
+\newcommand{\antienne}{\textcolor{red}{\noindent Antienne.\hspace{4mm}}}
+\newcommand{\rubrique}[1]{\textcolor{red}{\emph{#1}}}
+\newcommand{\saut}{\\ \null \hspace{1cm}}
+\newcommand{\minisaut}{\\ \null \hspace{4mm}}
+\newcommand{\sautRV}{\\ \null \hspace{5.95mm}}
+\newcommand{\petitvspace}{\vspace{2mm}}
+\newcommand{\microvspace}{\vspace{0.8mm}}
+% pour affichier 1 en rouge et un peu d'espace
+\newcommand{\un}{{\color{gregoriocolor} 1~~~}}
+
+% abréviations
+\newcommand{\tpalleluia}{\rubrique{(T.P.} \mbox{Allelúia.\rubrique{)}}}
+\newcommand{\tpalleluiafr}{\rubrique{(T.P.} \mbox{Alléluia.\rubrique{)}}}
+
+\newcommand{\tqomittitur}{{\small \rubrique{(In Tempore Quadragesimæ ommittitur} Allelúia.\rubrique{)}}}
+\newcommand{\careme}{{\small \rubrique{(Pendant le Carême on omet l'}Alléluia.\rubrique{)}}}
+
+% environnement hymne : alltt + normalfont + marges custom
+\newenvironment{hymne}
+  {
+  \begin{adjustwidth}{1.6cm}{1mm}
+  \begin{alltt}\normalfont
+  }
+  {
+  \end{alltt}
+  \end{adjustwidth}
+  }
+  
+% la commande \u permet de souligner les inflexions
+\let\u\underline
+
+% on définit la police par défaut
+\setmainfont[Ligatures=TeX, Scale=\echelle]{Charis SIL}
+%renderer=ICU a l'air de ne plus marcher...
+%\setmainfont[Renderer=ICU, Ligatures=TeX, Scale=\echelle]{Charis SIL}
+\setstretch{0.9}
+
+% paramétrage de paracol en mode 2 colonnes par page : taille des colonnes, séparateur
+\columnratio{0.5}
+\setlength{\columnsep}{1.5em}
+\setlength{\columnseprule}{0.3pt}
+
+\begin{document}
+
+% ceci est pour conserver une numérotation ordinaire malgré paracol
+\twosided[pb]
+
+\begin{titlepage}
+\centering\null
+
+\vspace{1cm}
+
+{\scshape\LARGE Dominica in Septuagesima}
+
+\vspace{2cm}
+
+{\scshape\Large Ad Matutinum}
+
+\vspace{5cm}
+
+{\scshape\LARGE Dimanche de la Septuagésime}
+
+\vspace{2cm}
+
+{\scshape\Large À Matines}
+
+
+\end{titlepage}
+
+\null\newpage
+
+% tolérance infinie sur les sauts de lignes pour les colonnes étroites
+\sloppy
+
+\gregorioscore{partitions/OA.gabc}
+
+\emph{\vv Seigneur, Vous ouvrirez mes lèvres. ~~~~ \rr Et ma bouche annoncera Votre louange. \\
+\vv Dieu, venez à mon aide. ~~~~ \rr Seigneur, hâtez-vous de me secourir. \\
+\vv Gloire au Père, au Fils, et au Saint-Esprit. \\
+\rr Comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il.}
+
+\section{Invitatoire}
+
+\gregorioscore{partitions/i.gabc}
+\gregorioscore{partitions/ip.gabc}
+
+\newpage
+\section{Hymne}
+\gregorioscore{partitions/h.gabc}
+
+~
+
+\begin{paracol}{2}
+C'est le premier des jours, jour où la Trinité\\
+Dans sa béatitude a créé l'univers,\\
+Où le Créateur, en ressuscitant,\\
+A terrassé la mort et délivré le monde.\\
+\\
+Bannissons loin de nous la tiédeur,\\
+Levons-nous tous, levons-nous sans retard,\\
+Du sein de la nuit, invoquons le Seigneur,\\
+C'est le Prophète-roi qui nous parle et nous presse.\\
+\\
+Dieu entendra notre prière,\\
+Il nous tendra une main secourable,\\
+Purifiera notre âme des souillures\\
+Et nous rendra nos droits au Paradis.\\
+
+Nous qui venons,\\
+En cette très sainte partie du jour,\\
+Chanter nos cantiques, durant les heures du repos,\\
+Nous aurons part aux récompenses éternelles.
+\switchcolumn
+Ô Jésus, splendeur du Père,\\
+Nous vous en supplions instamment,\\
+Eteignez en nous la flamme des passions,\\
+Et gardez-nous de toute action coupable.\\
+\\
+Gardez nos corps et nos âmes\\
+Du souffle impur de la concupiscence,\\
+C'est à cause de ses feux,\\
+Que les feux de l'enfer brûlent avec plus d'ardeur.\\
+\\
+O Rédempteur du monde, nous vous en supplions\\
+Purifiez-nous, lavez-nous de nos crimes,\\
+Et dans votre miséricorde,\\
+Accordez-nous les biens de l'éternelle vie.\\
+\\
+Exaucez-nous, Père très miséricordieux,\\
+Fils unique égal au Père,\\
+Et vous, Esprit consolateur,\\
+Qui régnez dans tous les siècles.
+\end{paracol}
+
+\section{Premier nocturne}
+
+\subsection{Psaume 1}
+
+\gregorioscore{partitions/a1_8g.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p1.gabc}
+\gresetinitiallines{1}
+\aa \emph{Bienheureux l'homme qui médite la loi du Seigneur.}
+
+\un \emph{Heureux est l'homme qui n'entre pas au conseil des méchants, + qui ne suit pas le chemin des pécheurs, * ne siège pas avec ceux qui ricanent,}
+\begin{paracol}{2}
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Sed in lege Dómini volúntas \textbf{e}jus,~* et in lege ejus meditábitur di\textit{e} \textit{ac} \textbf{noc}te.
+
+\item Et erit tamquam lignum, quod plantátum est secus decúrsus a\textbf{quá}rum,~* quod fructum suum dabit in tém\textit{po}\textit{re} \textbf{su}o:
+
+\item Et fólium ejus non \textbf{dé}fluet:~* et ómnia quæcúmque fáciet, pro\textit{spe}\textit{ra}\textbf{bún}tur.
+
+\item Non sic ímpii, \textbf{non} sic:~* sed tamquam pulvis, quem prójicit ventus a fá\textit{ci}\textit{e} \textbf{ter}ræ.
+
+\item Ideo non resúrgent ímpii in ju\textbf{dí}cio:~* neque peccatóres in concíli\textit{o} \textit{jus}\textbf{tó}rum.
+
+\item Quóniam novit Dóminus viam jus\textbf{tó}rum:~* et iter impió\textit{rum} \textit{per}\textbf{í}bit.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item mais se plaît dans la loi du Seigneur * et murmure sa loi jour et nuit !
+\item Il est comme un arbre planté près d'un ruisseau, * qui donne du fruit en son temps,
+\item et jamais son feuillage ne meurt ; * tout ce qu'il entreprend réussira,
+\item tel n'est pas le sort des méchants. * Mais ils sont comme la paille balayée par le vent :
+\item au jugement, les méchants ne se lèveront pas, * ni les pécheurs au rassemblement des justes.
+\item Le Seigneur connaît le chemin des justes, * mais le chemin des méchants se perdra.
+\end{enumerate}
+\end{paracol}
+
+\subsection{Psaume 2}
+
+\gregorioscore{partitions/a2_7a.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p2.gabc}
+\gresetinitiallines{1}
+\aa \emph{Servez le Seigneur dans la crainte, et exultez devant lui avec tremblement.}
+
+\un \emph{Pourquoi ce tumulte des nations, ce vain murmure des peuples ?}
+\begin{paracol}{2}
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Astitérunt reges terræ, et príncipes conve\textbf{né}runt in \textbf{u}num~* advérsus Dóminum, et advérsus \textbf{Chris}tum \textbf{e}jus.
+\item Dirumpámus víncu\textbf{la} e\textbf{ó}rum:~* et projiciámus a nobis \textbf{ju}gum ip\textbf{só}rum.
+\item Qui hábitat in cælis, irri\textbf{dé}bit \textbf{e}os:~* et Dóminus subsan\textbf{ná}bit \textbf{e}os.
+\item Tunc loquétur ad eos in \textbf{i}ra \textbf{su}a,~* et in furóre suo contur\textbf{bá}bit \textbf{e}os.
+\item Ego autem constitútus sum Rex ab eo super Sion montem \textbf{sanc}tum \textbf{e}jus,~* prǽdicans præ\textbf{cép}tum \textbf{e}jus.
+\item Dóminus \textbf{di}xit \textbf{ad} me:~* Fílius meus es tu, ego hódie \textbf{gé}nu\textbf{i} te.
+\item Póstula a me, et dabo tibi Gentes heredi\textbf{tá}tem \textbf{tu}am,~* et possessiónem tuam \textbf{tér}minos \textbf{ter}ræ.
+\item Reges eos in \textbf{vir}ga \textbf{fér}rea,~* et tamquam vas fíguli con\textbf{frín}ges \textbf{e}os.
+\item Et nunc, reges, \textbf{in}tel\textbf{lí}gite:~* erudímini, qui judi\textbf{cá}tis \textbf{ter}ram.
+\item Servíte Dómino \textbf{in} ti\textbf{mó}re:~* et exsultáte ei \textbf{cum} tre\textbf{mó}re.
+\item Apprehéndite disciplínam, nequándo iras\textbf{cá}tur \textbf{Dó}minus,~* et pereátis de \textbf{vi}a \textbf{jus}ta.
+\item Cum exárserit in brevi \textbf{i}ra \textbf{e}jus:~* beáti omnes qui con\textbf{fí}dunt in \textbf{e}o.
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item Les rois de la terre se dressent, les grands se liguent entre eux contre le Seigneur et son messie :
+\item « Faisons sauter nos chaînes, rejetons ces entraves ! »
+\item Celui qui règne dans les cieux s'en amuse, le Seigneur les tourne en dérision ;
+\item puis il leur parle avec fureur , et sa colère les épouvante :
+\item « Moi, j'ai sacré mon roi sur Sion, ma sainte montagne. »
+\item Je proclame le décret du Seigneur ! + Il m'a dit : « Tu es mon fils ; moi, aujourd'hui, je t'ai engendré.
+\item Demande, et je te donne en héritage les nations, pour domaine la terre tout entière.
+\item Tu les détruiras de ton sceptre de fer, tu les briseras comme un vase de potier. »
+\item Maintenant, rois, comprenez, reprenez-vous, juges de la terre.
+\item Servez le Seigneur avec crainte, rendez-lui votre hommage en tremblant.
+\item Qu'il s'irrite et vous êtes perdus : soudain sa colère éclatera. Heureux qui trouve en lui son refuge !
+\end{enumerate}
+\end{paracol}
+
+\subsection{Psaume 3}
+
+\gregorioscore{partitions/a3_6f.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p3.gabc}
+\gresetinitiallines{1}
+\aa \emph{Levez-vous, Seigneur, sauvez-moi, mon Dieu.}
+
+\un \emph{Seigneur, qu'ils sont nombreux mes adversaires, nombreux à se lever contre moi,}
+\begin{paracol}{2}
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Multi dicunt \textbf{á}nimæ \textbf{me}æ:~* Non est salus ipsi in \textit{De}\textit{o} \textbf{e}jus.
+\item Tu autem, Dómine, su\textbf{scép}tor \textbf{me}us es,~* glória mea, et exáltans \textit{ca}\textit{put} \textbf{me}um.
+\item Voce mea ad Dómi\textbf{num} cla\textbf{má}vi:~* et exaudívit me de monte \textit{sanc}\textit{to} \textbf{su}o.
+\item Ego dormívi, et \textbf{so}po\textbf{rá}tus sum:~* et exsurréxi, quia Dómi\textit{nus} \textit{su}\textbf{scé}pit me.
+\item Non timébo míllia pópuli \textbf{cir}cum\textbf{dán}tis me:~* exsúrge, Dómine, salvum me fac, \textit{De}\textit{us} \textbf{me}us.
+\item Quóniam tu percussísti omnes adversántes mihi \textbf{si}ne \textbf{cau}sa:~* dentes peccatórum \textit{con}\textit{tri}\textbf{vís}ti.
+\item Dómi\textbf{ni} est \textbf{sa}lus:~* et super pópulum tuum benedíc\textit{ti}\textit{o} \textbf{tu}a.
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item nombreux à déclarer à mon sujet : « Pour lui, pas de salut auprès de Dieu ! »
+\item Mais toi, Seigneur, mon bouclier, ma gloire, tu tiens haute ma tête.
+\item À pleine voix je crie vers le Seigneur ; il me répond de sa montagne sainte.
+\item Et moi, je me couche et je dors ; je m'éveille : le Seigneur est mon soutien.
+\item Je ne crains pas ce peuple nombreux qui me cerne et s'avance contre moi.
+\item Lève-toi, Seigneur ! Sauve-moi, mon Dieu ! Tous mes ennemis, tu les frappes à la mâchoire ; les méchants, tu leur brises les dents.
+\item Du Seigneur vient le salut ; vienne ta bénédiction sur ton peuple !
+\end{enumerate}
+\end{paracol}
+
+\subsection{Versicule}
+\begin{paracol}{2}
+\vv Ipse liberávit me de láqueo venántium. \\
+\rr Et a verbo áspero. \\
+\vv Pater noster... \rubrique{(secrètement)} Et ne nos indúcas in tentatiónem. \\
+\rr Sed líbera nos a malo. \\
+\vv Exáudi, Dómine Iesu Christe, preces servórum tuórum, et miserére nobis: Qui cum Patre et Spíritu Sancto vivis et regnas in sǽcula sæculórum. \rr Amen.
+\switchcolumn
+\vv C’est lui qui m’a délivré du lacet des chasseurs. \\
+\rr Et de l’affaire de ruine. \\
+\vv Notre Père... Et ne nous laissez pas entrer en tentation. \\
+\rr Mais délivrez-nous du mal. \\
+\vv Exaucez, Seigneur Jésus-Christ, les prières de vos serviteurs, et ayez pitié de nous, vous qui vivez et régnez avec le Père et le Saint-Esprit, dans les siècles des siècles. \rr Ainsi soit-il.
+\end{paracol}
+
+\subsection{Première leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Benedictióne perpétua benedícat nos Pater ætérnus.\\
+\rr Amen.\\
+\rubrique{Si le célébrant n'est pas au moins diacre, le lecteur dit} Dómine \rubrique{au lieu de} domne\rubrique{.}
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que le Père éternel nous bénisse d'une bénédiction perpétuelle. \\
+\rr Ainsi soit-il.
+\end{paracol}
+
+\paragraph{Incipit liber Génesis} \rubrique{Gen. 1 : 1-8}
+
+Au commencement, Dieu créa le ciel et la terre.
+La terre était informe et vide, les ténèbres étaient au-dessus de l’abîme et le souffle de Dieu planait au-dessus des eaux.
+Dieu dit : « Que la lumière soit. » Et la lumière fut.
+Dieu vit que la lumière était bonne, et Dieu sépara la lumière des ténèbres.
+Dieu appela la lumière « jour », il appela les ténèbres « nuit ». Il y eut un soir, il y eut un matin : premier jour.
+Et Dieu dit : « Qu’il y ait un firmament au milieu des eaux, et qu’il sépare les eaux. »
+Dieu fit le firmament, il sépara les eaux qui sont au-dessous du firmament et les eaux qui sont au-dessus. Et ce fut ainsi.
+Dieu appela le firmament « ciel ». Il y eut un soir, il y eut un matin : deuxième jour.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\newpage
+
+\gregorioscore{partitions/r1.gabc}
+
+\emph{\rr Au commencement Dieu créa le ciel et la terre, et sur la terre il fit l’homme, à son image et à sa ressemblance. \\
+\vv Dieu forma donc l’homme du limon de la terre et insuffla dans son visage un souffle de vie.}
+
+\subsection{Deuxième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Unigénitus Dei Fílius nos benedícere et adjuváre dignétur.\\
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que le Fils unique de Dieu daigne nous bénir et nous secourir.\\
+\rr Ainsi soit-il.
+\end{paracol}
+
+\rubrique{Gen. 1 : 9-19}
+
+Et Dieu dit : « Les eaux qui sont au-dessous du ciel, qu’elles se rassemblent en un seul lieu, et que paraisse la terre ferme. » Et ce fut ainsi.
+Dieu appela la terre ferme « terre », et il appela la masse des eaux « mer ». Et Dieu vit que cela était bon.
+Dieu dit : « Que la terre produise l’herbe, la plante qui porte sa semence, et que, sur la terre, l’arbre à fruit donne, selon son espèce, le fruit qui porte sa semence. » Et ce fut ainsi.
+La terre produisit l’herbe, la plante qui porte sa semence, selon son espèce, et l’arbre qui donne, selon son espèce, le fruit qui porte sa semence. Et Dieu vit que cela était bon.
+Il y eut un soir, il y eut un matin : troisième jour.
+Et Dieu dit : « Qu’il y ait des luminaires au firmament du ciel, pour séparer le jour de la nuit ; qu’ils servent de signes pour marquer les fêtes, les jours et les années ;
+et qu’ils soient, au firmament du ciel, des luminaires pour éclairer la terre. » Et ce fut ainsi.
+Dieu fit les deux grands luminaires : le plus grand pour commander au jour, le plus petit pour commander à la nuit ; il fit aussi les étoiles.
+Dieu les plaça au firmament du ciel pour éclairer la terre,
+pour commander au jour et à la nuit, pour séparer la lumière des ténèbres. Et Dieu vit que cela était bon.
+Il y eut un soir, il y eut un matin : quatrième jour.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\gregorioscore{partitions/r2.gabc}
+
+\emph{\rr Au commencement Dieu créa le ciel et la terre, et l’Esprit de Dieu était porté sur les eaux ; et Dieu vit que toutes les choses qu’il avait faites étaient très bonnes.\\
+\vv C'est donc ainsi que furent achevés les deux et la terre et tout leur ornement.}
+
+\newpage
+
+\subsection{Troisième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Spíritus Sancti grátia illúminet sensus et corda nostra.\\
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que la grâce du Saint-Esprit illumine nos esprits et nos cœurs.\\
+\rr Ainsi soit-il.
+\end{paracol}
+
+\rubrique{Gen. 1 : 20-26}
+
+Et Dieu dit : « Que les eaux foisonnent d’une profusion d’êtres vivants, et que les oiseaux volent au-dessus de la terre, sous le firmament du ciel. »
+Dieu créa, selon leur espèce, les grands monstres marins, tous les êtres vivants qui vont et viennent et foisonnent dans les eaux, et aussi, selon leur espèce, tous les oiseaux qui volent. Et Dieu vit que cela était bon.
+Dieu les bénit par ces paroles : « Soyez féconds et multipliez-vous, remplissez les mers, que les oiseaux se multiplient sur la terre. »
+Il y eut un soir, il y eut un matin : cinquième jour.
+Et Dieu dit : « Que la terre produise des êtres vivants selon leur espèce, bestiaux, bestioles et bêtes sauvages selon leur espèce. » Et ce fut ainsi.
+Dieu fit les bêtes sauvages selon leur espèce, les bestiaux selon leur espèce, et toutes les bestioles de la terre selon leur espèce. Et Dieu vit que cela était bon.
+Dieu dit : « Faisons l’homme à notre image, selon notre ressemblance. Qu’il soit le maître des poissons de la mer, des oiseaux du ciel, des bestiaux, de toutes les bêtes sauvages, et de toutes les bestioles qui vont et viennent sur la terre. »
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\gregorioscore{partitions/r3.gabc}
+
+\emph{\rr Le Seigneur forma l'homme du limon de la terre, et insuffla dans son visage un souffle de vie, et l’homme devint âme vivante. \\
+\vv Au commencement Dieu fit le ciel et la terre, et forma l’homme sur la terre.}
+
+\section{Deuxième nocturne}
+
+\subsection{Psaume 8}
+
+\gregorioscore{partitions/a4_1g.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p4.gabc}
+\gresetinitiallines{1}
+\aa \emph{Qu'il est admirable votre nom, Seigneur, par toute la terre !}
+
+\un \emph{Ô Seigneur, notre Dieu, qu'il est grand ton nom par toute la terre ! Jusqu'aux cieux, ta splendeur est chantée}
+\begin{paracol}{2}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Quóniam eleváta est magnifi\textbf{cén}tia \textbf{tu}a,~* \textit{su}\textit{per} \textbf{cæ}los.
+\item Ex ore infántium et lacténtium perfecísti laudem propter ini\textbf{mí}cos \textbf{tu}os,~* ut déstruas inimícum \textit{et} \textit{ul}\textbf{tó}rem.
+\item Quóniam vidébo cælos tuos, ópera digi\textbf{tó}rum tu\textbf{ó}rum:~* lunam et stellas, quæ \textit{tu} \textit{fun}\textbf{dás}ti.
+\item Quid est homo quod \textbf{me}mor es \textbf{e}jus?~* aut fílius hóminis, quóniam ví\textit{si}\textit{tas} \textbf{e}um?
+\item Minuísti eum paulo minus ab Angelis,~† glória et honóre coro\textbf{nás}ti \textbf{e}um:~* et constituísti eum super ópera mánu\textit{um} \textit{tu}\textbf{á}rum.
+\item Omnia subjecísti sub \textbf{pé}dibus \textbf{e}jus,~* oves et boves univérsas: ínsuper et pé\textit{co}\textit{ra} \textbf{cam}pi.
+\item Vólucres cæli, et \textbf{pi}sces \textbf{ma}ris,~* qui perámbulant sé\textit{mi}\textit{tas} \textbf{ma}ris.
+\item Dómine, \textbf{Dó}minus \textbf{nos}ter,~* quam admirábile est nomen tuum in uni\textit{vér}\textit{sa} \textbf{ter}ra!
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item par la bouche des enfants, des tout-petits : rempart que tu opposes à l'adversaire, où l'ennemi se brise en sa révolte.
+\item A voir ton ciel, ouvrage de tes doigts, la lune et les étoiles que tu fixas,
+\item qu'est-ce que l'homme pour que tu penses à lui, le fils d'un homme, que tu en prennes souci ?
+\item Tu l'as voulu un peu moindre qu'un dieu, le couronnant de gloire et d'honneur ;
+\item tu l'établis sur les oeuvres de tes mains, tu mets toute chose à ses pieds :
+\item les troupeaux de boeufs et de brebis, et même les bêtes sauvages,
+\item les oiseaux du ciel et les poissons de la mer, tout ce qui va son chemin dans les eaux.
+\item O Seigneur, notre Dieu, qu'il est grand ton nom par toute la terre !
+\end{enumerate}
+
+\end{paracol}
+
+\subsection{Psaume 9-1}
+
+\gregorioscore{partitions/a5_8g.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p5.gabc}
+\gresetinitiallines{1}
+\aa \emph{Vous siégez sur un trône vous qui jugez la justice.}
+
+\un \emph{De tout mon coeur, Seigneur, je rendrai grâce, je dirai tes innombrables merveilles ;}
+\begin{paracol}{2}
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Lætábor et exsultábo \textbf{in} te:~* psallam nómini tu\textit{o}, \textit{Al}\textbf{tís}sime.
+\item In converténdo inimícum meum re\textbf{trór}sum:~* infirmabúntur, et períbunt a fá\textit{ci}\textit{e} \textbf{tu}a.
+\item Quóniam fecísti judícium meum et causam \textbf{me}am:~* sedísti super thronum, qui júdi\textit{cas} \textit{jus}\textbf{tí}tiam.
+\item Increpásti Gentes, et périit \textbf{ím}pius:~* nomen eórum delésti in ætérnum, et in sǽ\textit{cu}\textit{lum} \textbf{sǽ}culi.
+\item Inimíci defecérunt frámeæ in \textbf{fi}nem:~* et civitátes eórum \textit{de}\textit{stru}\textbf{xís}ti.
+\item Périit memória eórum cum \textbf{só}nitu:~* et Dóminus in æ\textit{tér}\textit{num} \textbf{pér}manet.
+\item Parávit in judício thronum \textbf{su}um:~* et ipse judicábit orbem terræ in æquitáte, judicábit pópulos \textit{in} \textit{jus}\textbf{tí}tia.
+\item Et factus est Dóminus refúgium \textbf{páu}peri:~* adjútor in opportunitátibus, in tribu\textit{la}\textit{ti}\textbf{ó}ne.
+\item Et sperent in te qui novérunt nomen \textbf{tu}um:~* quóniam non dereliquísti quærén\textit{tes} \textit{te}, \textbf{Dó}mine.
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item pour toi, j'exulterai, je danserai, je fêterai ton nom, Dieu Très-Haut.
+\item Mes ennemis ont battu en retraite, devant ta face, ils s'écroulent et périssent.
+\item Tu as plaidé mon droit et ma cause, tu as siégé, tu as jugé avec justice.
+\item Tu menaces les nations, tu fais périr les méchants, à tout jamais tu effaces leur nom.
+\item L'ennemi est achevé, ruiné pour toujours, tu as rasé des villes, leur souvenir a péri.
+\item Mais il siège, le Seigneur, à jamais : pour juger, il affermit son trône ;
+\item il juge le monde avec justice et gouverne les peuples avec droiture.
+\item Qu'il soit la forteresse de l'opprimé, sa forteresse aux heures d'angoisse :
+\item ils s'appuieront sur toi, ceux qui connaissent ton nom ; jamais tu n'abandonnes, Seigneur, ceux qui te cherchent.
+\end{enumerate}
+\end{paracol}
+
+\newpage
+\subsection{Psaume 9-2}
+
+\gregorioscore{partitions/a6_1g2.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p6.gabc}
+\gresetinitiallines{1}
+\aa \emph{Levez-vous, Seigneur, que l'homme ne triomphe pas.}
+
+\un \emph{Fêtez le Seigneur qui siège dans Sion, annoncez parmi les peuples ses exploits !}
+\begin{paracol}{2}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Quóniam requírens sánguinem eórum \textbf{re}cor\textbf{dá}tus est:~* non est oblítus cla\textit{mó}\textit{rem} \textbf{páu}perum.
+\item Miserére \textbf{me}i, \textbf{Dó}mine:~* vide humilitátem meam de ini\textit{mí}\textit{cis} \textbf{me}is.
+\item Qui exáltas me de \textbf{por}tis \textbf{mor}tis,~* ut annúntiem omnes laudatiónes tuas in portis fí\textit{li}\textit{æ} \textbf{Si}on.
+\item Exsultábo in salu\textbf{tá}ri \textbf{tu}o:~* infíxæ sunt Gentes in intéritu, \textit{quem} \textit{fe}\textbf{cé}runt.
+\item In láqueo isto, quem \textbf{abs}con\textbf{dé}runt,~* comprehénsus est \textit{pes} \textit{e}\textbf{ó}rum.
+\item Cognoscétur Dóminus ju\textbf{dí}cia \textbf{fá}ciens:~* in opéribus mánuum suárum comprehénsus \textit{est} \textit{pec}\textbf{cá}tor.
+\item Convertántur peccatóres \textbf{in} in\textbf{fér}num,~* omnes Gentes quæ oblivis\textit{cún}\textit{tur} \textbf{De}um.
+\item Quóniam non in finem oblívio \textbf{e}rit \textbf{páu}peris:~* patiéntia páuperum non perí\textit{bit} \textit{in} \textbf{fi}nem.
+\item Exsúrge, Dómine, non confor\textbf{té}tur \textbf{ho}mo:~* judicéntur Gentes in con\textit{spéc}\textit{tu} \textbf{tu}o.
+\item Constítue, Dómine, legislatórem \textbf{su}per \textbf{e}os:~* ut sciant Gentes quóniam \textit{hó}\textit{mi}\textbf{nes} sunt.
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item Attentif au sang versé, il se rappelle, il n'oublie pas le cri des malheureux.
+\item Pitié pour moi, Seigneur, vois le mal que m'ont fait mes adversaires, * toi qui m'arraches aux portes de la mort ;
+\item et je dirai tes innombrables louanges aux portes de Sion, * je danserai de joie pour ta victoire.
+\item Ils sont tombés, les païens, dans la fosse qu'ils creusaient ; aux filets qu'ils ont tendus, leurs pieds se sont pris.
+\item Le Seigneur s'est fait connaître : il a rendu le jugement, il prend les méchants à leur piège.
+\item Que les méchants retournent chez les morts, toutes les nations qui oublient le vrai Dieu !
+\item Mais le pauvre n'est pas oublié pour toujours : jamais ne périt l'espoir des malheureux.
+\item Lève-toi, Seigneur : qu'un mortel ne soit pas le plus fort, que les nations soient jugées devant ta face !
+\item Frappe-les d'épouvante, Seigneur : que les nations se reconnaissent mortelles !
+\end{enumerate}
+
+\end{paracol}
+
+\subsection{Versicule}
+\begin{paracol}{2}
+\vv Scápulis suis obumbrábit tibi. \\
+\rr Et sub pennis ejus sperábis. \\
+\vv Pater noster... \rubrique{(secrètement)} Et ne nos indúcas in tentatiónem. \\
+\rr Sed líbera nos a malo. \\
+\vv Ipsíus píetas et misericórdia nos ádjuvet, qui cum Patre et Spíritu Sancto vivit et regnat in sǽcula sæculórum. \\
+\rr Amen.
+\switchcolumn
+\vv Sous ses épaules, il t’abritera. \\
+\rr Et sous ses ailes, tu auras confiance. \\
+\vv Notre Père... Et ne nous laissez pas entrer en tentation. \\
+\rr Mais délivrez-nous du mal. \\
+\vv Qu'il nous secoure par sa bonté et sa miséricorde, celui qui, avec le Père et le Saint-Esprit, vit et règne dans les siècles des siècles. \rr Ainsi soit-il.
+\end{paracol}
+
+\subsection{Quatrième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Deus Pater omnípotens sit nobis propítius et clemens. \\
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que Dieu le Père tout-puissant soit pour nous propice et plein de clémence. \\
+\rr Ainsi soit-il.
+\end{paracol}
+
+\paragraph{Ex libro Enchirídii sancti Augustíni Epíscopi} \rubrique{Cap. 25, 26 et 27 tomi 3}
+
+Dieu avait menacé l’homme de le punir de mort s’il venait à pécher ; il lui avait fait don du libre arbitre, mais tout en le gouvernant par son commandement et en lui faisant craindre sa ruine. Il le plaça dans un jardin de délices, qui n’était que l’ombre de la vie et d’où il serait monté à un monde meilleur, s’il avait conservé la justice. Exilé de là, après sa faute, le premier homme entraîna dans la mort et la réprobation tous ses descendants, corrompus en sa personne comme dans leur source, de telle sorte que toute la race qui devait naître de lui et de son épouse, condamnée comme lui après l’avoir porté au péché, naissant par la concupiscence chamelle, désobéissante, à l’imitation et en punition de la première désobéissance, contracterait la faute originelle et serait par elle entraînée à travers diverses erreurs et douleurs, jusqu’au supplice sans fin, avec les anges infidèles, ses corrupteurs, ses maîtres et les compagnons de son malheureux sort.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\newpage
+
+\gregorioscore{partitions/r4.gabc}
+
+\emph{\rr Le Seigneur prit l’homme et le plaça dans un jardin de délices, pour y travailler et le garder.\\
+\vv Le Seigneur Dieu avait planté dès le commencement un jardin de délices, dans lequel il plaça l’homme qu’il avait formé.}
+
+\newpage
+\subsection{Cinquième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Christus perpétuæ det nobis gáudia vitæ.
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que le Christ nous donne les joies de l'éternelle vie.
+\rr Ainsi soit-il.
+\end{paracol}
+
+C’est ainsi que par un seul homme le péché est entré dans le monde, et, avec le péché, la mort, qui a passé à tous les hommes, de par celui en qui tous ont péché. Ce que l’Apôtre appelle ici le monde, c’est l’humanité entière. Tel était donc l’état des choses. Toute la masse du genre humain gisait condamnée dans le mal et même roulait et était précipitée de maux en maux. Associé aux Anges coupables, l’homme subissait les peines très méritées de son impie prévarication.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+~
+
+\gregorioscore{partitions/r5.gabc}
+
+~
+
+\emph{\rr Il dit, le Seigneur Dieu : Il n’est pas bon que l’homme soit seul ; faisons-lui une aide semblable à lui. \\
+\vv Adam ne se trouvait pas d’aide qui lui fût semblable ; alors Dieu dit.}
+
+\newpage
+\subsection{Sixième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Ignem sui amóris accéndat Deus in córdibus nostris. \\
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que Dieu daigne allumer dans nos cœurs le feu de son amour.\\
+\rr Ainsi soit-il.
+\end{paracol}
+
+Car il faut considérer comme une conséquence de la juste colère de Dieu, les désordres auxquels les méchants sont portés par une concupiscence aveugle et sans frein, ainsi que les maux visibles ou invisibles qu’ils souffrent malgré eux. Cependant la bonté du Créateur n’a pas cessé de se manifester envers les mauvais anges, en leur conservant la vie et la puissance toujours active sans laquelle ils cesseraient d’être ; comme envers les hommes, en en propageant la race, bien qu’issue d’une souche viciée et condamnée. Il forme leur corps qu’il anime du souffle de la vie ; il dispose leurs membres qu’il met en harmonie avec les différents âges ; il entretient la vicacité de leurs sens, suivant la disposition des organes ; il leur fournit des aliments. Dans sa sagesse, il a mieux aimé tirer le bien du mal, que de ne permettre aucun mal.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\gregorioscore{partitions/r6.gabc}
+
+\emph{\rr Le Seigneur envoya un profond sommeil à Adam et lui prit une côte : et le Seigneur bâtit en femme la côte qu’il avait prise à Adam, et il l’amena à Adam, pour voir quel nom celui-ci lui donnerait ; et il l’appela du nom de Moitié de l’homme, parce qu’elle avait été tirée de l’homme.\\
+\vv Et lorsqu’il se fut endormi, il lui prit une côte et la remplaça par de la chair.}
+
+\section{Troisième nocturne}
+
+\subsection{Psaume 9-3}
+
+\gregorioscore{partitions/a7_2d.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p7.gabc}
+\gresetinitiallines{1}
+\aa \emph{Pourquoi, Seigneur, vous tenir à l'écart ?}
+
+\un \emph{Pourquoi, Seigneur, es-tu si loin ? Pourquoi te cacher aux jours d'angoisse ?}
+\begin{paracol}{2}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Dum supérbit ímpius, incénditur \textbf{pau}per:~* comprehendúntur in consíliis qui\textit{bus} \textbf{có}gitant.
+\item Quóniam laudátur peccátor in desidériis ánimæ \textbf{su}æ:~* et iníquus be\textit{ne}\textbf{dí}citur.
+\item Exacerbávit Dóminum pec\textbf{cá}tor,~* secúndum multitúdinem iræ suæ \textit{non} \textbf{quæ}ret.
+\item Non est Deus in conspéctu \textbf{e}jus:~* inquinátæ sunt viæ illíus in om\textit{ni} \textbf{tém}pore.
+\item Auferúntur judícia tua a fácie \textbf{e}jus:~* ómnium inimicórum suórum do\textit{mi}\textbf{ná}bitur.
+\item Dixit enim in corde \textbf{su}o:~* Non movébor a generatióne in generatiónem si\textit{ne} \textbf{ma}lo.
+\item Cujus maledictióne os plenum est, et amaritúdine, et \textbf{do}lo:~* sub lingua ejus labor \textit{et} \textbf{do}lor.
+\item Sedet in insídiis cum divítibus in oc\textbf{cúl}tis:~* ut interfíciat in\textit{no}\textbf{cén}tem.
+\item Oculi ejus in páuperem re\textbf{spí}ciunt:~* insidiátur in abscóndito, quasi leo in spelún\textit{ca} \textbf{su}a.
+\item Insidiátur ut rápiat \textbf{páu}perem:~* rápere páuperem, dum áttra\textit{hit} \textbf{e}um.
+\item In láqueo suo humiliábit \textbf{e}um:~* inclinábit se, et cadet, cum dominátus fúe\textit{rit} \textbf{páu}perum.
+\item Dixit enim in corde suo: Oblítus est \textbf{De}us,~* avértit fáciem suam ne vídeat \textit{in} \textbf{fi}nem.
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirítu\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæculó\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item L'impie, dans son orgueil, poursuit les malheureux : ils se font prendre aux ruses qu'il invente.
+\item L'impie se glorifie du désir de son âme, l'arrogant blasphème, il brave le Seigneur ;
+\item plein de suffisance, l'impie ne cherche plus : « Dieu n'est rien », voilà toute sa ruse.
+\item A tout moment, ce qu'il fait réussit ; + tes sentences le dominent de très haut. * (Tous ses adversaires, il les méprise.)
+\item Il s'est dit : « Rien ne peut m'ébranler, je suis pour longtemps à l'abri du malheur. »
+\item Sa bouche qui maudit n'est que fraude et violence, sa langue, mensonge et blessure.
+\item Il se tient à l'affût près des villages, il se cache pour tuer l'innocent. Des yeux, il épie le faible,
+\item il se cache à l'affût, comme un lion dans son fourré ; il se tient à l'affût pour surprendre le pauvre, il attire le pauvre, il le prend dans son filet.
+\item Il se baisse, il se tapit ; de tout son poids, il tombe sur le faible.
+\item Il dit en lui-même : « Dieu oublie ! il couvre sa face, jamais il ne verra ! »
+\end{enumerate}
+
+\end{paracol}
+
+\newpage
+
+\subsection{Psaume 9-4}
+
+\gregorioscore{partitions/a8_5a.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p8.gabc}
+\gresetinitiallines{1}
+\aa \emph{Levez-vous, Seigneur Dieu, que soit exaltée votre main.}
+
+\un \emph{Lève-toi, Seigneur ! Dieu, étends la main ! N'oublie pas le pauvre !}
+\begin{paracol}{2}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Propter quid irritávit ímpius \textbf{De}um?~* dixit enim in corde suo: \textbf{Non} re\textbf{quí}ret.
+\item Vides quóniam tu labórem et dolórem con\textbf{sí}deras:~* ut tradas eos in \textbf{ma}nus \textbf{tu}as.
+\item Tibi derelíctus est \textbf{pau}per:~* órphano tu \textbf{e}ris ad\textbf{jú}tor.
+\item Cóntere bráchium peccatóris et ma\textbf{lí}gni:~* quærétur peccátum illíus, et non in\textbf{ve}ni\textbf{é}tur.
+\item Dóminus regnábit in ætérnum, et in sǽculum \textbf{sǽ}culi:~* períbitis, Gentes, de \textbf{ter}ra il\textbf{lí}us.
+\item Desidérium páuperum exaudívit \textbf{Dó}minus:~* præparatiónem cordis eórum audívit \textbf{au}ris \textbf{tu}a.
+\item Judicáre pupíllo et \textbf{hú}mili,~* ut non appónat ultra magnificáre se homo \textbf{su}per \textbf{ter}ram.
+\item Glória Patri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item Pourquoi l'impie brave-t-il le Seigneur en lui disant : « Viendras-tu me cher\-cher~?~»
+\item Mais tu as vu : tu regardes le mal et la souffrance, tu les prends dans ta main ; sur toi repose le faible, c'est toi qui viens en aide à l'orphelin.
+\item Brise le bras de l'impie, du méchant ; alors tu chercheras son impiété sans la trouver.
+\item A tout jamais, le Seigneur est roi : les païens ont péri sur sa terre.
+\item Tu entends, Seigneur, le désir des pauvres, tu rassures leur coeur, tu les écoutes.
+\item Que justice soit rendue à l'orphelin, qu'il n'y ait plus d'opprimé, * et que tremble le mortel, né de la terre !
+\end{enumerate}
+
+\end{paracol}
+
+\subsection{Psaume 10}
+
+\gregorioscore{partitions/a9_1g.gabc}
+\gresetinitiallines{0}
+\gregorioscore{partitions/p9.gabc}
+\gresetinitiallines{1}
+\aa \emph{Auprès du Seigneur j'ai mon refuge. + Comment pouvez-vous me dire : Oiseaux, fuyez à la montagne !}
+
+\un \emph{Le Seigneur est roi : les peuples s'agitent. Il trône au-dessus des Kéroubim : la terre tremble.}
+\begin{paracol}{2}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\selectlanguage{latin}
+\item Quóniam ecce peccatóres intendérunt arcum,~† paravérunt sagíttas \textbf{su}as in \textbf{phá}retra,~* ut sagíttent in obscúro \textit{rec}\textit{tos} \textbf{cor}de.
+\item Quóniam quæ perfecísti, \textbf{de}stru\textbf{xé}runt:~* justus au\textit{tem} \textit{quid} \textbf{fe}cit?
+\item Dóminus in templo \textbf{sanc}to \textbf{su}o,~* Dóminus in cælo \textit{se}\textit{des} \textbf{e}jus.
+\item Oculi ejus in páupe\textbf{rem} re\textbf{spí}ciunt:~* pálpebræ ejus intérrogant fí\textit{li}\textit{os} \textbf{hó}minum.
+\item Dóminus intérrogat \textbf{jus}tum et \textbf{ím}pium:~* qui autem díligit iniquitátem, odit á\textit{ni}\textit{mam} \textbf{su}am.
+\item Pluet super pecca\textbf{tó}res \textbf{lá}queos:~* ignis, et sulphur, et spíritus procellárum pars cáli\textit{cis} \textit{e}\textbf{ó}rum.
+\item Quóniam justus Dóminus, et justíti\textbf{as} di\textbf{lé}xit:~* æquitátem vidit \textit{vul}\textit{tus} \textbf{e}jus.
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\selectlanguage{french}
+\end{enumerate}
+
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item Voici que les méchants tendent l'arc : + ils ajustent leur flèche à la corde pour viser dans l'ombre l'homme au coeur droit.
+\item Quand sont ruinées les fondations, que peut faire le juste ?
+\item Mais le Seigneur, dans son temple saint, + le Seigneur, dans les cieux où il trône, garde les yeux ouverts sur le monde. Il voit, il scrute les hommes ; +
+\item le Seigneur a scruté le juste et le méchant : l'ami de la violence, il le hait.
+\item Il fera pleuvoir ses fléaux sur les méchants, + feu et soufre et vent de tempête ; c'est la coupe qu'ils auront en partage.
+\item Vraiment, le Seigneur est juste ; + il aime toute justice : les hommes droits le verront face à face.
+\end{enumerate}
+
+\end{paracol}
+
+\subsection{Versicule}
+\begin{paracol}{2}
+\vv Scuto circúmdabit te véritas ejus. \\
+\rr Non timébis a timóre noctúrno. \\
+\vv Pater noster... \rubrique{(secrètement)} Et ne nos indúcas in tentatiónem. \\
+\rr Sed líbera nos a malo. \\
+\vv A vínculis peccatórum nostrórum absólvat nos omnípotens et miséricors Dóminus. \rr Amen.
+\switchcolumn
+\vv D’un bouclier, elle te couvrira, sa vérité. \\
+\rr Et tu ne craindras pas la terreur de la nuit. \\
+\vv Notre Père... Et ne nous laissez pas entrer en tentation. \\
+\rr Mais délivrez-nous du mal. \\
+\vv Que le Dieu tout-puissant et miséricordieux daigne nous délivrer des liens de nos péchés. \rr Ainsi soit-il.
+\end{paracol}
+
+\subsection{Septième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Evangélica léctio sit nobis salus et protéctio.
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que la lecture du saint Evangile nous soit salut et protection. 
+\rr Ainsi soit-il.
+\end{paracol}
+
+\paragraph{Léctio sancti Evangélii secúndum Matthǽum} \rubrique{Matt. 20 : 1}
+
+En ce temps-là, Jésus dit à ses disciples : \og~Le royaume des Cieux est comparable au maître d’un domaine qui sortit dès le matin afin d’embaucher des ouvriers pour sa vigne.~\fg
+
+Et réliqua.
+
+\paragraph{Homilía sancti Gregórii Papæ} \rubrique{Homil. 19 in Evangelium post princ.}
+
+Il est dit que le royaume des cieux est semblable à un père de famille qui loue des ouvriers pour cultiver sa vigne. Or, qui peut être plus justement représenté par le père de famille que notre Créateur, qui gouverne ceux qu’il a créés, et qui possède ses élus dans ce monde, comme un maître a ses serviteurs dans sa maison ? Il possède une vigne, à savoir l’Église universelle qui a poussé autant de sarments qu’elle a produit de saints, depuis le juste Abel jusqu’au dernier élu qui doit naître à la fin du monde.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\gregorioscore{partitions/r7.gabc}
+
+\emph{\rr Le Seigneur Dieu avait planté, dès le commencement, un jardin de délices, dans lequel il plaça l’homme qu’il avait formé.\\
+\vv Et le Seigneur Dieu lit pousser du sol toute sorte d’arbres beaux à voir, avec des fruits doux à manger ; et il y avait encore l’arbre de vie au milieu du jardin.}
+
+\subsection{Huitième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Divínum auxílium máneat semper nobíscum.
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que l'assistance divine soit toujours avec nous.
+\rr Ainsi soit-il.
+\end{paracol}
+
+Ce divin père de famille loue donc des ouvriers pour cultiver sa vigne, dès la pointe du jour, à la troisième heure, à la sixième, à la neuvième et à la onzième, parce qu’il ne cesse point, depuis le commencement de ce monde jusqu’à la fin, de réunir des prédicateurs pour enseigner les fidèles. Le matin du monde peut s’entendre du temps qui s’est écoulé depuis Adam jusqu’à Noé ; la troisième heure, de Noé à Abraham ; la sixième d’Abraham à Moïse ; la neuvième de Moïse à la venue du Sauveur, et la onzième, depuis la venue du Sauveur jusqu’à la fin du monde. Les Apôtres ont été envoyés pour prêcher en cette dernière heure, et quoique venant si tard ils ont reçu pleine récompense.
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\gregorioscore{partitions/r8.gabc}
+
+\emph{\rr Voici qu’Adam est devenu comme l’un de nous, sachant le bien et le mal ; veillez à ce qu’il ne cueille rien à l’arbre de vie, pour vivre éternellement.\\
+\vv Le Seigneur Dieu fit aussi pour Adam une tunique de peau et l’en revêtit et dit : Veillez...}
+
+\subsection{Neuvième leçon}
+
+\begin{paracol}{2}
+\vv Jube, domne, benedícere. \\
+\vv Ad societátem cívium supernórum perdúcat nos Rex Angelórum.
+\rr Amen.
+\switchcolumn
+\vv Veuillez, Seigneur, bénir. \\
+\vv Que le Roi des Anges nous fasse parvenir à la société des citoyens célestes.
+\rr Ainsi soit-il.
+\end{paracol}
+
+Le Seigneur ne cesse donc en aucun temps temps d’envoyer des ouvriers pour cultiver sa vigne, c’est-à-dire pour instruire son peuple. Par les Patriarches d’abord, ensuite par les Docteurs de la Loi et les Prophètes et enfin par les Apôtres, cultivant les mœurs de son peuple, il a travaillé, comme par le moyen d’ouvriers, à la culture de sa vigne ; mais cela n’empêche pas que tous ceux qui, avec une foi droite, se sont appliqués et ont exhorté à faire le bien, ne puissent être considérés aussi, chacun dans sa mesure et à un certain degré, comme les ouvriers de cette vigne. Ceux de la première heure ainsi que ceux de la troisième, de la sixième et de la neuvième, désignent l’ancien peuple hébreu qui, depuis le commencement du monde, s’efforçant, en la personne de ses saints, de servir Dieu avec une foi droite, n’a pour ainsi dire pas cessé de travailler à la culture de la vigne. Mais à la onzième heure, les Gentils sont appelés, c’est à eux que s’adressent ces paroles : Pourquoi êtes-vous ici tout le jour sans rien faire ?
+
+\begin{paracol}{2}
+\vv Tu autem, Dómine, miserére nobis. \\
+\rr Deo grátias.
+\switchcolumn
+\vv Et vous Seigneur, ayez pitié de nous. \\
+\rr Nous rendons grâces à Dieu.
+\end{paracol}
+
+\newpage
+\gregorioscore{partitions/r9.gabc}
+
+\newpage
+
+\emph{\rr Où est Abel, ton frère ? dit le Seigneur à Caïn. Je ne sais, Seigneur ; suis-je le gardien de mon frère ? Et le Seigneur lui dit : Qu’as-tu fait ? Voici que la voix du sang de ton frère Abel crie vers moi, de la terre.\\
+\vv Maudit seras-tu sur la terre qui a ouvert sa bouche et reçu de ta main le sang de ton frère.}
+
+~
+
+\begin{paracol}{2}
+\vv Dómine, exáudi oratiónem meam. \\
+\rr Et clamor meus ad te véniat.\\
+\rubrique{(ou, si le célébrant est au moins diacre :)}\\
+\vv Dóminus vobíscum.\\
+\rr Et cum spíritu tuo.
+\switchcolumn
+\vv Seigneur, exaucez ma prière. \\
+\vv Et que ma voix aille jusqu'à vous !\\
+ \\
+\vv Le Seigneur soit avec vous.\\
+\rr Et avec votre esprit.
+\switchcolumn*
+\vv Orémus. Preces pópuli tui, quǽsumus, Dómine, cleménter exáudi: ut, qui juste pro peccátis nostris afflígimur, pro tui nóminis glória misericórditer liberémur. Per Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.
+\rr Amen.
+\switchcolumn
+\vv Prions. Les prières de Votre peuple, nous Vous demandons, Seigneur, de les exaucer avec clémence, afin que, justement affligés à cause de nos péchés, nous soyons miséricordieusement libérés pour la gloire de Votre nom. Par Jésus-Christ, votre Fils, notre Seigneur, qui vit et règne avec vous et l'Esprit Saint, un seul Dieu, pour les siècles des siècles.
+\rr Amen.
+\switchcolumn*
+\vv Dómine, exáudi oratiónem meam. \\
+\rr Et clamor meus ad te véniat.\\
+\rubrique{(ou, si le célébrant est au moins diacre :)}\\
+\vv Dóminus vobíscum.\\
+\rr Et cum spíritu tuo.
+\switchcolumn
+\vv Seigneur, exaucez ma prière. \\
+\vv Et que ma voix aille jusqu'à vous !\\
+ \\
+\vv Le Seigneur soit avec vous.\\
+\rr Et avec votre esprit.
+\end{paracol}
+
+\gregorioscore{partitions/OZ.gabc}
+\emph{\vv Bénissons le Seigneur. ~~~~ \rr Nous rendons grâces à Dieu.}
+
+\begin{paracol}{2}
+\vv Fidélium ánimæ \cc per misericórdiam Dei requiéscant in pace.\\
+\rr Amen.
+\switchcolumn
+\vv Que par la miséricorde de Dieu, les âmes des fidèles trépassés reposent en paix.\\
+\rr Ainsi soit-il.
+\end{paracol}
+
+\end{document} 
