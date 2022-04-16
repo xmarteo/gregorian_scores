@@ -1,0 +1,33 @@
+\documentclass[twoside]{book}
+% This is the format of the recent Solesmes books.
+\usepackage[paperwidth=135mm, paperheight=1000mm]{geometry}
+\usepackage[latin.medieval]{babel}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[forcecompile]{gregoriotex}
+
+% header and footer definitions
+\pagestyle{empty}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+
+% Geometry
+\geometry{
+inner=15mm,
+outer=10mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+% Gregorio style
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+\newcommand{\altraise}{-2.4mm}
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+\begin{document}
+
+\gregorioscore{exsultet_fr}
+
+\end{document}
