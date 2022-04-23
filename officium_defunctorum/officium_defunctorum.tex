@@ -119,7 +119,7 @@ headsep=3mm,
   %% this prevents orphans
   \needspace{4\baselineskip} 
   \greannotation{\officepartannotation{#3}#4}
-  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\vspace{\neumespace}\fi
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace{0.6\neumespace}\fi
   \gregorioscore{partitions/#2}
   \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
 }
@@ -165,6 +165,7 @@ headsep=3mm,
 \gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
 \gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
 \gresetspecial{+}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}†~}}
+\gresetspecial{‡}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}‡~}}
 
 %% Roman Numerals
 \usepackage{modroman}
@@ -179,6 +180,9 @@ headsep=3mm,
 
 %% Macro to print rubrics
 \newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macro to print alternative text (feminine) between red parentheses
+\newcommand{\bracketed}[1]{{\textcolor{gregoriocolor}(}#1{\textcolor{gregoriocolor})}}
 
 %% Macro to print the name of a score in normal characters inside a \rubric
 \newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
@@ -200,6 +204,8 @@ headsep=3mm,
 %% First, without title and incipitur
 
 \newcommand{\psalmtext}[1]{
+	\needspace{2\baselineskip}
+	\vspace{\baselineskip}
 	\begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
 		\vspace{-\baselineskip}
@@ -239,13 +245,15 @@ headsep=3mm,
 	\needspace{4\baselineskip}
 	\smalltitle{Psaume #1}
 	\smallscore[n]{#2}
-	~\\
 	\psalmtext{#1}
 }
 
 %% Macro to print lessons on two columns.
 
 \newcommand{\lesson}[1]{
+	
+	~
+	
 	\begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
 		\input{lecons/#1_la.tex}%
@@ -302,6 +310,7 @@ headsep=3mm,
   %% needspace: should be barely more than the vertical space for the titles, rubrics excluded.
   %% this is to ensure that the page does not get cut after the title
   \needspace{10\baselineskip}
+  \vspace{1cm}
   \begin{center}
   {\scshape\Large #1}\par
   \end{center}
@@ -330,10 +339,23 @@ headsep=3mm,
 {\scshape\Large selon l'usage ancien du rite romain}
 
 
+
+
 \end{titlepage}
 
-\thispagestyle{empty}\null\newpage
+\thispagestyle{empty}
 
+~
+
+\vfill
+
+\begin{center}
+Nouvelles restitutions des antiennes et répons\\
+Édition préparée par Matthias Bry, Dominique Crochu et Anne Guyard\\
+Traduction des textes bibliques © AELF
+\end{center}
+
+\newpage
 % tolérance infinie sur les sauts de lignes pour les colonnes étroites
 \sloppy
 
@@ -383,7 +405,9 @@ headsep=3mm,
 \smalltitle{Conclusion}
 \label{conclusion}
 
-\rubric{Sauf mention contraire, toutes les réponses se disent sur ce ton :}
+~
+
+\rubric{Toute la conclusion de l'office se chante à genoux.\\Sauf la dernière, toutes les réponses se disent sur ce ton :}
 
 \smallscore[n]{OR_tonusversus}
 ~\\
@@ -392,22 +416,31 @@ headsep=3mm,
 		\vv Pater noster...\\
 		\rubric{(en silence jusqu'à :)}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
-		\rr Sed líbera nos a malo.\\
+		\rr Sed líbera nos a malo.
+	}
+	\colchunk{%
+		\vv Notre Père...\\
+		\vv Et ne nous laisse pas entrer en tentation.\\
+		\rr Mais délivre-nous du mal.
+	}
+\end{parcolumns}
+
+\rubric{Selon une ancienne coutume, on chantait ici le psaume 145 comme indiqué page~\pageref{ps145}. Aujourd'hui ce psaume est omis.}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
 		\vv A porta ínferi.\\
-		\rr Erue, Dómine, ánimam ejus [ánimas eórum].\\
-		\vv Requiéscat in pace. [Requiéscant in pace.]\\
+		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
+		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
 		\vv Orémus.
 	}
 	\colchunk{%
-		\vv Notre Père...\\
-		\vv Et ne nous laisse pas entrer en tentation.\\
-		\rr Mais délivre-nous du mal.\\
 		\vv De la puissance de l'enfer.\\
-		\rr Délivre, Seigneur, son âme [leurs âmes].\\
-		\vv Qu'il repose en paix. [Qu'ils reposent en paix.]\\
+		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
+		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
@@ -438,49 +471,60 @@ headsep=3mm,
 
 \smalltitle{devant le corps du défunt}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus, cui próprium est miseréri et párcere, te súpplices exorámus pro ánima fámuli[æ] tui[æ] N., quam hódie de hoc sǽculo migráre jussísti : † ut non tradas eam in manus inimíci, neque obliviscáris in finem, sed júbeas eam a sanctis Angelis súscipi, et ad pátriam paradísi perdúci ; * ut quia in te sperávit et credidit, non pœnas inférni sustíneat, sed gaúdia ætérna possidéat. Per Dóminum.
+Deus, cui próprium est miseréri et párcere, te súpplices exorámus pro ánima fámuli tui \bracketed{fámulæ tuæ} N., quam hódie de hoc sǽculo migráre jussísti : † ut non tradas eam in manus inimíci, neque obliviscáris in finem, sed júbeas eam a sanctis angelis súscipi, et ad pátriam paradísi perdúci ; * ut quia in te sperávit et credidit, non pœnas inférni sustíneat, sed gaúdia ætérna possidéat. Per Dóminum nostrum Jesum Christum, Fílium tuum : qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.\\
+\rr Amen.
 	}
 	\colchunk{%
-
+Dieu, à qui appartiennent la miséricorde et le pardon, nous T'adressons nos supplications en faveur de l'âme de Ton serviteur \bracketed{Ta servante} N., que Tu as aujourd'hui retirée de ce monde. Ne la livre pas au mains de l'ennemi, et ne l'ouble pas pour toujours ; mais ordonne à Tes anges de la recevoir et de la conduire au ciel, sa patrie. Fais que, après avoir cru et espéré en Toi, elle n'ait pas à souffrir les peines de l'enfer, mais qu'elle entre en possession des joies éternelles.
 	}
 \end{parcolumns}
 
 \smalltitle{le jour des funérailles}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Absólve, quǽsumus Dómine, ánimam fámuli[æ] tui[æ] N., ut defúnctus sǽculo tibi vívat : + et quæ per fragilitátem carnis humána conversatióne commísit,* tu vénia misericordíssimæ pietátis abstérge. Per Dominum.
+Absólve, quǽsumus Dómine, ánimam fámuli tui \bracketed{fámulæ tuæ} N., ut defúnctus \bracketed{defúncta} sǽculo tibi vívat : † et quæ per fragilitátem carnis humána conversatióne commísit,* tu vénia misericordíssimæ pietátis abstérge. Per Dominum.
 	}
 	\colchunk{%
-ici francais
+Délivre, Seigneur, nous T'en supplions, l'âme de Ton serviteur \bracketed{Ta servante}, afin que, ayant quitté ce monde, elle vive en vous ; et les fautes que la fragilité de la chair lui a fait commettre durant cette vie, efface-les, par un effet de Ta miséricordieuse bonté.
 	}
 \end{parcolumns}
 
 \smalltitle{le troisième, septième, trentième jour après la mort}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Quǽsumus Dómine, ut ánimæ fámuli tui N., (fámulæ tuæ N.) cujus depositiónis diem tértium (vel séptimum, vel trigésimum) commemorámus,~† Sanctórum atque electórum tuórum largíri dignéris consórtium ;~* et rorem misericórdiæ tuæ perénnem infúndas. Per Dóminum.
+Quǽsumus Dómine, ut ánimæ fámuli tui \bracketed{fámulæ tuæ} N., cujus depositiónis diem tértium \rubric{\emph{(}vel} séptimum\rubric{, vel} trigésimum\rubric{\emph{)}} commemorámus,~† sanctórum atque electórum tuórum largíri dignéris consórtium ;~* et rorem misericórdiæ tuæ perénnem infúndas. Per Dóminum.
 	}
 	\colchunk{%
-Seigneur, daigne accorder à l'âme de Ton serviteur \rubric{(ou} Ta servante\rubric{)} N., dont nous faisons mémoire en ce troisième \rubric{(ou} septième \rubric{ou} trentième\rubric{)} jour depuis sa mort, la société de Tes saints et de Tes élus ; répands aussi sur elle la rosée éternelle de Ta miséricorde.
+Seigneur, daigne accorder à l'âme de Ton serviteur \bracketed{Ta servante} N., dont nous faisons mémoire en ce troisième \rubric{\emph{(}ou} septième \rubric{ou} trentième\rubric{\emph{)}} jour depuis sa mort, la société de Tes saints et de Tes élus ; répands aussi sur elle la rosée éternelle de Ta miséricorde.
 	}
 \end{parcolumns}
 
 \smalltitle{le jour anniversaire de la mort}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus indulgentiárum Dómine :~† da ánimæ fámuli tui N. \rubric{(}fámulæ tuæ N.\rubric{, vel} animábus famulórumque tuárum\rubric{)}, cujus \rubric{(}quorum\rubric{)} anniversárium depositiónis diem commemorámus,~* refrigérii sedem, quiétis beatitúdinem, et lúminis claritátem. Per Dóminum.
+Deus indulgentiárum Dómine :~† da ánimæ fámuli tui N. \rubric{\emph{(}}fámulæ tuæ N.\rubric{, vel} animábus famulórumque tuárum\rubric{\emph{)}}, cujus \bracketed{quorum} anniversárium depositiónis diem commemorámus,~* refrigérii sedem, quiétis beatitúdinem, et lúminis claritátem. Per Dóminum.
 	}
 	\colchunk{%
-Seigneur, Dieu des miséricordes, accorde à l'âme de Ton serviteur \rubric{(ou} de Ta servante\rubric{, ou} aux âmes de Tes serviteurs\rubric{)}, dont nous célébrons aujourd'hui l'anniversaire, le lieu de rafraîchissement, le bonheur du repos et l'éclat de la lumière.
+Seigneur, Dieu des miséricordes, accorde à l'âme de Ton serviteur \rubric{\emph{(}ou} de Ta servante\rubric{, ou} aux âmes de Tes serviteurs\rubric{\emph{)}}, dont nous célébrons aujourd'hui l'anniversaire, le lieu de rafraîchissement, le bonheur du repos et l'éclat de la lumière.
 	}
 \end{parcolumns}
 
 \smalltitle{pour le Pape}
+
+~
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
@@ -493,6 +537,8 @@ Dieu, qui as voulu, par une providence ineffable, que Ton serviteur N. fût au n
 
 \smalltitle{pour un évêque}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
 Deus, qui inter apostólicos sacerdótes fámulum tuum N. pontificáli fecísti dignitáte vigére :~† præsta, quǽsumus ;~* ut eórum quoque perpétuo aggregétur consórtio. Per Dóminum.
@@ -504,22 +550,32 @@ Dieu, qui as élevé Ton serviteur N. à la dignité pontificale, en lui donnant
 
 \smalltitle{pour un prêtre}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus, qui inter apsotolícos sacerdótes fámulum tuum N. (fámulos tuos N. et N.) sacerdotáli fecísti dignitáte vigére : † præsta, quǽsumus ; * ut eórum quoque perpétuo aggregétur (aggregéntur) consórtio. Per Dóminum.
-Vel alia Oratio.
-Præsta, quǽsumus Dómine : † ut ánima fámuli tui N. Sacredótis, quem in hoc sǽcculo commorántem, sacris munéribus decorásti, * in celésti sede gloriósa semper exsúltet. Per Dóminum.
+Deus, qui inter apsotolícos sacerdótes fámulum tuum N. \bracketed{fámulos tuos N. et N.} sacerdotáli fecísti dignitáte vigére : † præsta, quǽsumus ; * ut eórum quoque perpétuo aggregétur \bracketed{aggregéntur} consórtio. Per Dóminum.
+
+\rubric{Autre oraison pour un prêtre}
+
+Præsta, quǽsumus Dómine : † ut ánima fámuli tui N. sacredótis, quem in hoc sǽculo commorántem, sacris munéribus decorásti, * in celésti sede gloriósa semper exsúltet. Per Dóminum.
 	}
 	\colchunk{%
-Dieu, qui as élevé Ton serviteur N. \rubric{(}Tes serviteurs N. et N.\rubric{)} à la dignité sacerdotale, en lui \rubric{(}leur\rubric{)} donnant part au sacerdoce des Apôtres, fais qu'il\rubric{(}s\rubric{)} jouisse\rubric{(}nt\rubric{)} avec eux de la gloire éternelle.
+Dieu, qui as élevé Ton serviteur N. \bracketed{Tes serviteurs N. et N.} à la dignité sacerdotale, en lui \bracketed{leur} donnant part au sacerdoce des Apôtres, fais qu'il\bracketed{s} jouisse\bracketed{nt} avec eux de la gloire éternelle.
+
+~
+
+Accorde, nous t'en prions, Seigneur, que l'âme de Ton serviteur N., prêtre, qu'en ce monde Tu as honoré de la charge sacerdotale, se réjouisse éternellement dans le glorieux séjour céleste.
 	}
 \end{parcolumns}
 
 \smalltitle{pour un homme}
 
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Inclína Dómine aurem tuam ad preces nostras, quibus misericórdiam tuam súpplices deprecámur :~† ut ánimam fámuli tui N., quam de hoc sǽculo migráre jussísti, in pacis ac lucis regióne constítuas,~* et Sanctórum tuórum júbeas esse consórtem. Per Dóminum.
+Inclína Dómine aurem tuam ad preces nostras, quibus misericórdiam tuam súpplices deprecámur :~† ut ánimam fámuli tui N., quam de hoc sǽculo migráre jussísti, in pacis ac lucis regióne constítuas,~* et sanctórum tuórum júbeas esse consórtem. Per Dóminum.
 	}
 	\colchunk{%
 Seigneur, prête l'oreille à nos prières, par lesquelles nous implorons humblement Ta miséricorde, afin que Tu introduises dans le séjour de la paix et de la lumière l'âme de Ton serviteur, que tu as retirée de cette terre, et que Tu l'admettes dans la société de Tes saints.
@@ -527,6 +583,8 @@ Seigneur, prête l'oreille à nos prières, par lesquelles nous implorons humble
 \end{parcolumns}
 
 \smalltitle{pour une femme}
+
+~
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
@@ -537,18 +595,22 @@ Seigneur, dans Ta bonté, aie pitié de l'âme de Ta servante N. : maintenant qu
 	}
 \end{parcolumns}
 
-\smalltitle{pour un ami ou un bienfaiteur}
+\smalltitle{pour un ou des frères, amis et bienfaiteurs}
+
+~
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus, véniæ largítor et humánæ salútis amátor :~† quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt,~* beáta María semper Vírgine intercedénte cum ómnibus Sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas. Per Dóminum.
+Deus, véniæ largítor et humánæ salútis amátor :~† quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt,~* beáta María semper Vírgine intercedénte cum ómnibus sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas. Per Dóminum.
 	}
 	\colchunk{%
-Dieu, qui accordes le pardon et qui veut le salut de l'homme, nous implorons votre clémence : grâce à l'intercession de la bienheureuse Marie toujours Vierge,
+Dieu, qui accordes le pardon et qui veux le salut de l'homme, nous implorons Ta clémence : grâce à l'intercession de la bienheureuse Marie toujours Vierge, et de tous Tes saints, fais parvenir les âmes de nos frères, amis et bienfaiteurs qui ont quitté ce monde, à la participation de la béatitude éternelle.
 	}
 \end{parcolumns}
 	
 \smalltitle{pour un père et une mère}
+
+~
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
@@ -561,41 +623,61 @@ Dieu, qui nous as commandé d'honorer notre père et notre mère, aie pitié, da
 	
 \smalltitle{pour plusieurs défunts}
 
-\begin{parcolumns}[rulebetween]{2}%
-	\colchunk{%
-Deus, cui próprium est miseréri semper et párcere : † propitiáre animábus famulórum famularúmque tuárum, et ómnia eórum peccáta dimítte ; * ut mortalitátis vínculis absolútæ, transíre mereántur ad vitam. Per Dóminum. 
-
-Vel alia Oratio. 
-
-Animábus, quǽsumus Dómine, famulórum famularúmque tuárum misericórdiam concéde perpétuam : † ut eis profíciat in ætérnum, * quod in te speravérunt et credidérunt. Per Dóminum.
-	}
-	\colchunk{%
-
-	}
-\end{parcolumns}
-
-\smalltitle{à la commémoraison de tous les fidèles défunts}
+~
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
+Deus, cui próprium est miseréri semper et párcere :~† propitiáre animábus famulórum famularúmque tuárum, et ómnia eórum peccáta dimítte ;~* ut mortalitátis vínculis absolútæ, transíre mereántur ad vitam. Per Dóminum. 
 
+~
+
+\rubric{Autre oraison pour plusieurs défunts}
+
+Animábus, quǽsumus Dómine, famulórum famularúmque tuárum misericórdiam concéde perpétuam :~† ut eis profíciat in ætérnum,~* quod in te speravérunt et credidérunt. Per Dóminum.
 	}
 	\colchunk{%
+Dieu, qui Te distingues surtout par la miséricorde et la clémence, jette un regard de bienveillance sur les âmes de Tes serviteurs et de Tes servantes, et pardonne tous leurs péchés : avin que, dégagées des liens de leurs péchés, elles puissent entrer dans la vie éternelle.
 
+~
+
+Accorde, nous T'en prions, Seigneur, la miséricorde éternelle aux âmes de Tes serviteurs et de Tes servantes, afin que leur espérance et leur foi en Toi leur soient profitables pour l'éternité.
 	}
 \end{parcolumns}
+
+\vfill
+
+\pagebreak
 
 \smalltitle{à l'office des défunts pendant l'année}
 
+~
+
+\rubric{On peut dire seulement la troisième oraison \normaltext{Fidélium Deus ómnium}, ou la faire précéder des deux autres, selon une coutume ancienne, ces trois oraisons étant groupées sous la même conclusion.}
+
+~
+
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus, qui inter apostólicos sacerdótes fámulos tuos pontificáli seu sacerdotáli fecísti dignitáte vigére : + præsta, quǽsumus ; * ut eórum quoque perpétuo aggregéntur consórtio.
+Deus, qui inter apostólicos sacerdótes fámulos tuos pontificáli seu sacerdotáli fecísti dignitáte vigére :~† præsta, quǽsumus ;~* ut eórum quoque perpétuo aggregétur consórtio.
 
-Deus, véniæ largítor et humánæ salútis amátor : † quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt, * beáta María semper Vírgine intercedénte cum ómnibus Sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas. 
+~
 
-Fidélium Deus ómnium cónditor et redémptor, animábus famulórum famularúmque tuárum remissiónem cunctórum tríbue peccatórum : † ut indulgéntiam, quam semper optavérunt, * piis supplicatiónibus consequántur. Qui vivis et regnas cum Deo.
+Deus, véniæ largítor et humánæ salútis amátor :~† quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt,~* beáta María semper Vírgine intercedénte cum ómnibus sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas.
+
+~
+
+Fidélium Deus ómnium cónditor et redémptor, animábus famulórum famularúmque tuárum remissiónem cunctórum tríbue peccatórum :~† ut indulgéntiam, quam semper optavérunt,~* piis supplicatiónibus consequántur. Qui vivis et regnas cum Deo Patre, in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.
 	}
 	\colchunk{%
+Dieu, qui as élevé Tes serviteurs aux dignités pontificale et sacerdotale, en leur donnant part au sacerdoce des Apôtres, fais qu'ils jouisse avec eux de la gloire éternelle.
+	
+~\\~
+
+Dieu, qui accordes le pardon et qui veux le salut de l'homme, nous implorons Ta clémence : grâce à l'intercession de la bienheureuse Marie toujours Vierge, et de tous Tes saints, fais parvenir les âmes de nos frères, amis et bienfaiteurs qui ont quitté ce monde, à la participation de la béatitude éternelle.
+
+~
+
+Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes serviteurs et de Tes servantes, la rémission de tous leurs péchés afin que le pardon qu'ils ont toujours désiré leur soit obtenu par ces pieuses supplications. Toi qui vis et règne avec le Père dans l'unité du Saint Esprit, Dieu, pour les siècles des siècles.
 
 	}
 \end{parcolumns}
@@ -775,7 +857,69 @@ de calamité et de misère,
 jour terriblement grand et amer,
 ‡ lorsque Tu viendras juger le monde par le feu.}
 
-\rubric{Si on ne joint pas Matines et Laudes, on conclut par un \normaltext{Pater noster}, et le reste, comme à Vêpres, page~\pageref{conclusion}.}
+\newpage
+
+\smalltitle{Conclusion}
+\label{conclusion}
+
+~
+
+\rubric{Si on joint Laudes à Matines, la conclusion est intégralement omise.\\
+Toute la conclusion de l'office se chante à genoux.\\
+Sauf la dernière, toutes les réponses se disent sur ce ton :}
+
+\smallscore[n]{OR_tonusversus}
+~\\
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Pater noster...\\
+		\rubric{(en silence jusqu'à :)}\\
+		\vv Et ne nos indúcas in tentatiónem: \\
+		\rr Sed líbera nos a malo.
+	}
+	\colchunk{%
+		\vv Notre Père...\\
+		\vv Et ne nous laisse pas entrer en tentation.\\
+		\rr Mais délivre-nous du mal.
+	}
+\end{parcolumns}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv A porta ínferi.\\
+		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
+		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
+		\rr Amen.\\
+		\vv Dómine, exáudi oratiónem meam.\\
+		\rr Et clamor meus ad te véniat.\\
+		\vv Orémus.
+	}
+	\colchunk{%
+		\vv De la puissance de l'enfer.\\
+		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
+		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
+		\rr Amen.\\
+		\vv Seigneur, entends ma prière.\\
+		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\vv Prions.
+	}
+\end{parcolumns}
+
+\rubric{On dit l'oraison qui correspond à l'occasion, pages suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Réquiem ætérnam dona eis, Dómine.\\
+		\rr Et lux perpétua lúceat eis.
+	}
+	\colchunk{%
+		\vv Seigneur, donne-leur le repos éternel.\\
+		\rr Et fais luire pour eux la lumière sans déclin.
+	}
+\end{parcolumns}
+
+\smallscore[n]{OR_requiescant}
+\trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \officiumtitulum{à Laudes}
 
@@ -798,8 +942,9 @@ jour terriblement grand et amer,
 
 \gscore{LA4}{A}{4}
 \trans{\aa De la puissance de l'enfer délivre mon âme, Seigneur.}
-{\centering\scshape Cantique d'Ézéchias\par}
-\smallscore{LP4}
+
+\smalltitle{Cantique d'Ézéchias}
+\smallscore[n]{LP4}
 \psalmtext{ez}
 \smallscore{LA4}
 
@@ -820,11 +965,76 @@ jour terriblement grand et amer,
 \psalmtext{b}
 \smallscore{LAB}
 
-\rubric{On conclut par un \normaltext{Pater noster}, et le reste, comme à Vêpres, page~\pageref{conclusion}.}
+\newpage
+
+\smalltitle{Conclusion}
+\label{conclusion}
+
+~
+
+\rubric{Toute la conclusion de l'office se chante à genoux.\\Sauf la dernière, toutes les réponses se disent sur ce ton :}
+
+\smallscore[n]{OR_tonusversus}
+~\\
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Pater noster...\\
+		\rubric{(en silence jusqu'à :)}\\
+		\vv Et ne nos indúcas in tentatiónem: \\
+		\rr Sed líbera nos a malo.
+	}
+	\colchunk{%
+		\vv Notre Père...\\
+		\vv Et ne nous laisse pas entrer en tentation.\\
+		\rr Mais délivre-nous du mal.
+	}
+\end{parcolumns}
+
+\rubric{Selon une ancienne coutume, on chantait ici le psaume 129 comme indiqué page~\pageref{ps129}. Aujourd'hui ce psaume est omis.}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv A porta ínferi.\\
+		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
+		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
+		\rr Amen.\\
+		\vv Dómine, exáudi oratiónem meam.\\
+		\rr Et clamor meus ad te véniat.\\
+		\vv Orémus.
+	}
+	\colchunk{%
+		\vv De la puissance de l'enfer.\\
+		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
+		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
+		\rr Amen.\\
+		\vv Seigneur, entends ma prière.\\
+		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\vv Prions.
+	}
+\end{parcolumns}
+
+\rubric{On dit l'oraison qui correspond à l'occasion, pages suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
+
+\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vv Réquiem ætérnam dona eis, Dómine.\\
+		\rr Et lux perpétua lúceat eis.
+	}
+	\colchunk{%
+		\vv Seigneur, donne-leur le repos éternel.\\
+		\rr Et fais luire pour eux la lumière sans déclin.
+	}
+\end{parcolumns}
+
+\smallscore[n]{OR_requiescant}
+\trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \officiumtitulum{Sépulture des défunts}
 
 \smalltitle{Levée du corps}
+
+~
+
 \rubric{Avant la fermeture du cercueil, le prêtre asperge le corps d'eau bénite. Pendant la procession vers l'église, on sonne le glas. La procession est ordonnée de la manière habituelle, avec croix et cierges en tête, et sans encens. Pendant la procession, on chante les psaumes 129 et 50, avec leurs antiennes.}
 
 \gscore{LA1}{A}{}
@@ -862,7 +1072,7 @@ jour terriblement grand et amer,
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
-		\vv Orémus. Tibi, Dómine, commendámus ánimam famuli tui N. \rubric{(}famulæ tuæ N.\rubric{)} ut defúnctus \rubric{(}defúncta\rubric{)} sǽculo, tibi vivat, et, quæ per fragilitátem humánæ conversatiónis peccáta commísit, tu vénia misericordíssimæ pietátis abstérge. Per Christum Dóminum nostrum.\\
+		\vv Orémus. Tibi, Dómine, commendámus ánimam famuli tui N. \bracketed{famulæ tuæ} N. ut defúnctus \bracketed{defúncta} sǽculo, tibi vivat, et, quæ per fragilitátem humánæ conversatiónis peccáta commísit, tu vénia misericordíssimæ pietátis abstérge. Per Christum Dóminum nostrum.\\
 		\rr Amen.\\
 	}
 	\colchunk{%
@@ -871,11 +1081,11 @@ jour terriblement grand et amer,
 		\rr Mais délivre-nous du mal.\\
 		\vv De la puissance de l'enfer.\\
 		\rr Délivre, Seigneur, son âme.\\
-		\vv Qu'il \rubric{(}elle\rubric{)} repose en paix.\\
+		\vv Qu'il \bracketed{elle} repose en paix.\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
-		\vv Prions. Nous Te recommandons, Seigneur, l'âme de Ton serviteur \rubric{(}Ta servante\rubric{)} N., afin que, sorti\rubric{(}e\rubric{)} de ce monde, il \rubric{(}elle\rubric{)} vive unie à Toi ; daigne effacer ce qu'il \rubric{(}elle\rubric{)} a fait de mal, à cause de l'humaine fragilité, par l'effet de votre miséricordieuse bonté. Par le Christ, notre Seigneur.\\
+		\vv Prions. Nous Te recommandons, Seigneur, l'âme de Ton serviteur \bracketed{Ta servante} N., afin que, sorti\bracketed{e} de ce monde, il \bracketed{elle} vive unie à Toi ; daigne effacer ce qu'il \bracketed{elle} a fait de mal, à cause de l'humaine fragilité, par l'effet de votre miséricordieuse bonté. Par le Christ, notre Seigneur.\\
 		\rr Amen.\\
 	}
 \end{parcolumns}
@@ -883,6 +1093,8 @@ jour terriblement grand et amer,
 \rubric{La messe suit, éventuellement précédée d'une ou plusieurs heures de l'Office des défunts. L'absoute suit la messe, comme au \emph{Graduale Romanum}.}
 
 \smalltitle{Enterrement}
+
+~
 
 \rubric{Pendant la procession au cimetière, on chante cette antienne :}
 
@@ -908,7 +1120,7 @@ jour terriblement grand et amer,
 
 \smalltitle{Cantique de Zacharie}
 \smallscore[n]{LPB}
-\psalmtext{b}
+\vspace{2mm}
 \smallscore{LAB}
 
 \rubric{Enfin, on chante sur ce ton les invocations qui suivent :}
@@ -931,11 +1143,11 @@ jour terriblement grand et amer,
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
 		\vv Dóminus vobíscum.\\
-		\rr Et cum spíritu tuo.
-		\vv Orémus. Fac, quǽsumus, Dómine, hanc cum servo tuo defúncto \rubric{(}fámula tua defúncta\rubric{)} misericórdiam, ut factórum suórum in pœnis non recípiat vicem, qui \rubric{(}quæ\rubric{)} tuam in votis ténuit voluntátem : ut sicut hic eum \rubric{(}eam\rubric{)} vera fides junxit fidélium turmis, ita illic eum \rubric{(}eam\rubric{)} tua miserátio sóciet angélicis choris. Per Christum Dóminum nostrum.\\
+		\rr Et cum spíritu tuo.\\
+		\vv Orémus. Fac, quǽsumus, Dómine, hanc cum servo tuo defúncto \bracketed{fámula tua defúncta} misericórdiam, ut factórum suórum in pœnis non recípiat vicem, qui \bracketed{quæ} tuam in votis ténuit voluntátem : ut sicut hic eum \bracketed{eam} vera fides junxit fidélium turmis, ita illic eum \bracketed{eam} tua miserátio sóciet angélicis choris. Per Christum Dóminum nostrum.\\
 		\rr Amen.\\
 		\vv Réquiem ætérnam dona ei, Dómine.\\
-		\rr Et lux perpétua lúceat ei.
+		\rr Et lux perpétua lúceat ei.\\
 		\vv Requiéscat in pace.\\
 		\rr Amen.\\
 		\rubric{On ajoute à voix grave et recto tono :}\\
@@ -950,22 +1162,37 @@ jour terriblement grand et amer,
 		\rr Mais délivre-nous du mal.\\
 		\vv De la puissance de l'enfer.\\
 		\rr Délivre, Seigneur, son âme.\\
-		\vv Qu'il \rubric{(}elle\rubric{)} repose en paix.\\
+		\vv Qu'il \bracketed{elle} repose en paix.\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
 		\vv Le Seigneur soit avec vous.\\
 		\rr Et avec votre esprit.\\
-		\vv Prions. Daigne, Seigneur, faire à Ton serviteur défunt \rubric{(}Ta servante défunte\rubric{)} cette miséricorde, qu'il \rubric{(}elle\rubric{)} n'ait point à subir les peines de ses péchés, car il \rubric{(}elle\rubric{)} a désiré faire Ta volonté ; et, de même qu'ici bas la vraie foi l'unissait à la société des fidèles, qu'ainsi là-haut Ta miséricorde l'associe aux chœurs des anges. Par le Christ, notre Seigneur.\\
+		\vv Prions. Daigne, Seigneur, faire à Ton serviteur défunt \bracketed{Ta servante défunte} cette miséricorde, qu'il \bracketed{elle} n'ait point à subir les peines de ses péchés, car il \bracketed{elle} a désiré faire Ta volonté ; et, de même qu'ici bas la vraie foi l'unissait à la société des fidèles, qu'ainsi là-haut Ta miséricorde l'associe aux chœurs des anges. Par le Christ, notre Seigneur.\\
 		\rr Amen.\\
 		\vv Seigneur, donne-lui le repos éternel.\\
-		\rr Et fais luire pour lui \rubric{(}elle\rubric{)} la lumière sans déclin.
-		\vv Qu'il \rubric{(}elle\rubric{)} repose en paix.\\
+		\rr Et fais luire pour lui \bracketed{elle} la lumière sans déclin.\\
+		\vv Qu'il \bracketed{elle} repose en paix.\\
 		\rr Amen.\\
-		~\\
 		\vv Que par la miséricorde de Dieu, son âme et celle de tous les fidèles trépassés reposent en paix.\\
 		\rr Amen.
 	}
 \end{parcolumns}
+
+\newpage
+\nocturnumtitulum{Psaumes supplémentaires}
+\setheaders{}{}
+
+\rubric{Chantés à la fin des Vêpres et des Laudes, selon les rubriques antérieures aux réformes de 1960, sauf le jour de la Commémoraison de tous les fidèles défunts, les jours suivant la mort du défunt, et les autres jours où l'office était chanté selon le rite double. Aujourd'hui, l'office est toujours chanté selon le rite double, et ces psaumes sont ordinairement omis.}
+
+\label{ps145}
+\smalltitle{Psaume 145}
+\smallscore[n]{EP1}
+\psalmtext{145_id}
+
+\label{ps129}
+\smalltitle{Psaume 129}
+\smallscore[n]{EP2}
+\psalmtext{129_id}
 
 \end{document} 
