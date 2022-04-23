@@ -285,13 +285,15 @@ headsep=3mm,
 
 \newcommand{\officiumtitulum}[1]{
   \newpage
+  \thispagestyle{empty}
+  \setheaders{{\scshape #1}}{{\scshape #1}}
   \begin{center}
   {\scshape\LARGE #1}\par
   \end{center}
 }
 
 \newcommand{\smalltitle}[1]{
-\needspace{4\baselineskip}
+\needspace{6\baselineskip}
  ~\\
  {\centering\scshape #1\par}
 }
