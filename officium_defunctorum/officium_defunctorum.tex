@@ -96,30 +96,32 @@ headsep=3mm,
 %% header capture setup for the mode
 \gresetheadercapture{mode}{greannotation}{string}
 
+%% the space above lines for scores with neumes
+\newcommand{\neumespace}{10mm}
+
 %% outputs a score with no initials or annotations
 %% for 
-\newcommand{\smallscore}[1]{
+\newcommand{\smallscore}[2][y]{
   \gresetinitiallines{0}
-  %% the use of a directory called "gabc" is linked
-  %% to the management of gabc files by the website: do not change 
-  %% without also changing the website static files structure
-  \gregorioscore{partitions/#1}
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\vspace{\neumespace}\fi
+  \gregorioscore{partitions/#2}
+  \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
   \gresetinitiallines{1}
 }
 
 %% outputs a score with annotations. no initials if [n] is passed
-\newcommand{\gscore}[3]{
-  %% #1 (passed as option) : y = initial, n = no initial
+\newcommand{\gscore}[4][y]{
+  %% #1 (passed as option) : y = space above lines for neumes, n = no such space
   %% #2 : name of the score file, should be a code, e.g. Q4F4A3 or 1225N1R1
+  %% #3 : type of the score
   %% #4 : if applicable, a number between 1 and 9 (rank of the ant./resp.) - else: empty
   
   %% this prevents orphans
   \needspace{4\baselineskip} 
-  \greannotation{\officepartannotation{#2}#3}
-  \grechangedim{spaceabovelines}{10mm}{scalable}
-  \vspace{10mm}
-  \gregorioscore{partitions/#1}
-  \grechangedim{spaceabovelines}{0mm}{scalable}
+  \greannotation{\officepartannotation{#3}#4}
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\vspace{\neumespace}\fi
+  \gregorioscore{partitions/#2}
+  \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
 }
 
 %%%%%%%%%%%%%%% FONTS %%%%%%%%%%%%%%%
@@ -236,7 +238,7 @@ headsep=3mm,
 \newcommand{\psalmus}[2]{
 	\needspace{4\baselineskip}
 	\smalltitle{Psaume #1}
-	\smallscore{#2}
+	\smallscore[n]{#2}
 	~\\
 	\psalmtext{#1}
 }
@@ -289,6 +291,7 @@ headsep=3mm,
 }
 
 \newcommand{\smalltitle}[1]{
+\needspace{4\baselineskip}
  ~\\
  {\centering\scshape #1\par}
 }
@@ -362,14 +365,14 @@ headsep=3mm,
 \smallscore{VA5}
 
 \smalltitle{Versicule}
-\smallscore{OR_audivi}
+\smallscore[n]{OR_audivi}
 \trans{\vv J'entendis une voix du ciel qui me disait : \\ \rr Bienheureux les morts qui meurent dans le Seigneur.}
 
 \gscore{VAM}{M}{}
 \trans{\aa Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
 
 \smalltitle{Cantique de Marie}
-\smallscore{VPM}
+\smallscore[n]{VPM}
 \psalmtext{m}
 \smallscore{VAM}
 
@@ -380,7 +383,7 @@ headsep=3mm,
 
 \rubric{Sauf mention contraire, toutes les réponses se disent sur ce ton :}
 
-\smallscore{OR_tonusversus}
+\smallscore[n]{OR_tonusversus}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
@@ -423,7 +426,7 @@ headsep=3mm,
 	}
 \end{parcolumns}
 
-\smallscore{OR_requiescant}
+\smallscore[n]{OR_requiescant}
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \officiumtitulum{Oraisons}
@@ -536,10 +539,10 @@ Seigneur, dans Ta bonté, aie pitié de l'âme de Ta servante N. : maintenant qu
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-Deus, véniæ largítor et humánæ salútis amátor : † quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt, * beáta María semper Vírgine intercedénte cum ómnibus Sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas. Per Dóminum.
+Deus, véniæ largítor et humánæ salútis amátor :~† quǽsumus cleméntiam tuam ; ut nostræ congregatiónis fratres, propínquos et benefactóres qui ex hoc sǽculo transiérunt,~* beáta María semper Vírgine intercedénte cum ómnibus Sanctis tuis, ad perpétuæ beatitúdinis consórtium perveníre concédas. Per Dóminum.
 	}
 	\colchunk{%
-
+Dieu, qui accordes le pardon et qui veut le salut de l'homme, nous implorons votre clémence : grâce à l'intercession de la bienheureuse Marie toujours Vierge,
 	}
 \end{parcolumns}
 	
@@ -592,7 +595,8 @@ Dieu, qui nous as commandé d'honorer notre père et notre mère, aie pitié, da
 \rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne.  Les leçons sont chantées sans bénédiction ni absolution. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
 
 \smalltitle{Invitatoire}
-\gscore{MI}{I}{}
+
+\gscore[n]{MI}{I}{}
 
 \nocturnumtitulum{Premier Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les dimanche, lundi et jeudi.}
@@ -614,7 +618,7 @@ Dieu, qui nous as commandé d'honorer notre père et notre mère, aie pitié, da
 \smallscore{MA3}
 
 \smalltitle{Versicule}
-\smallscore{MV1}
+\smallscore[n]{MV1}
 \trans{\vv De la puissance de l'enfer.\\ \rr Délivrez, Seigneur, leurs âmes.}
 
 \rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
@@ -665,7 +669,7 @@ Dieu, qui nous as commandé d'honorer notre père et notre mère, aie pitié, da
 \smallscore{MA6}
 
 \smalltitle{Versicule}
-\smallscore{MV2}
+\smallscore[n]{MV2}
 \trans{\vv Le Seigneur les établira avec les princes. \\ \rr Avec les princes de son peuple.}
 
 \rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
@@ -716,7 +720,7 @@ Dieu, qui nous as commandé d'honorer notre père et notre mère, aie pitié, da
 \smallscore{MA9}
 
 \smalltitle{Versicule}
-\smallscore{MV3}
+\smallscore[n]{MV3}
 \trans{\vv Ne livre pas aux bêtes les âmes qui Te louent.\\ \rr Et les âmes de Tes pauvres, ne les oublie pas à jamais.}
 
 \rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
@@ -795,14 +799,14 @@ jour terriblement grand et amer,
 \smallscore{LA5}
 
 \smalltitle{Versicule}
-\smallscore{OR_audivi}
+\smallscore[n]{OR_audivi}
 \trans{\vv J'entendis une voix du ciel qui me disait : \\ \rr Bienheureux les morts qui meurent dans le Seigneur.}
 
 \gscore{LAB}{B}{}
 \trans{\aa Moi, je suis la résurrection et la vie. Celui qui croit en moi, même s’il meurt, vivra ; quiconque vit et croit en moi ne mourra jamais.}
 
 \smalltitle{Cantique de Zacharie}
-\smallscore{LPB}
+\smallscore[n]{LPB}
 \psalmtext{b}
 \smallscore{LAB}
 
