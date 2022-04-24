@@ -6,3 +6,4 @@
 *.gaux
 *.glog
 *.synctex.gz
+*(busy)
