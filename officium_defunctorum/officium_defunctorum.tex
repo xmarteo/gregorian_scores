@@ -62,7 +62,7 @@ headsep=3mm,
 %% text above lines shall be of color gregoriocolor
 \grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
 %% fine-tuning of space beween the staff and the text above lines
-\newcommand{\altraise}{-2.4mm} %% default is -0.1cm
+\newcommand{\altraise}{-1mm} %% default is -0.1cm
 \grechangedim{abovelinestextraise}{\altraise}{scalable}
 
 %% fine-tuning of space between the staff and the lyrics
@@ -103,7 +103,7 @@ headsep=3mm,
 %% for 
 \newcommand{\smallscore}[2][y]{
   \gresetinitiallines{0}
-  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\vspace{\neumespace}\fi
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace*{0.8\neumespace}\fi
   \gregorioscore{partitions/#2}
   \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
   \gresetinitiallines{1}
@@ -119,7 +119,7 @@ headsep=3mm,
   %% this prevents orphans
   \needspace{4\baselineskip} 
   \greannotation{\officepartannotation{#3}#4}
-  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace{0.6\neumespace}\fi
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace*{0.8\neumespace}\fi
   \gregorioscore{partitions/#2}
   \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
 }
@@ -301,7 +301,7 @@ headsep=3mm,
 }
 
 \newcommand{\smalltitle}[1]{
-\needspace{6\baselineskip}
+\needspace{5\baselineskip}
  ~\\
  {\centering\scshape #1\par}
 }
@@ -364,29 +364,43 @@ Traduction des textes bibliques © AELF
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
 
 \gscore{VA1}{A}{1}
+~\\
 \trans{\aa Je plairai au Seigneur dans la terre des vivants.}
 \psalmus{114}{VP1}
 \smallscore{VA1}
 
+~\\
+
 \gscore{VA2}{A}{2}
+~\\
 \trans{\aa Malheur à moi car mon exil s'est prolongé.}
+~\\
 \psalmus{119}{VP2}
 \smallscore{VA2}
 
 \gscore{VA3}{A}{3}
+~\\
 \trans{\aa Le Seigneur te garde de tout mal, que le Seigneur garde ton âme.}
+
 \psalmus{120}{VP3}
 \smallscore{VA3}
 
 \gscore{VA4}{A}{4}
+~\\
 \trans{\aa Si Tu retiens les fautes, Seigneur, Seigneur, qui subsistera ?}
+~\\
 \psalmus{129}{VP4}
 \smallscore{VA4}
+\vspace{2mm}
 
 \gscore{VA5}{A}{5}
+~\\
 \trans{\aa Ne méprise pas, Seigneur, les œuvres de Tes mains.}
+~\\
 \psalmus{137}{VP5}
 \smallscore{VA5}
+
+\newpage
 
 \smalltitle{Versicule}
 \smallscore[n]{OR_audivi}
@@ -403,7 +417,6 @@ Traduction des textes bibliques © AELF
 \newpage
 
 \smalltitle{Conclusion}
-\label{conclusion}
 
 ~
 
@@ -694,19 +707,39 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les dimanche, lundi et jeudi.}
 
 \gscore{MA1}{A}{1}
+~\\
 \trans{\aa Redresse, Seigneur mon Dieu, Ton chemin devant moi.}
 \psalmus{5}{MP1}
+
+\begin{itemize}[%
+			label=\null, %
+			leftmargin=0pt, %
+			itemindent=3mm, %
+			labelsep=0pt, %
+			labelwidth=0pt, %
+			rightmargin=0pt, %
+			parsep=0pt, %
+			topsep=0pt, %
+			itemsep=0pt]%
+\item Dómine, ut scuto bonæ volun\textbf{tá}tis \textbf{tu}æ~* \textbf{co}ro\textbf{nás}ti nos.
+\item Réqui\textbf{em} æ\textbf{tér}nam~* dona \textbf{e}is, \textbf{Dó}mine.
+\item Et \textbf{lux} per\textbf{pé}tua~* \textbf{lú}ceat \textbf{e}is.
+\end{itemize}%
+\newpage
 \smallscore{MA1}
 
 
 \gscore{MA2}{A}{2}
+~\\
 \trans{\aa Reviens, Seigneur, délivre mon âme : car, dans la mort, nul souvenir de Toi.}
 \psalmus{6}{MP2}
 \smallscore{MA2}
 
 \gscore{MA3}{A}{3}
+~\\
 \trans{\aa Qu'ils ne m'égorgent pas, tous ces fauves, ne me déchirent pas, sans que personne me délivre.}
 \psalmus{7}{MP3}
+\pagebreak
 \smallscore{MA3}
 
 \smalltitle{Versicule}
@@ -719,6 +752,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{1}
 \gscore{ODEFN1R1_dcrochu}{R}{1}
+~\\
 \trans{\rr Je crois que mon Rédempteur est vivant, et qu'au dernier jour je ressusciterai de la terre,
 † et que, dans ma chair, je verrai Dieu, mon Sauveur.\\
 \vv Que je verrai moi-même, et non pas un autre, et que mes yeux doivent le contempler, 
@@ -728,6 +762,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{2}
 \gscore{ODEFN1R2_dcrochu}{R}{2}
+~\\
 \trans{\rr Toi qui as délivré du tombeau Lazare déjà fétide,
 † Toi, Seigneur, donne-leur le repos et le lieu du pardon.\\
 \vv Toi qui dois venir juger les vivants et les morts, et ce siècle par le feu,
@@ -737,25 +772,32 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{3}
 \gscore{ODEFN1R3_dcrochu}{R}{3}
+~\\
 \trans{\rr Seigneur, quand Tu viendras juger la terre, où me mettrai-je à l'abri de Ton visage irrité ?
 † Car j'ai beaucoup péché dans ma vie.\\
 \vv De mes fautes je suis effrayé, et j'en rougis devant Toi,
 † car j'ai beaucoup péché dans ma vie.}
 
+\newpage
+
 \nocturnumtitulum{Deuxième Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mardi et vendredi.}
 
 \gscore{MA4}{A}{4}
+~\\
 \trans{\aa Sur des prés d'herbe fraîche, Il me fait reposer.}
+~\\
 \psalmus{22}{MP4}
 \smallscore{MA4}
 
 \gscore{MA5}{A}{5}
+~\\
 \trans{\aa Oublie les péchés de ma jeunesse, ne Te rappelle pas mes erreurs, Seigneur.}
 \psalmus{24}{MP5}
 \smallscore{MA5}
 
 \gscore{MA6}{A}{6}
+~\\
 \trans{\aa J'en suis sûr, je verrai les bontés du Seigneur sur la terre des vivants.}
 \psalmus{26}{MP6}
 \smallscore{MA6}
@@ -770,6 +812,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{4}
 \gscore{ODEFN2R1_dcrochu}{R}{4}
+~\\
 \trans{\rr Souviens-Toi de moi, mon Dieu, car ma vie est un souffle ;
 † et que le regard de l’homme ne m’examine pas.\\
 \vv Des profondeurs, je crie vers Toi, Seigneur ; Seigneur, écoute mon appel,
@@ -778,7 +821,9 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smalltitle{Cinquième leçon}
 
 \lesson{5}
+
 \gscore{ODEFN2R2_dcrochu}{R}{5}
+~\\
 \trans{\rr Malheur à moi, Seigneur, car j'ai beaucoup péché dans ma vie : que ferai-je, malheureux ? Où pourrai-je fuir, sinon vers Toi, mon Dieu ?
 † Aie pitié de moi, quand Tu viendras au dernier jour.\\
 \vv Mon âme est grandement troublée, mais Toi, Seigneur, viens à son aide.
@@ -788,25 +833,30 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{6}
 \gscore{ODEFN2R3_dcrochu}{R}{6}
+~\\
 \trans{\rr Ne Te rappelle pas, Seigneur, mes péchés,
 † quand Tu viendras juger ce monde par le feu.\\
 \vv Seigneur, mon Dieu, dirige ma voie en Ta présence,
 † quand Tu viendras juger ce monde par le feu.}
 
+\newpage
 \nocturnumtitulum{Troisième Nocturne}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mercredi et samedi.}
 
 \gscore{MA7}{A}{7}
+~\\
 \trans{\aa Daigne, Seigneur, me délivrer ; Seigneur, viens vite à mon secours !}
 \psalmus{39}{MP7}
 \smallscore{MA7}
 
 \gscore{MA8}{A}{8}
+~\\
 \trans{\aa Pitié pour moi, Seigneur, guéris-moi, car j'ai péché contre Toi.}
 \psalmus{40}{MP8}
 \smallscore{MA8}
 
 \gscore{MA9}{A}{9}
+~\\
 \trans{\aa Mon âme a soif du Dieu vivant ; quand pourrai-je m'avancer, paraître face à Dieu ?}
 \psalmus{41}{MP9}
 \smallscore{MA9}
@@ -821,6 +871,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{7}
 \gscore{ODEFN3R1_dcrochu}{R}{7}
+~\\
 \trans{\rr En moi qui pèche chaque jour et n'en fais pas pénitence, la crainte de la mort met le trouble :
 † puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.
 \vv Seigneur, par Ton Nom, donne-moi le salut, et dans Ta puissance, délivre-moi,
@@ -830,6 +881,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{8}
 \gscore{ODEFN3R2_dcrochu}{R}{8}
+~\\
 \trans{\rr Seigneur, ne me juge pas selon mes actes ; je n'ai rien fait de digne en Ta présence ; c'est pourquoi je supplie Ta Majesté,
 † pour que Tu effaces, ô Dieu, mon iniquité.\\
 \vv Lave-moi tout entier, Seigneur, de mon injustice, et purifie-moi de mon péché,
@@ -838,21 +890,25 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smalltitle{Neuvième leçon}
 
 \lesson{9}
+
 \rubric{On chante ce répons si l'on a chanté seulement le troisième nocturne. Sinon, on chante le suivant.}
 \gscore{ODEFN3R3a_dcrochu}{R}{9}
+~\\
 \trans{\rr Délivre-moi, Seigneur, des chemins de l'enfer, 
 Toi qui as brisé les portes d'airain et visité l'enfer, et donné, pour Te voir, la lumière
 † à ceux qui étaient dans les peines des ténèbres,\\
-\vv criant et disant : Tu es enfin venu, ô notre Rédempteur,
+\vv Criant et disant : Tu es enfin venu, ô notre Rédempteur,
 † ceux qui étaient dans les peines des ténèbres.}
+
 \rubric{On chante ce répons si l'on a chanté les trois nocturnes. Sinon, on chante le précédent.}
 \gscore{ODEFN3R3b_dcrochu}{R}{9}
+~\\
 \trans{\rr Libère-moi, Seigneur, de la mort éternelle, en ce jour redoutable :
 † quand les cieux seront ébranlés, et la terre :
 ‡ lorsque Tu viendras juger le monde par le feu.\\
 \vv Me voilà moi-même tremblant et effrayé, jusqu'au jour de l'examen, et de la colère à venir,
 † quand les cieux seront ébranlés, et la terre :\\
-\vv jour de courroux que ce jour-là,
+\vv Jour de courroux que ce jour-là,
 de calamité et de misère,
 jour terriblement grand et amer,
 ‡ lorsque Tu viendras juger le monde par le feu.}
@@ -860,7 +916,6 @@ jour terriblement grand et amer,
 \newpage
 
 \smalltitle{Conclusion}
-\label{conclusion}
 
 ~
 
@@ -905,7 +960,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	}
 \end{parcolumns}
 
-\rubric{On dit l'oraison qui correspond à l'occasion, pages suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
+\rubric{On dit l'oraison qui correspond à l'occasion, page~\pageref{oraisons} et suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
@@ -1013,7 +1068,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	}
 \end{parcolumns}
 
-\rubric{On dit l'oraison qui correspond à l'occasion, pages suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
+\rubric{On dit l'oraison qui correspond à l'occasion, page~\pageref{oraisons} et suivantes, et on répond \normaltext{Amen.} Puis, on dit, toujours au pluriel :}
 
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
