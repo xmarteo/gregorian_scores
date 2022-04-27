@@ -23,6 +23,8 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{refcount}
+\usepackage{graphicx}
+
 %%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
 
 %% This should mimic the layout of the recent Solesmes books.
@@ -198,6 +200,9 @@ headsep=3mm,
 %% This defines the star character used for mediants in text
 \newcommand{\psstar}{\gresixstar}
 
+%% Custom separator
+\newcommand{\customseparator}{\vfill{\centering \greseparator{2}{18}\par}\vfill}
+
 %%%%%%%%%%%%%%% COLUMN MANAGEMENT %%%%%%%%%%%%%%%
 
 \usepackage{multicol}
@@ -306,7 +311,7 @@ headsep=3mm,
 
 \newcommand{\smalltitle}[1]{
 \needspace{5\baselineskip}
- ~\\
+\vspace{\baselineskip}
  {\centering\scshape #1\par}
 }
 
@@ -409,6 +414,8 @@ Traduction des textes bibliques © AELF
 \smalltitle{Versicule}
 \smallscore[n]{OR_audivi}
 \trans{\vv J'entendis une voix du ciel qui me disait : \\ \rr Bienheureux les morts qui meurent dans le Seigneur.}
+
+\vspace{\baselineskip}
 
 \gscore{VAM}{M}{}
 \trans{\aa Tout ce que le Père Me donne viendra à Moi ; et celui qui vient à Moi, Je ne le jetterai pas dehors.}
@@ -700,6 +707,8 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 	}
 \end{parcolumns}
 
+\customseparator{}
+
 \officiumtitulum{à Matines}
 
 \rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne.  Les leçons sont chantées sans bénédiction ni absolution. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
@@ -878,7 +887,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \gscore{ODEFN3R1_dcrochu}{R}{7}
 ~\\
 \trans{\rr En moi qui pèche chaque jour et n'en fais pas pénitence, la crainte de la mort met le trouble :
-† puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.
+† puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.\\
 \vv Seigneur, par Ton Nom, donne-moi le salut, et dans Ta puissance, délivre-moi,
 † puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.}
 
@@ -985,6 +994,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
+\customseparator{}
+
 \officiumtitulum{à Laudes}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
@@ -1044,7 +1055,6 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \newpage
 
 \smalltitle{Conclusion}
-\label{conclusion}
 
 ~
 
@@ -1105,6 +1115,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \smallscore[n]{OR_requiescant}
 ~\\
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
+
+\customseparator{}
 
 \officiumtitulum{Sépulture des défunts}
 
@@ -1178,6 +1190,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 
 \rubric{La messe suit, éventuellement précédée d'une ou plusieurs heures de l'Office des défunts. L'absoute suit la messe, comme au \emph{Graduale Romanum}.}
 
+\customseparator{}
 \newpage
 \smalltitle{Enterrement}
 
@@ -1274,7 +1287,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 		\rr Amen.
 	}
 \end{parcolumns}
-
+\customseparator{}
+{\centering\includegraphics[width=\textwidth]{purgatory.png}\par}
 \newpage
 \nocturnumtitulum{Psaumes supplémentaires}
 \setheaders{}{}
