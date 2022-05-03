@@ -1,0 +1,350 @@
+% !TEX TS-program = lualatex
+% !TEX encoding = UTF-8
+
+\documentclass[twoside]{book}
+
+%%%%%%%%%%%%%%% STANDARD PACKAGES %%%%%%%%%%%%%%%
+
+\usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
+
+\usepackage{fontspec}
+\usepackage[medievallatin, french]{babel}
+\usepackage{fancyhdr}
+\usepackage{paracol}
+\usepackage{expl3}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{tableof}
+\usepackage{setspace}
+\usepackage{alltt}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{refcount}
+\usepackage{graphicx}
+
+%%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
+
+%% This should mimic the layout of the recent Solesmes books.
+\geometry{
+inner=15mm,
+outer=10mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%% General scale of all graphical elements.
+%% Values different from 1 are largely untested.
+%% Used in those commands (e.g. everything FontSpec) that use a scale parameter.
+\newcommand{\customscale}{1}
+
+%% Provide the command \fpeval as a copy of the code-level \fp_eval:n.
+%% \fpeval allows to evaluate floating point calculation for scaled parameters, e.g. \setSomeStretchFactor{\fpeval{0,6 * \customscale}}
+\ExplSyntaxOn
+\cs_new_eq:NN \fpeval \fp_eval:n
+\ExplSyntaxOff
+
+%% No indentation of paragraphs
+\setlength{\parindent}{0mm}
+
+%% We want to allow large inter-words space 
+%% to avoid overfull boxes in two-columns rubrics.
+\sloppy
+
+%%%%%%%%%%%%%%% GREGORIO CONFIG %%%%%%%%%%%%%%%
+
+\usepackage[autocompile]{gregoriotex}
+
+%% disable NABC a the request of A. Guyard who will add SG neumes by hand
+\gresetnabc{1}{invisible} 
+
+%% text above lines shall be of color gregoriocolor
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+%% fine-tuning of space beween the staff and the text above lines
+\newcommand{\altraise}{-1mm} %% default is -0.1cm
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+%% fine-tuning of space between the staff and the lyrics
+\newcommand{\textraise}{2.8ex} %% default is 3.48471 ex
+\grechangedim{spacelinestext}{\textraise}{scalable}
+
+%% fine-tuning of space between the initial and the annotations
+\newcommand{\annraise}{0mm} %% default is -0.2mm
+\grechangedim{annotationraise}{\annraise}{scalable}
+
+%% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
+%% storing the result into \result.
+
+\newcommand{\result}{}
+\newcommand{\lookup}[3]{%
+  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+}%
+\newcommand{\officepartannotation}[1]{%
+  \renewcommand{\result}{#1}%
+  \lookup{#1}{T}{}%
+  \lookup{#1}{H}{Hymn.}%
+  \lookup{#1}{A}{Ant.}%
+  \lookup{#1}{P}{}%
+  \lookup{#1}{R}{Resp.}%
+  \lookup{#1}{I}{Invit.}%
+  \lookup{#1}{M}{Ad Magn.}%
+  \lookup{#1}{B}{Ad Ben.}%
+  \result%
+}%
+
+%% header capture setup for the mode
+\gresetheadercapture{mode}{greannotation}{string}
+
+%% the space above lines for scores with neumes
+\newcommand{\neumespace}{10mm}
+
+%% outputs a score with no initials or annotations
+%% for 
+\newcommand{\smallscore}[2][y]{
+  \gresetinitiallines{0}
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace*{0.8\neumespace}\fi
+  \gregorioscore{partitions/#2}
+  \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
+  \gresetinitiallines{1}
+}
+
+%% outputs a score with annotations. no initials if [n] is passed
+\newcommand{\gscore}[4][y]{
+  %% #1 (passed as option) : y = space above lines for neumes, n = no such space
+  %% #2 : name of the score file, should be a code, e.g. Q4F4A3 or 1225N1R1
+  %% #3 : type of the score
+  %% #4 : if applicable, a number between 1 and 9 (rank of the ant./resp.) - else: empty
+  
+  %% this prevents orphans
+  \needspace{4\baselineskip} 
+  \greannotation{\officepartannotation{#3}#4}
+  \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace*{0.8\neumespace}\fi
+  \gregorioscore{partitions/#2}
+  \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
+}
+
+%%%%%%%%%%%%%%% FONTS %%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% Main font
+\setmainfont[Ligatures=TeX, Scale=\customscale]{Charis SIL}
+%\setmainfont[Ligatures=TeX, Scale=\customscale]{TeXGyreBonum-Regular}
+\setstretch{\fpeval{1.05 * \customscale}}
+
+%%%%%%%%%%%%%%% Score initials
+%% \initialsize resizes the initials, with one argument (size in points)
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+}
+%% default initial size is 32 points
+\newcommand{\defaultinitialsize}{32}
+\initialsize{\defaultinitialsize}
+
+%% spacing before and after initials to kern the Zallman Caps.
+%% this should be changed if we move away from Zallman Caps.
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+%% default space before and after initials is 0cm.
+\newcommand{\defaultinitialspace}{0.9mm}
+\initialspace{\defaultinitialspace}
+
+%%%%%%%%%%%%%%% Score annotations
+\grechangestyle{annotation}{\small}
+
+%%%%%%%%%%%%%%% GRAPHICAL ELEMENTS %%%%%%%%%%%%%%%
+
+%% V/, R/, A/ and + signs for in-line use (\vv \rr \aa \cc) and in-score use (<sp>V/ R/ A/ +</sp>)
+\newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/
+\newcommand{\vv}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.\hspace{\specialcharhsep}}}
+\newcommand{\rr}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.\hspace{\specialcharhsep}}}
+\renewcommand{\aa}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.\hspace{\specialcharhsep}}}
+\newcommand{\cc}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}\symbol{"2720}~}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
+\gresetspecial{+}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}†~}}
+\gresetspecial{‡}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}‡~}}
+\gresetspecial{*}{\gresixstar}
+
+%% Roman Numerals
+\usepackage{modroman}
+\newcommand{\Rnum}[1]{\nbRoman{#1}}
+\newcommand{\rnum}[1]{\nbshortroman{#1}}
+
+%% Macro to print versicles
+\newcommand{\versiculus}[2]{\rr #1 \\ \vv #2}
+
+\newcommand{\versiculustpall}[2]
+	{\versiculus{#1 \rubric{(T.P.} Allelúja. \rubric{)}}{#2 \rubric{(T.P.} Allelúja. \rubric{)}}}
+
+%% Macro to print rubrics
+\newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macro to print alternative text (feminine) between red parentheses
+\newcommand{\bracketed}[1]{{\textcolor{gregoriocolor}(}#1{\textcolor{gregoriocolor})}}
+
+%% Macro to print the name of a score in normal characters inside a \rubric
+\newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
+\newcommand{\scorename}[1]{\normaltext{\nameref{#1}}}
+
+%% Macro to print the common rubric that signals the Te Deum
+\newcommand{\tedeumrubric}{\rubric{Lectione ultima peracta Hymnus \normaltext{Te Deum} cantatur.}}
+
+%% Macro to print translations
+\newcommand{\trans}[1]{	\emph{#1}}
+
+%% This defines the star character used for mediants in text
+\newcommand{\psstar}{\gresixstar}
+
+%% Custom separator
+\newcommand{\customseparator}{\vfill{\centering \greseparator{2}{18}\par}\vfill}
+
+%%%%%%%%%%%%%%% COLUMN MANAGEMENT %%%%%%%%%%%%%%%
+
+\usepackage{multicol}
+\usepackage{parcolumns}
+\setlength\columnseprule{0.4pt}
+
+%% Macros to print a psalm on two columns.
+%% First, without title and incipitur
+
+\newcommand{\psalmtext}[1]{
+	\needspace{2\baselineskip}
+	\vspace{\baselineskip}
+	\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\vspace{-\baselineskip}
+		\begin{itemize}[%
+			label=\null, %
+			leftmargin=0pt, %
+			itemindent=3mm, %
+			labelsep=0pt, %
+			labelwidth=0pt, %
+			rightmargin=0pt, %
+			parsep=0pt, %
+			topsep=0pt, %
+			itemsep=0pt]%
+		\input{psaumes/#1_la.tex}%
+		\end{itemize}%
+	}%
+	\colchunk{%
+		\vspace{-\baselineskip}
+		\begin{itemize}[%
+			label=\null, %
+			leftmargin=0pt, %
+			itemindent=3mm, %
+			labelsep=0pt, %
+			labelwidth=0pt, %
+			rightmargin=0pt, %
+			parsep=0pt, %
+			topsep=0pt, %
+			itemsep=0pt]%
+		\input{psaumes/#1_fr.tex} %
+		\end{itemize} %
+	}%
+	\end{parcolumns}
+}
+
+%% then, adding a title and incipitur
+\newcommand{\psalmus}[2]{
+	\needspace{4\baselineskip}
+	\smalltitle{Psaume #1}
+	\smallscore[n]{#2}
+	\psalmtext{#1}
+}
+
+%% Macro to print lessons on two columns.
+
+\newcommand{\lesson}[1]{
+	
+	~
+	
+	\begin{parcolumns}[rulebetween]{2}%
+	\colchunk{%
+		\input{lecons/#1_la.tex}%
+	}%
+	\colchunk{%
+		\input{lecons/#1_fr.tex} %
+	}%
+	\end{parcolumns}
+}
+
+%%%%%%%%%%%%%%% HEADER STYLES %%%%%%%%%%%%%%%
+
+\pagestyle{empty}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\fancyhead[RO]{\small\rightmark\hspace{1cm}\thepage}
+\fancyhead[LE]{\small\thepage\hspace{1cm}\leftmark}
+
+\newcommand{\setheaders}[2]{
+	\renewcommand{\rightmark}{{\sc#2}}
+	\renewcommand{\leftmark}{{\sc#1}}
+}
+\setheaders{}{}
+
+%%%%%%%%%%%%%%% TITLE STYLES %%%%%%%%%%%%%%%
+
+%% Titles are centered and small-caps
+\titleformat{\chapter}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\section}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+%% Fine-tuning of space around titles
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+
+\newcommand{\officiumtitulum}[1]{
+  \newpage
+  \thispagestyle{empty}
+  \setheaders{{\scshape #1}}{{\scshape #1}}
+  \begin{center}
+  {\scshape\LARGE #1}\par
+  \end{center}
+}
+
+\newcommand{\smalltitle}[1]{
+\needspace{5\baselineskip}
+\vspace{\baselineskip}
+ {\centering\scshape #1\par}
+}
+
+\newcommand{\nocturnumtitulum}[1]{
+  %% needspace: should be barely more than the vertical space for the titles, rubrics excluded.
+  %% this is to ensure that the page does not get cut after the title
+  \needspace{10\baselineskip}
+  \vspace{1cm}
+  \begin{center}
+  {\scshape\Large #1}\par
+  \end{center}
+}
+
+\begin{document}
+
+\gscore{ODEFN1R1_dcrochu}{R}{1}
+\pagebreak
+\gscore{ODEFN1R2_dcrochu}{R}{2}
+\pagebreak
+\gscore{ODEFN1R3_dcrochu}{R}{3}
+\pagebreak
+\gscore{ODEFN2R1_dcrochu}{R}{4}
+\pagebreak
+\gscore{ODEFN2R2_dcrochu}{R}{5}
+\pagebreak
+\gscore{ODEFN2R3_dcrochu}{R}{6}
+\pagebreak
+\gscore{ODEFN3R1_dcrochu}{R}{7}
+\pagebreak
+\gscore{ODEFN3R2_dcrochu}{R}{8}
+\pagebreak
+\gscore{ODEFN3R3a_dcrochu}{R}{9}
+\pagebreak
+\gscore{ODEFN3R3b_dcrochu}{R}{9}
+
+\end{document} 

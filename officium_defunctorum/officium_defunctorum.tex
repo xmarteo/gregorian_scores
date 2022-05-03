@@ -362,7 +362,9 @@ headsep=3mm,
 Nouvelles restitutions des antiennes et répons\\
 Édition préparée par Matthias Bry, Dominique Crochu et Anne Guyard\\
 Neumes de l'antiphonaire de Hartker, Codex Sangallensis 391, ff. 195-200\\
-Traduction des textes bibliques © AELF
+Traduction des textes bibliques © AELF\\
+~\\
+MMXXII
 \end{center}
 
 \newpage
@@ -370,6 +372,7 @@ Traduction des textes bibliques © AELF
 \sloppy
 
 \officiumtitulum{à Vêpres}
+\addcontentsline{toc}{section}{Vêpres}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
 
@@ -491,6 +494,7 @@ Traduction des textes bibliques © AELF
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \officiumtitulum{Oraisons}
+\addcontentsline{toc}{subsection}{Oraisons à la fin des offices}
 
 {\centering \rubric{À dire à la fin des offices, en fonction de diverses circonstances.}\par}
 \label{oraisons}
@@ -711,6 +715,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \customseparator{}
 
 \officiumtitulum{à Matines}
+\addcontentsline{toc}{section}{Matines}
 
 \rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne.  Les leçons sont chantées sans bénédiction ni absolution. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
 
@@ -719,6 +724,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \gscore[n]{MI}{I}{}
 
 \nocturnumtitulum{Premier Nocturne}
+\addcontentsline{toc}{subsection}{Premier Nocturne, les dimanche, lundi et jeudi}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les dimanche, lundi et jeudi.}
 
 \gscore{MA1}{A}{1}
@@ -796,6 +802,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \newpage
 
 \nocturnumtitulum{Deuxième Nocturne}
+\addcontentsline{toc}{subsection}{Deuxième Nocturne, les mardi et vendredi}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mardi et vendredi.}
 
 \gscore{MA4}{A}{4}
@@ -856,6 +863,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \newpage
 \nocturnumtitulum{Troisième Nocturne}
+\addcontentsline{toc}{subsection}{Troisième Nocturne, les mercredi et samedi}
 \rubric{Si l'on chante un seul nocturne, ce nocturne se chante les mercredi et samedi.}
 
 \gscore{MA7}{A}{7}
@@ -998,6 +1006,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \customseparator{}
 
 \officiumtitulum{à Laudes}
+\addcontentsline{toc}{section}{Laudes}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
 
@@ -1120,8 +1129,10 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \customseparator{}
 
 \officiumtitulum{Sépulture des défunts}
+\addcontentsline{toc}{section}{Sépulture des défunts}
 
 \smalltitle{Levée du corps}
+\addcontentsline{toc}{subsection}{Levée du corps}
 
 ~
 
@@ -1194,6 +1205,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \customseparator{}
 \newpage
 \smalltitle{Enterrement}
+\addcontentsline{toc}{subsection}{Enterrement}
 
 ~
 
@@ -1295,6 +1307,9 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 {\centering\includegraphics[width=\textwidth]{purgatory.png}\par}
 \newpage
 \nocturnumtitulum{Psaumes supplémentaires}
+\addtocontents{toc}{\vspace{2\baselineskip}}
+\addcontentsline{toc}{subsection}{Psaumes supplémentaires à Laudes et Vêpres}
+
 \setheaders{}{}
 
 \rubric{Chantés à la fin des Vêpres et des Laudes, selon les rubriques antérieures aux réformes de 1960, sauf le jour de la Commémoraison de tous les fidèles défunts, les jours suivant la mort du défunt, et les autres jours où l'office était chanté selon le rite double. Aujourd'hui, l'office est toujours chanté selon le rite double, et ces psaumes sont ordinairement omis.}
@@ -1314,6 +1329,24 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \vspace{-0.5\baselineskip}
 \begin{flushright}Seigneur, donne-leur le repos éternel,~\psstar{}\\et fais luire pour eux la lumière sans déclin.\end{flushright}
 
+\newpage
+\nocturnumtitulum{Tons communs}
+\addcontentsline{toc}{subsection}{Tons communs}
 
+\smalltitle{Ton des oraisons}
+
+\smallscore[n]{OR_tonusorationis}
+
+\smalltitle{Ton des leçons}
+
+\smallscore[n]{OR_tonuslectionis}
+~\\
+\rubric{La formule de conclusion s'emploie même lorsque la leçon se termine par un point d'interrogation.}
+
+\newpage
+
+\thispagestyle{empty}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\tableofcontents
 
 \end{document} 
