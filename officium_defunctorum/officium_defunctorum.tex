@@ -80,7 +80,7 @@ headsep=3mm,
 
 \newcommand{\result}{}
 \newcommand{\lookup}[3]{%
-  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+  \IfSubStr{#2}{#1}{\renewcommand{\result}{#3} }{}%
 }%
 \newcommand{\officepartannotation}[1]{%
   \renewcommand{\result}{#1}%
@@ -120,7 +120,7 @@ headsep=3mm,
   
   %% this prevents orphans
   \needspace{4\baselineskip} 
-  \greannotation{\officepartannotation{#3}#4}
+  \greannotation[c]{\officepartannotation{#3}#4}
   \ifx y#1\grechangedim{spaceabovelines}{\neumespace}{scalable}\null \vspace*{0.8\neumespace}\fi
   \gregorioscore{partitions/#2}
   \ifx y#1\grechangedim{spaceabovelines}{0mm}{scalable}\fi
