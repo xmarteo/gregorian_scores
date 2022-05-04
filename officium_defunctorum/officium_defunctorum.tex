@@ -95,8 +95,13 @@ headsep=3mm,
   \result%
 }%
 
+%% \modeannotation converts a number (1-8) into the corresponding roman numeral to be printed as annotation,
+\newcommand{\modeannotation}[1]{
+  \greannotation{\Rnum{#1}}
+}
+
 %% header capture setup for the mode
-\gresetheadercapture{mode}{greannotation}{string}
+\gresetheadercapture{mode}{modeannotation}{string}
 
 %% the space above lines for scores with neumes
 \newcommand{\neumespace}{10mm}
