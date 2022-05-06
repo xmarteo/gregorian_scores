@@ -24,6 +24,8 @@
 \usepackage{hyperref}
 \usepackage{refcount}
 \usepackage{graphicx}
+\usepackage{lettrine}
+\usepackage{zallman}
 
 %%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
 
@@ -159,6 +161,9 @@ headsep=3mm,
 
 %%%%%%%%%%%%%%% Score annotations
 \grechangestyle{annotation}{\small}
+
+%%%%%%%%%%%%%%% Lettrines in lessons
+\renewcommand\LettrineFontHook{\Zallmanfamily}
 
 %%%%%%%%%%%%%%% GRAPHICAL ELEMENTS %%%%%%%%%%%%%%%
 
@@ -446,8 +451,8 @@ MMXXII
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster...\\
-		\rubric{(en silence jusqu'à :)}\\
+		\vv Pater noster\\
+		\rubric{en silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
@@ -464,19 +469,23 @@ MMXXII
 	\colchunk{%
 		\vv A porta ínferi.\\
 		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
-		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
+		\vv Requiésca\bracketed{n}t in pace.\\
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
+		\bracketed{\vv Dóminus vobíscum.\\
+		\rr Et cum spíritu tuo.}\\
 		\vv Orémus.
 	}
 	\colchunk{%
 		\vv De la puissance de l'enfer.\\
 		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
-		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
+		\vv Qu'il\bracketed{s} repose\bracketed{nt} en paix.\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\bracketed{\vv Le Seigneur soit avec vous.\\
+		\rr Et avec votre esprit.}\\
 		\vv Prions.
 	}
 \end{parcolumns}
@@ -717,12 +726,12 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 	}
 \end{parcolumns}
 
-\customseparator{}
+%\customseparator{}
 
 \officiumtitulum{à Matines}
 \addcontentsline{toc}{section}{Matines}
 
-\rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne.  Les leçons sont chantées sans bénédiction ni absolution. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. On chante un seul nocturne les autres jours, comme précisé ci-dessous.}
+\rubric{L'office débute par l'invitatoire, sans aucune introduction. Il n'y a pas d'hymne. On chante trois nocturnes le jour de la mort d'un défunt, le jour de sa sépulture, les troisième, septième, trentième jours après sa mort, et le jour anniversaire, et en toute autre occasion légitime. Les autres jours, on peut chanter un seul nocturne : le premier, le dimanche, le lundi et le jeudi ; le deuxième, le mardi et le vendredi ; et le troisième, le mercredi et le samedi.}
 
 \smalltitle{Invitatoire}
 
@@ -772,7 +781,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smallscore[n]{MV1}
 \trans{\vv De la puissance de l'enfer.\\ \rr Délivre, Seigneur, leurs âmes.}
 
-\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
+\rubric{\normaltext{Pater noster} entièrement en silence. Les leçons sont chantées sans absolution, ni bénédiction, ni conclusion.}
 
 \smalltitle{Première leçon}
 
@@ -833,7 +842,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smallscore[n]{MV2}
 \trans{\vv Le Seigneur les établira avec les princes. \\ \rr Avec les princes de son peuple.}
 
-\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
+\rubric{\normaltext{Pater noster} entièrement en silence.}
 
 \smalltitle{Quatrième leçon}
 
@@ -893,7 +902,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smallscore[n]{MV3}
 \trans{\vv Ne livre pas aux bêtes les âmes qui Te louent.\\ \rr Et les âmes de Tes pauvres, ne les oublie pas à jamais.}
 
-\rubric{On dit un \normaltext{Pater noster} entièrement en silence.}
+\rubric{\normaltext{Pater noster} entièrement en silence.}
 
 \smalltitle{Septième leçon}
 
@@ -958,8 +967,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster...\\
-		\rubric{(en silence jusqu'à :)}\\
+		\vv Pater noster\\
+		\rubric{en silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
@@ -974,19 +983,23 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	\colchunk{%
 		\vv A porta ínferi.\\
 		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
-		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
+		\vv Requiésca\bracketed{n}t in pace.\\
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
+		\bracketed{\vv Dóminus vobíscum.\\
+		\rr Et cum spíritu tuo.}\\
 		\vv Orémus.
 	}
 	\colchunk{%
 		\vv De la puissance de l'enfer.\\
 		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
-		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
+		\vv Qu'il\bracketed{s} repose\bracketed{nt} en paix.\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\bracketed{\vv Le Seigneur soit avec vous.\\
+		\rr Et avec votre esprit.}\\
 		\vv Prions.
 	}
 \end{parcolumns}
@@ -1014,7 +1027,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \addcontentsline{toc}{section}{Laudes}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
-
+\end{document}
 \gscore{LA1}{A}{1}
 ~\\
 \trans{\aa Les os humiliés exulteront dans le Seigneur.}
@@ -1079,8 +1092,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster...\\
-		\rubric{(en silence jusqu'à :)}\\
+		\vv Pater noster\\
+		\rubric{en silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
@@ -1097,19 +1110,23 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	\colchunk{%
 		\vv A porta ínferi.\\
 		\rr Erue, Dómine, ánimam ejus \bracketed{ánimas eórum}.\\
-		\vv Requiéscat in pace. \bracketed{Requiéscant in pace.}\\
+		\vv Requiésca\bracketed{n}t in pace.\\
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
+		\bracketed{\vv Dóminus vobíscum.\\
+		\rr Et cum spíritu tuo.}\\
 		\vv Orémus.
 	}
 	\colchunk{%
 		\vv De la puissance de l'enfer.\\
 		\rr Délivre, Seigneur, son âme \bracketed{leurs âmes}.\\
-		\vv Qu'il repose en paix. \bracketed{Qu'ils reposent en paix.}\\
+		\vv Qu'il\bracketed{s} repose\bracketed{nt} en paix.\\
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
+		\bracketed{\vv Le Seigneur soit avec vous.\\
+		\rr Et avec votre esprit.}\\
 		\vv Prions.
 	}
 \end{parcolumns}
@@ -1128,7 +1145,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \end{parcolumns}
 
 \smallscore[n]{OR_requiescant}
-~\\
+
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \customseparator{}
@@ -1175,8 +1192,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster...\\
-		\rubric{(en silence jusqu'à :)}\\
+		\vv Pater noster\\
+		\rubric{en silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.\\
 		\vv A porta ínferi.\\
@@ -1262,8 +1279,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	\colchunk{%
 		\vv Kýrie eléison\\
 		\rr Christe eléison, Kýrie eléison.\\
-		\vv Pater noster...\\
-		\rubric{(en silence jusqu'à :)}\\
+		\vv Pater noster\\
+		\rubric{en silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.\\
 		\vv A porta ínferi.\\
@@ -1272,8 +1289,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 		\rr Amen.\\
 		\vv Dómine, exáudi oratiónem meam.\\
 		\rr Et clamor meus ad te véniat.\\
-		\vv Dóminus vobíscum.\\
-		\rr Et cum spíritu tuo.\\
+		\bracketed{\vv Dóminus vobíscum.\\
+		\rr Et cum spíritu tuo.}\\
 		\vv Orémus. Fac, quǽsumus, Dómine, hanc cum servo tuo defúncto \bracketed{fámula tua defúncta} misericórdiam, ut factórum suórum in pœnis non recípiat vicem, qui \bracketed{quæ} tuam in votis ténuit voluntátem : ut sicut hic eum \bracketed{eam} vera fides junxit fidélium turmis, ita illic eum \bracketed{eam} tua miserátio sóciet angélicis choris. Per Christum Dóminum nostrum.\\
 		\rr Amen.\\
 		\vv Réquiem ætérnam dona ei, Dómine.\\
@@ -1296,8 +1313,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 		\rr Amen.\\
 		\vv Seigneur, entends ma prière.\\
 		\rr Et que mon cri parvienne jusqu'à Toi.\\
-		\vv Le Seigneur soit avec vous.\\
-		\rr Et avec votre esprit.\\
+		\bracketed{\vv Le Seigneur soit avec vous.\\
+		\rr Et avec votre esprit.}\\
 		\vv Prions. Daigne, Seigneur, faire à Ton serviteur défunt \bracketed{Ta servante défunte} cette miséricorde, qu'il \bracketed{elle} n'ait point à subir les peines de ses péchés, car il \bracketed{elle} a désiré faire Ta volonté ; et, de même qu'ici bas la vraie foi l'unissait à la société des fidèles, qu'ainsi là-haut Ta miséricorde l'associe aux chœurs des anges. Par le Christ, notre Seigneur.\\
 		\rr Amen.\\
 		\vv Seigneur, donne-lui le repos éternel.\\
