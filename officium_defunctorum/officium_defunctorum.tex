@@ -269,15 +269,18 @@ headsep=3mm,
 
 %% Macro to print lessons on two columns.
 
-\newcommand{\lesson}[1]{
+\newcommand{\lesson}[3]{%
+	\smalltitle{#2}
 	
-	~
+	{\centering\rubric{#3}\par}
 	
 	\begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
+		\vspace{-\baselineskip}%
 		\input{lecons/#1_la.tex}%
 	}%
 	\colchunk{%
+		\vspace{-\baselineskip}%
 		\input{lecons/#1_fr.tex} %
 	}%
 	\end{parcolumns}
@@ -451,13 +454,12 @@ MMXXII
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster\\
-		\rubric{en silence jusqu'à}\\
+		\vv Pater noster. \rubric{En silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
 	\colchunk{%
-		\vv Notre Père...\\
+		\vv Notre Père.\\
 		\vv Et ne nous laisse pas entrer en tentation.\\
 		\rr Mais délivre-nous du mal.
 	}
@@ -726,7 +728,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 	}
 \end{parcolumns}
 
-%\customseparator{}
+\customseparator{}
 
 \officiumtitulum{à Matines}
 \addcontentsline{toc}{section}{Matines}
@@ -779,13 +781,14 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \smalltitle{Versicule}
 \smallscore[n]{MV1}
+~\\
 \trans{\vv De la puissance de l'enfer.\\ \rr Délivre, Seigneur, leurs âmes.}
 
-\rubric{\normaltext{Pater noster} entièrement en silence. Les leçons sont chantées sans absolution, ni bénédiction, ni conclusion.}
+~\\
+\rubric{\normaltext{Pater noster} entièrement en silence.\\Les leçons sont chantées sans absolution, ni bénédiction, ni conclusion.}
 
-\smalltitle{Première leçon}
+\lesson{1}{Première leçon}{Job 7 : 16-21\\~}
 
-\lesson{1}
 \gscore{ODEFN1R1_dcrochu}{R}{1}
 ~\\
 \trans{\rr Je crois que mon Rédempteur est vivant, et qu'au dernier jour je ressusciterai de la terre,
@@ -793,9 +796,8 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Que je verrai moi-même, et non pas un autre, et que mes yeux doivent le contempler, 
 † et que, dans ma chair, je verrai Dieu, mon Sauveur.}
 
-\smalltitle{Deuxième leçon}
+\lesson{2}{Deuxième leçon}{Job 10 : 1-7}
 
-\lesson{2}
 \gscore{ODEFN1R2_dcrochu}{R}{2}
 ~\\
 \trans{\rr Toi qui as délivré du tombeau Lazare déjà fétide,
@@ -803,9 +805,8 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Toi qui dois venir juger les vivants et les morts, et ce siècle par le feu,
 † Toi, Seigneur, donne-leur le repos et le lieu du pardon.}
 
-\smalltitle{Troisième leçon}
+\lesson{3}{Troisième leçon}{Job 10 : 8-12}
 
-\lesson{3}
 \gscore{ODEFN1R3_dcrochu}{R}{3}
 ~\\
 \trans{\rr Seigneur, quand Tu viendras juger la terre, où me mettrai-je à l'abri de Ton visage irrité ?
@@ -841,12 +842,11 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smalltitle{Versicule}
 \smallscore[n]{MV2}
 \trans{\vv Le Seigneur les établira avec les princes. \\ \rr Avec les princes de son peuple.}
-
+\\~\\
 \rubric{\normaltext{Pater noster} entièrement en silence.}
 
-\smalltitle{Quatrième leçon}
+\lesson{4}{Quatrième leçon}{Job 13 : 22-28}
 
-\lesson{4}
 \gscore{ODEFN2R1_dcrochu}{R}{4}
 ~\\
 \trans{\rr Souviens-Toi de moi, mon Dieu, car ma vie est un souffle ;
@@ -854,9 +854,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Des profondeurs, je crie vers Toi, Seigneur ; Seigneur, écoute mon appel,
 † et que le regard de l’homme ne m’examine pas.}
 
-\smalltitle{Cinquième leçon}
-
-\lesson{5}
+\lesson{5}{Cinquième leçon}{Job 14 : 1-6}
 
 \gscore{ODEFN2R2_dcrochu}{R}{5}
 ~\\
@@ -865,9 +863,8 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Mon âme est grandement troublée, mais Toi, Seigneur, viens à son aide.
 † Aie pitié de moi, quand Tu viendras au dernier jour.}
 
-\smalltitle{Sixième leçon}
+\lesson{6}{Sixième leçon}{Job 14 : 13-16}
 
-\lesson{6}
 \gscore{ODEFN2R3_dcrochu}{R}{6}
 ~\\
 \trans{\rr Ne Te rappelle pas, Seigneur, mes péchés,
@@ -901,12 +898,11 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \smalltitle{Versicule}
 \smallscore[n]{MV3}
 \trans{\vv Ne livre pas aux bêtes les âmes qui Te louent.\\ \rr Et les âmes de Tes pauvres, ne les oublie pas à jamais.}
-
+\\~\\
 \rubric{\normaltext{Pater noster} entièrement en silence.}
 
-\smalltitle{Septième leçon}
+\lesson{7}{Septième leçon}{Job 17 : 1-3, 11-15}
 
-\lesson{7}
 \gscore{ODEFN3R1_dcrochu}{R}{7}
 ~\\
 \trans{\rr En moi qui pèche chaque jour et n'en fais pas pénitence, la crainte de la mort met le trouble :
@@ -914,9 +910,8 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Seigneur, par Ton Nom, donne-moi le salut, et dans Ta puissance, délivre-moi,
 † puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.}
 
-\smalltitle{Huitième leçon}
+\lesson{8}{Huitième leçon}{Job 19 : 20-27}
 
-\lesson{8}
 \gscore{ODEFN3R2_dcrochu}{R}{8}
 ~\\
 \trans{\rr Seigneur, ne me juge pas selon mes actes ; je n'ai rien fait de digne en Ta présence ; c'est pourquoi je supplie Ta Majesté,
@@ -924,12 +919,10 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 \vv Lave-moi tout entier, Seigneur, de mon injustice, et purifie-moi de mon péché,
 † pour que Tu effaces, ô Dieu, mon iniquité.}
 
-\smalltitle{Neuvième leçon}
-
-\lesson{9}
+\lesson{9}{Neuvième leçon}{Job 10 : 18-22}
 
 \pagebreak
-\rubric{On chante ce répons si l'on a chanté seulement le troisième nocturne. Sinon, on chante le suivant.}
+\rubric{On chante ce répons si l'on a chanté seulement le troisième nocturne.}
 \gscore{ODEFN3R3a_dcrochu}{R}{9}
 
 \trans{\rr Délivre-moi, Seigneur, des chemins de l'enfer, 
@@ -940,7 +933,7 @@ Toi qui as brisé les portes d'airain et visité l'enfer, et donné, pour Te voi
 
 ~\\
 
-\rubric{On chante ce répons si l'on a chanté les trois nocturnes. Sinon, on chante le précédent.}
+\rubric{On chante ce répons si l'on a chanté les trois nocturnes.}
 \gscore{ODEFN3R3b_dcrochu}{R}{9}
 ~\\
 \trans{\rr Libère-moi, Seigneur, de la mort éternelle, en ce jour redoutable :
@@ -967,13 +960,12 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster\\
-		\rubric{en silence jusqu'à}\\
+		\vv Pater noster. \rubric{En silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
 	\colchunk{%
-		\vv Notre Père...\\
+		\vv Notre Père.\\
 		\vv Et ne nous laisse pas entrer en tentation.\\
 		\rr Mais délivre-nous du mal.
 	}
@@ -1027,7 +1019,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \addcontentsline{toc}{section}{Laudes}
 
 \rubric{L'office débute par la première antienne, sans aucune introduction. Il n'y a ni hymne ni capitule.}
-\end{document}
+
 \gscore{LA1}{A}{1}
 ~\\
 \trans{\aa Les os humiliés exulteront dans le Seigneur.}
@@ -1092,13 +1084,12 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster\\
-		\rubric{en silence jusqu'à}\\
+		\vv Pater noster. \rubric{En silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.
 	}
 	\colchunk{%
-		\vv Notre Père...\\
+		\vv Notre Père.\\
 		\vv Et ne nous laisse pas entrer en tentation.\\
 		\rr Mais délivre-nous du mal.
 	}
@@ -1192,10 +1183,10 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 ~\\
 \begin{parcolumns}[rulebetween]{2}%
 	\colchunk{%
-		\vv Pater noster\\
-		\rubric{en silence jusqu'à}\\
+		\vv Pater noster. \rubric{En silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.\\
+		~\\
 		\vv A porta ínferi.\\
 		\rr Erue, Dómine, ánimam ejus.\\
 		\vv Requiéscat in pace.\\
@@ -1206,7 +1197,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 		\rr Amen.
 	}
 	\colchunk{%
-		\vv Notre Père...\\
+		\vv Notre Père.\\
 		\vv Et ne nous laisse pas entrer en tentation.\\
 		\rr Mais délivre-nous du mal.\\
 		\vv De la puissance de l'enfer.\\
@@ -1279,10 +1270,10 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	\colchunk{%
 		\vv Kýrie eléison\\
 		\rr Christe eléison, Kýrie eléison.\\
-		\vv Pater noster\\
-		\rubric{en silence jusqu'à}\\
+		\vv Pater noster. \rubric{En silence jusqu'à}\\
 		\vv Et ne nos indúcas in tentatiónem: \\
 		\rr Sed líbera nos a malo.\\
+		~\\
 		\vv A porta ínferi.\\
 		\rr Erue, Dómine, ánimam ejus.\\
 		\vv Requiéscat in pace.\\
@@ -1304,7 +1295,7 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 	\colchunk{%
 		\vv Kýrie eléison\\
 		\rr Christe eléison, Kýrie eléison.\\
-		\vv Notre Père...\\
+		\vv Notre Père.\\
 		\vv Et ne nous laisse pas entrer en tentation.\\
 		\rr Mais délivre-nous du mal.\\
 		\vv De la puissance de l'enfer.\\
