@@ -94,12 +94,18 @@ headsep=3mm,
   \lookup{#1}{I}{Invit.}%
   \lookup{#1}{M}{Ad Magn.}%
   \lookup{#1}{B}{Ad Ben.}%
+  \lookup{#1}{in}{Intr.}%
+  \lookup{#1}{gr}{Grad.}%
+  \lookup{#1}{tr}{Tract.}%
+  \lookup{#1}{sq}{Sequ.}%
+  \lookup{#1}{of}{Offert.}%
+  \lookup{#1}{co}{Comm.}%
   \result%
 }%
 
 %% \modeannotation converts a number (1-8) into the corresponding roman numeral to be printed as annotation,
 \newcommand{\modeannotation}[1]{
-  \greannotation{\Rnum{#1}}
+  \greannotation{\IfInteger{#1}{\Rnum{#1}}{#1}}
 }
 
 %% header capture setup for the mode
@@ -1143,6 +1149,23 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \trans{\vv Qu'ils reposent en paix.\\ \rr Amen.}
 
 \customseparator{}
+%
+%\officiumtitulum{À la Messe}
+%\addcontentsline{toc}{section}{Messe}
+%
+%\gscore{MI_in}{in}{}
+%\gscore{MI_ky}{}{}
+%\gscore{MI_gr}{gr}{}
+%\gscore{MI_tr}{tr}{}
+%\gscore{MI_sq}{sq}{}
+%\gscore{MI_of}{of}{}
+%\gscore{MI_pref}{}{}
+%\gscore{MI_sa}{}{}
+%\gscore{MI_ag}{}{}
+%\gscore{MI_co}{co}{}
+%\gscore{MI_req}{}{}
+%
+%\customseparator{}
 
 \officiumtitulum{Sépulture des défunts}
 \addcontentsline{toc}{section}{Sépulture des défunts}
