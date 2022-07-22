@@ -1,0 +1,702 @@
+\documentclass[twoside]{article}
+
+\usepackage[paperwidth=150mm, paperheight=230mm]{geometry}
+\usepackage{fontspec}
+%\usepackage[latin1]{inputenc}
+\usepackage[latin.medieval, french]{babel}
+\usepackage[strict]{changepage}
+\usepackage{fancyhdr}
+\usepackage{paracol}
+\usepackage{tableof}
+\usepackage{setspace}
+\usepackage{alltt}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{parskip}
+\usepackage{enumitem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Mise en page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on numérote les nbp par page et non globalement
+\usepackage[perpage]{footmisc}
+
+% définition des en-têtes et pieds de page
+\pagestyle{empty}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{0pt}
+
+% la commande titres permet de changer les titres de gauche et de droite.
+\newcommand{\titres}[2]{
+	\renewcommand{\rightmark}{\textcolor{red}{\sc #2}}
+	\renewcommand{\leftmark}{\textcolor{red}{\sc #1}}
+}
+\titres{}{}
+
+% pas d'indentation
+\setlength{\parindent}{0mm}
+
+\geometry{
+inner=20mm,
+outer=20mm,
+top=10mm,
+bottom=25mm,
+headsep=0mm,
+}
+
+\twosided[p]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Options gregorio %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[autocompile]{gregoriotex}
+%\usepackage{gregoriotex}
+
+\definecolor{gregoriocolor}{RGB}{215,65,29}
+
+%% style général de gregorio :
+% lignes rouges, commenter pour du noir
+%\gresetlinecolor{gregoriocolor}
+
+% texte <alt> (au-dessus de la portée) en rouge et en petit, avec réglage de sa position verticale
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+\newcommand{\altraise}{-2.4mm}
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+% taille des initiales
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{ZallmanCaps}\fontsize{#1}{#1}\selectfont}
+}
+\newcommand{\defaultinitialsize}{32}
+\initialsize{\defaultinitialsize}
+% espace avant et après les initiales
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+\newcommand{\defaultinitialspace}{0cm}
+\initialspace{\defaultinitialspace}
+
+
+% on définit le système qui capture des headers pour générer des annotations
+% cette commande sera appelée pour définir des abréviations ou autres substitutions
+\newcommand{\resultat}{}
+\newcommand{\abbrev}[3]{
+  \IfSubStr{#1}{#2}{ \renewcommand{\resultat}{#3} }{}
+}
+\newcommand{\officepartannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{ntro}{ {Intr.} }
+  \abbrev{#1}{espo}{Resp.}
+  \abbrev{#1}{ll}{All.}
+  \abbrev{#1}{act}{Tract.}
+  \abbrev{#1}{equen}{Seq.}
+  \abbrev{#1}{ffert}{Off.}
+  \abbrev{#1}{ommun}{Co.}
+  \abbrev{#1}{ntip}{Ant.}
+  \abbrev{#1}{ntic}{Cant.}
+  \abbrev{#1}{ymn}{Hy.}
+  \abbrev{#1}{salm}{}
+  \abbrev{#1}{Toni Communes}{}
+  \abbrev{#1}{yrial}{}
+  \greannotation{\resultat}
+}
+\newcommand{\modeannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{1}{ {\sc i} }
+  \abbrev{#1}{2}{ {\sc ii} }
+  \abbrev{#1}{3}{ {\sc iii} }
+  \abbrev{#1}{4}{ {\sc iv} }
+  \abbrev{#1}{5}{ {\sc v} }
+  \abbrev{#1}{6}{ {\sc vi} }
+  \abbrev{#1}{7}{ {\sc vii} }
+  \abbrev{#1}{8}{ {\sc viii} }
+  \greannotation{\resultat}
+}
+\gresetheadercapture{office-part}{officepartannotation}{}
+\gresetheadercapture{mode}{modeannotation}{string}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Graphisme %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on définit l'échelle générale
+
+\newcommand{\echelle}{1}
+
+% on centre les titres et on ne les numérote pas
+\titleformat{\section}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\paragraph}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+% on diminue l'espace avant les titres
+\titlespacing*{\paragraph}{0pt}{1.8ex plus .4ex minus .4ex}{1.2ex plus .2ex minus .2ex}
+
+% commandes versets, repons et croix
+\newcommand{\vv}{\textcolor{gregoriocolor}{\fontspec[Scale=\echelle]{Charis SIL}℣.\hspace{3mm}}}
+\newcommand{\rr}{\textcolor{gregoriocolor}{\fontspec[Scale=\echelle]{Charis SIL}℟.\hspace{3mm}}}
+\newcommand{\cc}{\textcolor{gregoriocolor}{\fontspec[Scale=\echelle]{FreeSerif}\symbol{"2720}~}}
+\renewcommand{\aa}{\textcolor{gregoriocolor}{\fontspec[Scale=\echelle]{Charis SIL}\Abar.\hspace{3mm}}}
+
+% commandes diverses
+\newcommand{\antiphona}{\textcolor{gregoriocolor}{\noindent Antiphona.\hspace{4mm}}}
+\newcommand{\antienne}{\textcolor{gregoriocolor}{\noindent Antienne.\hspace{4mm}}}
+\newcommand{\rubrique}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+\newcommand{\saut}{\hspace{1cm}}
+\newcommand{\capsaut}{\hspace{3mm}}
+% pour affichier 1 en rouge et un peu d'espace
+\newcommand{\un}{{\color{gregoriocolor} 1~~~}}
+
+% abréviations
+\newcommand{\tpalleluia}{\rubrique{(T.P.} \mbox{Allelúia.\rubrique{)}}}
+\newcommand{\tpalleluiafr}{\rubrique{(T.P.} \mbox{Alléluia.\rubrique{)}}}
+
+\newcommand{\tqomittitur}{{\small \rubrique{(In Tempore Quadragesimæ ommittitur} Allelúia.\rubrique{)}}}
+\newcommand{\careme}{{\small \rubrique{(Pendant le Carême on omet l'}Alléluia.\rubrique{)}}}
+
+% environnement hymne : alltt + normalfont + marges custom
+\newenvironment{hymne}
+  {
+  \begin{adjustwidth}{1.6cm}{1mm}
+  \begin{alltt}\normalfont
+  }
+  {
+  \end{alltt}
+  \end{adjustwidth}
+  }
+  
+% la commande \u permet de souligner les inflexions
+\let\u\textbf
+
+% on définit la police par défaut
+\setmainfont[Ligatures=TeX, Scale=\echelle]{Charis SIL}
+%renderer=ICU a l'air de ne plus marcher...
+%\setmainfont[Renderer=ICU, Ligatures=TeX, Scale=\echelle]{Charis SIL}
+\setstretch{0.9}
+
+\begin{document}
+
+\null \newpage
+
+\sloppy
+
+\begin{paracol}[1]{2}
+
+\begin{center}\begin{doublespace}
+
+{\fontspec[Scale=\echelle]{Futura Book}
+\MakeUppercase{\Large Dominica VII post Pentecosten \\ ad I. Vesperas}\\
+juxta usum antiquiorem ritus romani}
+\end{doublespace}\end{center}
+
+\gresetinitiallines{0}
+\gregorioscore{gabc/or--deus_in_adjutorium.gabc}
+\gresetinitiallines{1}
+
+~~
+
+\switchcolumn
+
+\selectlanguage{french}
+\begin{center}\begin{doublespace}
+{\fontspec[Scale=\echelle]{Futura Book}
+\MakeUppercase{\Large First Vespers of the 7\th~Sunday \\ after Pentecost}\\
+according to the more ancient use of the Roman Rite
+}
+\end{doublespace}\end{center}
+
+~~
+
+~~
+
+\vv Dieu, viens à mon aide.
+
+\rr Seigneur, viens vite à mon secours.
+
+\vv Gloire au Père, au Fils, et au Saint-Esprit.
+
+\rr Comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen. Alléluia.
+
+\switchcolumn*
+
+\paragraph{Psalmus 143 - I}
+
+\gregorioscore{gabc/1an.gabc}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\selectlanguage{latin}
+\item Benedíctus Dóminus, Deus meus, qui docet manus meas \textit{ad} \textbf{prǽ}lium,~* et dígitos me\textit{os} \textit{ad} \textbf{bel}lum.
+
+\item Misericórdia mea, et refúgi\textit{um} \textbf{me}um :~* suscéptor meus, et libe\textit{rá}\textit{tor} \textbf{me}us :
+
+\item Protéctor meus, et in ipso \textit{spe}\textbf{rá}vi :~* qui subdit pópulum \textit{me}\textit{um} \textbf{sub} me.
+
+\item Dómine, quid est homo quia innotuís\textit{ti} \textbf{e}i ?~* aut fílius hóminis, quia ré\textit{pu}\textit{tas} \textbf{e}um ?
+
+\item Homo vanitáti sími\textit{lis} \textbf{fac}tus est :~* dies ejus sicut um\textit{bra} \textit{præ}\textbf{tér}eunt.
+\newpage
+\item Dómine, inclína cælos tuos, et \textit{de}\textbf{scén}de :~* tange montes, et \textit{fu}\textit{mi}\textbf{gá}bunt.
+
+\item Fúlgura coruscatiónem, et dissipá\textit{bis} \textbf{e}os :~* emítte sagíttas tuas, et contur\textit{bá}\textit{bis} \textbf{e}os.
+
+\item Emítte manum tuam de alto,~† éripe me, et líbera me de a\textit{quis} \textbf{mul}tis~:~* de manu filiórum a\textit{li}\textit{e}\textbf{nó}rum.
+
+\item Quorum os locútum est va\textit{ni}\textbf{tá}tem~:~* et déxtera eórum, déxtera in\textit{i}\textit{qui}\textbf{tá}tis.
+
+\item Glória Patri, \textit{et} \textbf{Fí}lio ,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, \textit{et} \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{enumerate}
+
+\switchcolumn
+
+
+\paragraph{Psaume 143 - I}
+\aa Béni soit le Seigneur * mon défenseur et mon libérateur.
+
+\gregorioscore{gabc/6_lib.gabc}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Béni soit le Seigneur, mon rocher ! +
+Il exerce mes mains pour le combat, *
+il m’entraîne à la bataille.
+\item Il est mon allié, ma forteresse, *
+ma citadelle, celui qui me libère ;
+\item il est le bouclier qui m’abrite, *
+il me donne pouvoir sur mon peuple.
+
+\item Qu’est-ce que l’homme,
+pour que tu le connaisses, Seigneur, *
+le fils d’un homme, pour que tu comptes avec lui ?
+\item L’homme est semblable à un souffle, *
+ses jours sont une ombre qui passe.
+
+\item Seigneur, incline les cieux et descends ; *
+touche les montagnes : qu’elles brûlent !
+\item Décoche des éclairs de tous côtés, *
+tire des flèches et répands la terreur.
+
+\item Des hauteurs, tends-moi la main, délivre-moi, *
+sauve-moi du gouffre des eaux,
+de l’emprise d’un peuple étranger :
+\item il dit des paroles mensongères, *
+sa main est une main parjure.
+\end{enumerate}
+
+\switchcolumn*
+\paragraph{Psalmus 143 - II}
+
+\gregorioscore{gabc/2an.gabc}
+
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+
+\item Deus, cánticum novum cantábo \textbf{ti}bi:~* in psaltério, decachórdo \textit{psal}\textit{lam} \textbf{ti}bi.
+
+\item Qui das salútem \textbf{ré}gibus :~* qui redemísti David, servum tuum, de gládio malígno : \textit{é}\textit{ri}\textbf{pe} me.
+
+\item Et érue me de manu filiórum alienórum,~† quorum os locútum est vani\textbf{tá}tem :~* et déxtera eórum, déxtera in\textit{i}\textit{qui}\textbf{tá}tis.
+
+\item Quorum fílii, sicut novéllæ plantati\textbf{ó}nes~* in juven\textit{tú}\textit{te} \textbf{su}a.
+
+\item Fíliæ eórum com\textbf{pó}sitæ :~* circumornátæ ut simili\textit{tú}\textit{do} \textbf{tem}pli.
+
+\item Promptuária eórum \textbf{ple}na :~* eructántia ex \textit{hoc} \textit{in} \textbf{il}lud.
+
+\item Oves eórum fœtósæ, abundántes in egréssibus \textbf{su}is :~* boves e\textit{ó}\textit{rum} \textbf{cras}sæ.
+
+\item Non est ruína macériæ, neque \textbf{tráns}itus :~* neque clamor in platé\textit{is} \textit{e}\textbf{ó}rum.
+
+\item Beátum dixérunt pópulum, cui \textbf{hæc} sunt :~* beátus pópulus, cujus Dóminus \textit{De}\textit{us} \textbf{e}jus.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{enumerate}
+
+\switchcolumn
+
+\paragraph{Psaume 143 - II}
+\aa Heureux le peuple * qui a le Seigneur pour son Dieu.
+
+\gregorioscore{gabc/8_c.gabc}
+
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Pour toi, je chanterai un chant nouveau, *
+pour toi, je jouerai sur la harpe à dix cordes,
+\item pour toi qui donnes aux rois la victoire *
+et sauves de l’épée meurtrière
+David, ton serviteur.
+
+\item Délivre-moi, sauve-moi
+de l’emprise d’un peuple étranger : *
+il dit des paroles mensongères,
+sa main est une main parjure.
+
+\item Que nos fils soient pareils à des plants
+bien venus dès leur jeune âge ; *
+nos filles, pareilles à des colonnes
+sculptées pour un palais !
+
+\item Nos greniers, remplis, débordants,
+regorgeront de biens ; *
+\item les troupeaux, par milliers, par myriades,
+empliront nos campagnes !
+
+\item Nos vassaux nous resteront soumis,
+plus de défaites ; *
+\item plus de brèches dans nos murs,
+plus d’alertes sur nos places !
+
+\item Heureux le peuple ainsi comblé ! *
+Heureux le peuple qui a pour Dieu « Le Seigneur » !
+\end{enumerate}
+\newpage
+\switchcolumn*
+
+\paragraph{Psalmus 144 - I}
+
+\gregorioscore{gabc/3an.gabc}
+
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Exaltábo te, \textbf{De}us \textbf{me}us, rex:~* et benedícam nómini tuo in sǽculum, et in sǽ\textit{cu}\textit{lum} \textbf{sǽ}culi.
+
+\item Per síngulos dies bene\textbf{dí}cam \textbf{ti}bi :~* et laudábo nomen tuum in sǽculum, et in sǽ\textit{cu}\textit{lum} \textbf{sǽ}culi.
+
+\item Magnus Dóminus, et lau\textbf{dá}bilis \textbf{ni}mis :~* et magnitúdinis ejus \textit{non} \textit{est} \textbf{fi}nis.
+
+\item Generátio et generátio laudábit \textbf{ó}pera \textbf{tu}a :~* et poténtiam tuam pro\textit{nun}\textit{ti}\textbf{á}bunt.
+
+\item Magnificéntiam glóriæ sanctitátis \textbf{tu}æ lo\textbf{quén}tur :~* et mirabília tu\textit{a} \textit{nar}\textbf{rá}bunt.
+
+\item Et virtútem terribílium tu\textbf{ó}rum \textbf{di}cent :~* et magnitúdinem tu\textit{am} \textit{nar}\textbf{rá}bunt.
+
+\item Memóriam abundántiæ suavitátis tuæ \textbf{e}ruc\textbf{tá}bunt :~* et justítia tua \textit{ex}\textit{sul}\textbf{tá}bunt.
+
+\item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{enumerate}
+
+\switchcolumn
+
+\paragraph{Psaume 144 - I}
+
+\aa Le Seigneur est grand * et très digne de louange, et Sa grandeur n'a pas de bornes.
+
+\gregorioscore{gabc/1_a3.gabc}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+
+\item Je t’exalterai, mon Dieu, mon Roi, *
+je bénirai ton nom toujours et à jamais !
+
+\item Chaque jour je te bénirai, *
+je louerai ton nom toujours et à jamais.
+\item Il est grand, le Seigneur, hautement loué ; *
+à sa grandeur, il n’est pas de limite.
+
+\item D’âge en âge, on vantera tes œuvres, *
+on proclamera tes exploits.
+\item Je redirai le récit de tes merveilles, *
+ton éclat, ta gloire et ta splendeur.
+
+\item On dira ta force redoutable ; *
+je raconterai ta grandeur.
+\item On rappellera tes immenses bontés ; *
+tous acclameront ta justice.
+\end{enumerate}
+
+\switchcolumn*
+\paragraph{Psalmus 144 - II}
+
+\gregorioscore{gabc/4an.gabc}
+
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+
+\item Miserátor, et miséricors \textbf{Dó}minus:~* pátiens, et mul\textit{tum} \textit{mi}\textbf{sé}ricors.
+
+\item Suávis Dóminus uni\textbf{vér}sis :~* et miseratiónes ejus super ómnia ó\textit{pe}\textit{ra} \textbf{e}jus.
+
+\item Confiteántur tibi, Dómine, ómnia ópera \textbf{tu}a :~* et sancti tui bene\textit{dí}\textit{cant} \textbf{ti}bi.
+\newpage
+\item Glóriam regni tui \textbf{di}cent :~* et poténtiam tu\textit{am} \textit{lo}\textbf{quén}tur :
+
+\item Ut notam fáciant fíliis hóminum poténtiam \textbf{tu}am :~* et glóriam magnificéntiæ \textit{re}\textit{gni} \textbf{tu}i.
+
+\item Regnum tuum regnum ómnium sæcu\textbf{ló}rum :~* et dominátio tua in omni generatióne et gene\textit{ra}\textit{ti}\textbf{ó}nem.
+
+\item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{enumerate}
+
+\switchcolumn
+
+\paragraph{Psaume 144 - II}
+
+\aa Le Seigneur est bon * envers tous, et Ses miséricordes s'étendent sur toutes Ses œuvres.
+
+\gregorioscore{gabc/8_G.gabc}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Le Seigneur est tendresse et pitié, *
+lent à la colère et plein d’amour ;
+\item la bonté du Seigneur est pour tous, *
+sa tendresse, pour toutes ses œuvres.
+
+\item Que tes œuvres, Seigneur, te rendent grâce *
+et que tes fidèles te bénissent !
+\item Ils diront la gloire de ton règne, *
+ils parleront de tes exploits,
+
+\item annonçant aux hommes tes exploits, *
+la gloire et l’éclat de ton règne :
+\item ton règne, un règne éternel, *
+ton empire, pour les âges des âges.
+\end{enumerate}
+
+\switchcolumn*
+\paragraph{Psalmus 144 - III}
+
+\gregorioscore{gabc/5an.gabc}
+
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\setcounter{enumi}{1}
+\item Allevat Dóminus om\textit{nes} \textit{qui} \textbf{cór}ruunt:~* et érigit omnes e\textbf{lí}sos.
+
+\item Oculi ómnium in te \textit{spe}\textit{rant}, \textbf{Dó}mine :~* et tu das escam illórum in témpore oppor\textbf{tú}no.
+
+\item Aperis tu \textit{ma}\textit{num} \textbf{tu}am :~* et imples omne ánimal benedicti\textbf{ó}ne.
+
+\item Justus Dóminus in ómnibus \textit{vi}\textit{is} \textbf{su}is :~* et sanctus in ómnibus opéribus \textbf{su}is.
+
+\item Prope est Dóminus ómnibus invocán\textit{ti}\textit{bus} \textbf{e}um :~* ómnibus invocántibus eum in veri\textbf{tá}te.
+
+\item Voluntátem timéntium se fáciet :~† et deprecatiónem eó\textit{rum} \textit{ex}\textbf{áu}diet :~* et salvos fáciet \textbf{e}os.
+
+\item Custódit Dóminus omnes \textit{di}\textit{li}\textbf{gén}tes se :~* et omnes peccatóres dis\textbf{pér}det.
+
+\item Laudatiónem Dómini loqué\textit{tur} \textit{os} \textbf{me}um :~* et benedícat omnis caro nómini sancto ejus in sǽculum, et in sǽculum \textbf{sǽ}culi.
+
+\item Glória Pa\textit{tri}, \textit{et} \textbf{Fí}lio,~* et Spirítui \textbf{Sanc}to.
+
+\item Sicut erat in princípio, et \textit{nunc}, \textit{et} \textbf{sem}per,~* et in sǽcula sæculórum. \textbf{A}men.
+\end{enumerate}
+
+\switchcolumn
+
+\paragraph{Psaume 144 - III}
+\aa Le Seigneur est fidèle * dans toutes Ses paroles, et saint dans toutes Ses œuvres.
+
+\gregorioscore{gabc/4_la_g.gabc}
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Le Seigneur est vrai en tout ce qu’il dit, *
+fidèle en tout ce qu’il fait.
+\item Le Seigneur soutient tous ceux qui tombent, *
+il redresse tous les accablés.
+
+\item Les yeux sur toi, tous, ils espèrent : *
+tu leur donnes la nourriture au temps voulu ;
+\item tu ouvres ta main : *
+tu rassasies avec bonté tout ce qui vit.
+
+\item Le Seigneur est juste en toutes ses voies, *
+fidèle en tout ce qu’il fait.
+\item Il est proche de ceux qui l’invoquent, *
+de tous ceux qui l’invoquent en vérité.
+
+\item Il répond au désir de ceux qui le craignent ; *
+il écoute leur cri : il les sauve.
+\item Le Seigneur gardera tous ceux qui l’aiment, *
+mais il détruira tous les impies.
+
+\item Que ma bouche proclame
+les louanges du Seigneur ! *
+Son nom très saint, que toute chair le bénisse
+toujours et à jamais !
+\end{enumerate}
+\newpage
+\switchcolumn*
+
+\paragraph{Capitulum}
+O Altitúdo divitiárum sapiéntiæ, et sciéntiæ Dei : † quam incomprehensibília sunt iudícia eius, * et investigábiles viæ eius!
+
+\gresetinitiallines{0}
+\gregorioscore{gabc/or--deo_gratias_capitulum.gabc}
+\gresetinitiallines{1}
+
+\switchcolumn
+
+\paragraph{Capitule}
+\rubrique{Rom. 11, 33} \capsaut Quelle profondeur dans la richesse, la sagesse et la connaissance de Dieu ! Ses décisions sont insondables, ses chemins sont impénétrables !\\
+\rr Nous rendons grâces à Dieu.
+
+\switchcolumn*
+
+\paragraph{Hymnus}
+
+\gregorioscore{gabc/hy.gabc}
+
+\switchcolumn
+
+\paragraph{Hymne}
+\begin{alltt}\normalfont
+             Déjà le soleil de feu s’en va :
+             ô toi, lumière éternelle, Unité,
+             Trinité bienheureuse, verse
+             ton amour dans nos cœurs.
+
+             Le matin, nous chantons tes louanges,
+             le soir, nous te prions encore ;
+             daigne, nous t'en supplions,
+             que nous te louions parmi les habitants des cieux.
+
+             Au Père, en même temps au Fils,
+             et à toi, Esprit-Saint,
+             comme autrefois, ainsi toujours
+             gloire dans tous les siècles.
+             Amen.
+\end{alltt}
+\newpage
+\switchcolumn*
+\gresetinitiallines{0}
+\gregorioscore{gabc/VespertinaOratio.gabc}
+\gresetinitiallines{1}
+\switchcolumn
+
+\vv Que la prière du soir s’élève vers toi, Seigneur.
+
+\rr Et que ta miséricorde descende sur nous.
+
+\switchcolumn*
+
+\paragraph{Canticum Beatæ Mariæ Virginis}
+
+\gregorioscore{gabc/mag_ant.gabc}
+
+
+\switchcolumn
+
+\paragraph{Cantique de la Sainte Vierge Marie}
+
+\aa Que le Seigneur * exauce vos prières, et qu'il se réconcilie avec vous, et qu'il ne vous délaisse pas aux jours mauvais, le Seigneur notre Dieu.
+
+\gregorioscore{gabc/M.gabc}
+\gresetinitiallines{0}
+
+\switchcolumn*
+
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item \textit{Ma}\textbf{gní}ficat~* ánima \textit{me}\textit{a} \textbf{Dó}minum.
+
+\item Et exsultávit \textit{spí}\textit{ri}\textit{tus} \textbf{me}us~* in Deo salu\textit{tá}\textit{ri} \textbf{me}o.
+
+\item Quia respéxit humilitátem \textit{an}\textit{cíl}\textit{læ} \textbf{su}æ:~* ecce enim ex hoc beátam me dicent omnes gene\textit{ra}\textit{ti}\textbf{ó}nes.
+
+\item Quia fecit mihi \textit{ma}\textit{gna} \textit{qui} \textbf{pot}ens est:~* et sanctum \textit{no}\textit{men} \textbf{e}jus.
+
+\item Et misericórdia ejus a progéni\textit{e} \textit{in} \textit{pro}\textbf{gé}nies~* timén\textit{ti}\textit{bus} \textbf{e}um.
+
+\item Fecit poténtiam in \textit{brá}\textit{chi}\textit{o} \textbf{su}o:~* dispérsit supérbos mente \textit{cor}\textit{dis} \textbf{su}i.
+
+\item Depósuit pot\textit{én}\textit{tes} \textit{de} \textbf{se}de,~* et exal\textit{tá}\textit{vit} \textbf{hú}miles.
+
+\item Esuriéntes \textit{im}\textit{plé}\textit{vit} \textbf{bo}nis:~* et dívites dimí\textit{sit} \textit{in}\textbf{á}nes.
+
+\item Suscépit Israël \textit{pú}\textit{e}\textit{rum} \textbf{su}um,~* recordátus misericór\textit{di}\textit{æ} \textbf{su}æ.
+
+\item Sicut locútus est \textit{ad} \textit{pa}\textit{tres} \textbf{nos}tros,~* Abraham et sémini e\textit{jus} \textit{in} \textbf{sǽ}cula.
+
+\item Glória \textit{Pa}\textit{tri}, \textit{et} \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
+
+\item Sicut erat in princípio, \textit{et} \textit{nunc}, \textit{et} \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
+\end{enumerate}
+\switchcolumn
+\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
+\item Mon âme exalte le Seigneur, *
+
+\item exulte mon esprit en Dieu, mon Sauveur !
+
+\item Il s'est penché sur son humble servante ; *
+désormais, tous les âges me diront bienheureuse.
+
+\item Le Puissant fit pour moi des merveilles ; *
+Saint est son nom !
+
+\item Son amour s'étend d'âge en âge *
+sur ceux qui le craignent ;
+
+\item Déployant la force de son bras, *
+il disperse les superbes.
+
+\item Il renverse les puissants de leurs trônes, *
+il élève les humbles.
+
+\item Il comble de biens les affamés, *
+renvoie les riches les mains vides.
+
+\item Il relève Israël, son serviteur, *
+il se souvient de son amour,
+
+\item de la promesse faite à nos pères, *
+en faveur d'Abraham et de sa race, à jamais.
+\end{enumerate}
+\newpage
+\switchcolumn*
+
+\vv Dóminus vobíscum. \\
+\rr Et cum spíritu tuo.
+
+Orémus.\\
+Deus, cuius providéntia in sui dispositióne non fállitur: te súpplices exorámus; ut nóxia cuncta submóveas, et ómnia nobis profutúra concédas.
+Per Dóminum nostrum Iesum Christum, Fílium tuum: qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum. \\
+\rr Amen.
+
+\switchcolumn
+
+\vv Le Seigneur soit avec vous. \\
+\rr Et avec votre esprit.
+
+Prions. \\
+O Dieu, dont la providence ne se trompe jamais dans ses plans, nous Vous demandons humblement de détourner de nous tout ce qui nous serait nuisible et de nous accorder ce qui doit nous être utile.
+Par Notre Seigneur Jésus Christ, ton Fils, qui vit et règne avec toi et le Saint-Esprit, Dieu, maintenant et pour les siècles des siècles.\\
+\rr Amen.
+
+\switchcolumn*
+
+\vv Dóminus vobíscum. \\
+\rr Et cum spíritu tuo.
+
+~~
+
+\gregorioscore{gabc/or--benedicamus_domino.gabc}
+
+\switchcolumn
+
+\vv Le Seigneur soit avec vous. \\
+\rr Et avec votre esprit.
+
+~~
+
+\vv Bénissons le Seigneur. \\
+\rr Nous rendons grâces à Dieu.
+
+\switchcolumn*
+
+~~
+
+\vv Fidélium ánimæ per misericórdiam Dei requiéscant in pace. \\
+\rr Amen.
+
+\switchcolumn
+
+~~
+
+\vv Que par la miséricorde de Dieu, les âmes des fidèles trépassés reposent en paix. \\
+\rr Amen.
+
+\end{paracol}
+\end{document}
