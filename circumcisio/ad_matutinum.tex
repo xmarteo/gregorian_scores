@@ -3,7 +3,8 @@
 \usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
 \usepackage{fontspec}
 %\usepackage[latin1]{inputenc}
-\usepackage[latin.medieval, french]{babel}
+\usepackage[nolocalmarks]{polyglossia}
+\setdefaultlanguage[variant=french, frenchitemlabels=false]{french}
 \usepackage[strict]{changepage}
 \usepackage{fancyhdr}
 \usepackage{paracol}
@@ -52,18 +53,18 @@ headsep=3mm,
 
 %% style général de gregorio :
 % lignes rouges, commenter pour du noir
-\gresetlinecolor{gregoriocolor}
+%\gresetlinecolor{gregoriocolor}
 
 % texte <alt> (au-dessus de la portée) en rouge et en petit, avec réglage de sa position verticale
 \grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
-\newcommand{\altraise}{-2.4mm}
+\newcommand{\altraise}{-1.4mm}
 \grechangedim{abovelinestextraise}{\altraise}{scalable}
 
 % taille des initiales
 \newcommand{\initialsize}[1]{
-    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+    \grechangestyle{initial}{\fontspec{Zallman Caps}\fontsize{#1}{#1}\selectfont}
 }
-\newcommand{\defaultinitialsize}{32}
+\newcommand{\defaultinitialsize}{28}
 \initialsize{\defaultinitialsize}
 % espace avant et après les initiales
 \newcommand{\initialspace}[1]{
@@ -128,13 +129,20 @@ headsep=3mm,
 \newcommand{\rr}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}℟.\hspace{3mm}}}
 \newcommand{\cc}{\textcolor{red}{\fontspec[Scale=\echelle]{FreeSerif}\symbol{"2720}~}}
 \renewcommand{\aa}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}\Abar.\hspace{3mm}}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}\Abar.~}}
+\gresetspecial{+}{{\fontspec{FreeSerif}†~}}
+\gresetspecial{*}{\gresixstar}
+\gresetspecial{cross}{\textcolor{gregoriocolor}{\fontspec{FreeSerif}\symbol{"2720}}}
+\gresetspecial{labiacross}{\textcolor{gregoriocolor}{+}}
 
 % commandes diverses
 \newcommand{\antiphona}{\textcolor{red}{\noindent Antiphona.\hspace{4mm}}}
 \newcommand{\antienne}{\textcolor{red}{\noindent Antienne.\hspace{4mm}}}
 \newcommand{\rubrique}[1]{\textcolor{red}{\emph{#1}}}
-\newcommand{\saut}{\\ \null \hspace{1cm}}
-\newcommand{\minisaut}{\\ \null \hspace{4mm}}
+\newcommand{\saut}{\hspace{1cm}}
+\newcommand{\minisaut}{\hspace{4mm}}
 \newcommand{\sautRV}{\\ \null \hspace{5.95mm}}
 \newcommand{\petitvspace}{\vspace{2mm}}
 \newcommand{\microvspace}{\vspace{0.8mm}}
@@ -183,7 +191,7 @@ headsep=3mm,
 
 \vspace{1cm}
 
-{\scshape\LARGE In Circumcisione Domini}
+{\scshape\LARGE In Octava Nativitatis}
 
 \vspace{2cm}
 
@@ -191,7 +199,7 @@ headsep=3mm,
 
 \vspace{5cm}
 
-{\scshape\LARGE La Circoncision de Notre-Seigneur}
+{\scshape\LARGE Octave de Noël}
 
 \vspace{2cm}
 
@@ -200,34 +208,32 @@ headsep=3mm,
 
 \end{titlepage}
 
-\null\newpage
-
 % tolérance infinie sur les sauts de lignes pour les colonnes étroites
 \sloppy
-
-\begin{paracol}{2}
-\vv Dómine, lábia \cc mea apéries. \\
-\rr Et os meum annuntiábit laudem tuam. \\
-\vv Deus \cc in adjutórium meum inténde. \\
-\rr Dómine, ad adjuvándum me festína. \\
-\vv Glória Patri, et Fílio, et Spirítui Sancto. \\
-\rr Sicut erat in princípio, et nunc, et semper, et in sǽcula sæculórum. Amen. Allelúia.
-\switchcolumn
-\vv Seigneur, Vous ouvrirez mes lèvres. \\
-\rr Et ma bouche annoncera Votre louange. \\
-\vv Dieu, venez à mon aide. \\
-\rr Seigneur, hâtez-vous de me secourir. \\
-\vv Gloire au Père, au Fils, et au Saint-Esprit. \\
-\rr Comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il. Alléluia.
-\end{paracol}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ORIa}
+\gresetinitiallines{1}
+\emph{\vv Seigneur, ouvre mes lèvres. \minisaut \rr Et ma bouche annoncera ta louange. \\
+\vv Dieu, viens à mon aide. \minisaut \rr Seigneur, viens vite à notre secours. \\
+\vv Gloire au Père, au Fils, et au Saint-Esprit. \minisaut \rr Comme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Amen. Alléluia.}
 
 \section{Invitatoire}
 
+\emph{\aa Le Christ nous est né, venez, adorons.}
+
 \gregorioscore{partitions/in--christus_natus_est_nobis--.gabc}
+
+\emph{Venez, chantons avec allégresse au Seigneur, faisons monter l'expression d'une joie vers Dieu, notre salut.
+Hâtons-nous de nous présenter devant lui avec des louanges et, dans des psaumes célébrons sa gloire.\\
+Parce que le Seigneur est le grand Dieu; le grand Roi au dessus de tous les dieux; parce que le Seigneur ne repoussera pas son peuple; parce que dans sa main sont tous les confins de la terre et que son regard domine les cimes des montagnes.\\
+Parce qu'à lui est la mer, et que c'est lui-même qui l'a faite, et que ses mains ont formé le continent. Venez, adorons, prosternons-nous devant Dieu, et pleurons devant le Seigneur qui nous a faits, parce que lui-même est le Seigneur notre Dieu, et que nous sommes son peuple et les brebis de son pâturage.\\
+Aujourd'hui, si vous entendez sa voix, n'endurcissez pas vos cœurs, comme il arriva à vos pères dans l'exaspération au jour de la tentation dans le désert, alors qu'ils me tentèrent, m'éprouvèrent et virent mes œuvres.\\
+Pendant quarante ans, j'ai été proche de cette génération et j'ai dit: Toujours ils errent de cœur; et eux, ils n'ont point connu mes voies: et je leur ai juré dans ma colère, s'ils entreront dans mon repos.}
 
 \newpage
 \section{Hymne}
-\gregorioscore{partitions/hy--jesu_redemptor_omnium_(t._nativitatis)--solesmes_1961.gabc}
+%\gregorioscore{partitions/hy--jesu_redemptor_omnium_(t._nativitatis)--solesmes_1961.gabc}
+\gregorioscore{partitions/hy--christe_redemptor_omnium_ex_patre--solesmes_1934.gabc}
 
 ~
 
@@ -271,13 +277,12 @@ headsep=3mm,
 \gresetinitiallines{0}
 \gregorioscore{partitions/ps1_2.gabc}
 \gresetinitiallines{1}
-\aa \emph{Le Seigneur m'a dit : tu es mon Fils, aujourd'hui, je t'ai engendré.}
+\aa \emph{Le Seigneur m'a dit: tu es mon Fils, aujourd'hui, je t'ai engendré.}
 
-\un \emph{Pourquoi ce tumulte des nations, ce vain murmure des peuples ?}
+\un \emph{Pourquoi ce tumulte des nations, ce vain murmure des peuples?}
 \begin{paracol}{2}
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Astitérunt reges terræ, et príncipes convenérunt in \textbf{u}num~* advérsus Dóminum, et advérsus \textit{Chris}\textit{tum} \textbf{e}jus.
 \item Dirumpámus víncula e\textbf{ó}rum:~* et projiciámus a nobis ju\textit{gum} \textit{ip}\textbf{só}rum.
 \item Qui hábitat in cælis, irridébit \textbf{e}os:~* et Dóminus subsan\textit{ná}\textit{bit} \textbf{e}os.
@@ -292,25 +297,24 @@ headsep=3mm,
 \item Cum exárserit in brevi ira \textbf{e}jus:~* beáti omnes qui confí\textit{dunt} \textit{in} \textbf{e}o.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\item Les rois de la terre se dressent, les grands se liguent entre eux contre le Seigneur et son messie :
-\item « Faisons sauter nos chaînes, rejetons ces entraves ! »
-\item Celui qui règne dans les cieux s'en amuse, le Seigneur les tourne en dérision ;
-\item puis il leur parle avec fureur, et sa colère les épouvante :
-\item « Moi, j'ai sacré mon roi sur Sion, ma sainte montagne. »
-\item Je proclame le décret du Seigneur ! Il m'a dit : « Tu es mon fils ; moi, aujourd'hui, je t'ai engendré.
+\item Les rois de la terre se dressent, les grands se liguent entre eux contre le Seigneur et son messie:
+\item «Faisons sauter nos chaînes, rejetons ces entraves !»
+\item Celui qui règne dans les cieux s'en amuse, le Seigneur les tourne en dérision;
+\item puis il leur parle avec fureur, et sa colère les épouvante:
+\item «Moi, j'ai sacré mon roi sur Sion, ma sainte montagne.»
+\item Je proclame le décret du Seigneur! Il m'a dit: «Tu es mon fils; moi, aujourd'hui, je t'ai engendré.
 \item Demande, et je te donne en héritage les nations, pour domaine la terre tout entière.
-\item Tu les détruiras de ton sceptre de fer, tu les briseras comme un vase de potier. »
+\item Tu les détruiras de ton sceptre de fer, tu les briseras comme un vase de potier.»
 \item Maintenant, rois, comprenez, reprenez-vous, juges de la terre.
 \item Servez le Seigneur avec crainte, rendez-lui votre hommage en tremblant.
-\item Qu'il s'irrite et vous êtes perdus : soudain sa colère éclatera. 
-\item Heureux qui trouve en lui son refuge !
+\item Qu'il s'irrite et vous êtes perdus: soudain sa colère éclatera. 
+\item Heureux qui trouve en lui son refuge!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 \end{paracol}
 
@@ -320,13 +324,12 @@ headsep=3mm,
 \gresetinitiallines{0}
 \gregorioscore{partitions/ps2_18.gabc}
 \gresetinitiallines{1}
-\aa \emph{C'est dans le soleil qu'il a placé son tabernacle ; et lui-même, comme l'époux, il sort de la chambre nuptiale.}
+\aa \emph{C'est dans le soleil qu'il a placé son tabernacle; et lui-même, comme l'époux, il sort de la chambre nuptiale.}
 
 \un \emph{Les cieux proclament la gloire de Dieu, le firmament raconte l'ouvrage de ses mains.}
 \begin{paracol}{2}
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Dies diéi erúctat \textbf{ver}bum,~* et nox nocti índi\textbf{cat} sci\textbf{én}tiam.
 \item Non sunt loquélæ, neque ser\textbf{mó}nes,~* quorum non audiántur \textbf{vo}ces e\textbf{ó}rum.
 \item In omnem terram exívit sonus e\textbf{ó}rum:~* et in fines orbis terræ \textbf{ver}ba e\textbf{ó}rum.
@@ -344,7 +347,6 @@ headsep=3mm,
 \item Dómine, adjútor \textbf{me}us,~* et red\textbf{émp}tor \textbf{me}us.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
@@ -352,20 +354,20 @@ headsep=3mm,
 \item Le jour au jour en livre le récit et la nuit à la nuit en donne connaissance.
 \item Pas de paroles dans ce récit, pas de voix qui s'entende;
 \item mais sur toute la terre en paraît le message et la nouvelle, aux limites du monde. 
-\item Là, se trouve la demeure du soleil : tel un époux, il paraît hors de sa tente,
+\item Là, se trouve la demeure du soleil: tel un époux, il paraît hors de sa tente,
 \item il s'élance en conquérant joyeux. Il paraît où commence le ciel,
-\item il s'en va jusqu'où le ciel s'achève : rien n'échappe à son ardeur.
-\item La loi du Seigneur est parfaite, qui redonne vie ; la charte du Seigneur est sûre, qui rend sages les simples.
-\item Les préceptes du Seigneur sont droits, ils réjouissent le cœur ; le commandement du Seigneur est limpide, il clarifie le regard.
-\item La crainte qu'il inspire est pure, elle est là pour toujours ; les décisions du Seigneur sont justes et vraiment équitables :
+\item il s'en va jusqu'où le ciel s'achève: rien n'échappe à son ardeur.
+\item La loi du Seigneur est parfaite, qui redonne vie; la charte du Seigneur est sûre, qui rend sages les simples.
+\item Les préceptes du Seigneur sont droits, ils réjouissent le cœur; le commandement du Seigneur est limpide, il clarifie le regard.
+\item La crainte qu'il inspire est pure, elle est là pour toujours; les décisions du Seigneur sont justes et vraiment équitables:
 \item plus désirables que l'or, qu'une masse d'or fin, plus savoureuses que le miel qui coule des rayons.
-\item Aussi ton serviteur en est illuminé ; à les garder, il trouve son profit.
-\item Qui peut discerner ses erreurs ? Purifie-moi de celles qui m'échappent.
-\item Préserve aussi ton serviteur de l'orgueil : qu'il n'ait sur moi aucune emprise. Alors je serai sans reproche, pur d'un grand péché.
-\item Accueille les paroles de ma bouche, le murmure de mon cœur ; qu'ils parviennent devant toi, 
-\item Seigneur, mon rocher, mon défenseur !
+\item Aussi ton serviteur en est illuminé; à les garder, il trouve son profit.
+\item Qui peut discerner ses erreurs? Purifie-moi de celles qui m'échappent.
+\item Préserve aussi ton serviteur de l'orgueil: qu'il n'ait sur moi aucune emprise. Alors je serai sans reproche, pur d'un grand péché.
+\item Accueille les paroles de ma bouche, le murmure de mon cœur; qu'ils parviennent devant toi, 
+\item Seigneur, mon rocher, mon défenseur!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 \end{paracol}
 
@@ -377,11 +379,10 @@ headsep=3mm,
 \gresetinitiallines{1}
 \aa \emph{Levez-vous, portes éternelles, qu'il entre, le Roi de gloire.}
 
-\un \emph{Au Seigneur, le monde et sa richesse, la terre et tous ses habitants !}
+\un \emph{Au Seigneur, le monde et sa richesse, la terre et tous ses habitants!}
 \begin{paracol}{2}
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Quia ipse super mária fundávit \textbf{e}um:~* et super flúmina præpa\textbf{rá}vit \textbf{e}um.
 \item Quis ascéndet in montem \textbf{Dó}mini?~* aut quis stabit in loco \textbf{sanc}to \textbf{e}jus?
 \item Innocens mánibus et mundo corde,~† qui non accépit in vano ánimam \textbf{su}am,~* nec jurávit in dolo \textbf{pró}ximo \textbf{su}o.
@@ -393,22 +394,21 @@ headsep=3mm,
 \item Quis est iste Rex \textbf{gló}riæ?~* Dóminus virtútum ipse \textbf{est} Rex \textbf{gló}riæ.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
 \item C'est lui qui l'a fondée sur les mers et la garde inébranlable sur les flots.
-\item Qui peut gravir la montagne du Seigneur et se tenir dans le lieu saint ?
+\item Qui peut gravir la montagne du Seigneur et se tenir dans le lieu saint?
 \item L'homme au cœur pur, aux mains innocentes, qui ne livre pas son âme aux idoles, et ne dit pas de faux serments.
 \item Il obtient, du Seigneur, la bénédiction, et de Dieu son Sauveur, la justice.
-\item Voici le peuple de ceux qui le cherchent ! Voici Jacob qui recherche ta face !
-\item Portes, levez vos frontons, élevez-vous, portes éternelles : qu'il entre, le roi de gloire !
-\item Qui est ce roi de gloire ? C'est le Seigneur, le fort, le vaillant, le Seigneur, le vaillant des combats.
-\item Portes, levez vos frontons, levez-les, portes éternelles : qu'il entre, le roi de gloire !
-\item Qui donc est ce roi de gloire ? C'est le Seigneur, Dieu de l'univers ; c'est lui, le roi de gloire.
+\item Voici le peuple de ceux qui le cherchent! Voici Jacob qui recherche ta face!
+\item Portes, levez vos frontons, élevez-vous, portes éternelles: qu'il entre, le roi de gloire!
+\item Qui est ce roi de gloire? C'est le Seigneur, le fort, le vaillant, le Seigneur, le vaillant des combats.
+\item Portes, levez vos frontons, levez-les, portes éternelles: qu'il entre, le roi de gloire!
+\item Qui donc est ce roi de gloire? C'est le Seigneur, Dieu de l'univers; c'est lui, le roi de gloire.
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 \end{paracol}
 
@@ -424,7 +424,7 @@ headsep=3mm,
 \rr Le Seigneur sort de sa chambre. \\
 \vv Notre Père... Et ne nous laissez pas succomber à la tentation. \\
 \rr Mais délivrez-nous du mal. \\
-\vv Exaucez, Seigneur Jésus-Christ, les prières de vos serviteurs, et ayez pitié de nous, vous qui vivez et régnez avec le Père et le Saint-Esprit, dans les siècles des siècles. \rr Ainsi soit-il.
+\vv Exaucez, Seigneur Jésus-Christ, les prières de vos serviteurs, et ayez pitié de nous, vous qui vivez et régnez avec le Père et le Saint-Esprit, dans les siècles des siècles. \rr Amen.
 \end{paracol}
 
 \subsection{Première leçon}
@@ -437,17 +437,17 @@ headsep=3mm,
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que le Père éternel nous bénisse d'une bénédiction perpétuelle. \\
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-\paragraph{Lecture de la lettre de Saint Paul, Apôtre, aux Romains} \rubrique{Rom 4 : 1-8}
+\paragraph{Lecture de la lettre de Saint Paul, Apôtre, aux Romains} \rubrique{Rom 4: 1-8}
 
-Que dirons-nous alors d’Abraham, notre ancêtre selon la chair ? Qu’a-t-il obtenu ?
+Que dirons-nous alors d’Abraham, notre ancêtre selon la chair? Qu’a-t-il obtenu?
 Si Abraham était devenu un homme juste par la pratique des œuvres, il aurait pu en tirer fierté, mais pas devant Dieu.
-Or, que dit l’Écriture ? Abraham eut foi en Dieu, et il lui fut accordé d’être juste.
+Or, que dit l’Écriture? Abraham eut foi en Dieu, et il lui fut accordé d’être juste.
 Si quelqu’un accomplit un travail, son salaire ne lui est pas accordé comme un don gratuit, mais comme un dû.
 Au contraire, si quelqu’un, sans rien accomplir, a foi en Celui qui rend juste l’homme impie, il lui est accordé d’être juste par sa foi.
-C’est ainsi que le psaume de David proclame heureux l’homme à qui Dieu accorde d’être juste, indépendamment de la pratique des œuvres :
+C’est ainsi que le psaume de David proclame heureux l’homme à qui Dieu accorde d’être juste, indépendamment de la pratique des œuvres:
 Heureux ceux dont les offenses ont été remises, et les péchés, effacés.
 Heureux l’homme dont le péché n’est pas compté par le Seigneur.
 
@@ -461,7 +461,7 @@ Heureux l’homme dont le péché n’est pas compté par le Seigneur.
 
 \gregorioscore{partitions/re1--ecce_agnus_dei_(resp.)--gregofacsimil.gabc}
 
-\emph{\rr Voici l'Agneau de Dieu, celui qui porte le péché du monde. C'est de lui que je vous ai dit : celui qui vient après moi était avant moi, et je ne suis pas digne de délier la courroie de sa sandale.
+\emph{\rr Voici l'Agneau de Dieu, celui qui porte le péché du monde. C'est de lui que je vous ai dit: celui qui vient après moi était avant moi, et je ne suis pas digne de délier la courroie de sa sandale.
 \vv Voilà quel fut le témoignage de Jean.}
 
 \subsection{Deuxième leçon}
@@ -473,14 +473,14 @@ Heureux l’homme dont le péché n’est pas compté par le Seigneur.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que le Fils unique de Dieu daigne nous bénir et nous secourir.\\
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-\rubrique{Rom 4 : 9-12}
+\rubrique{Rom 4: 9-12}
 
-Cette béatitude-là concerne-t-elle seulement ceux qui ont la circoncision, ou bien aussi ceux qui ne l’ont pas ? Nous disons, en effet : « C’est pour sa foi qu’il a été accordé à Abraham d’être juste. »
-Et quand cela lui fut-il accordé ? Après la circoncision ? ou avant ? Non pas après, mais avant.
-Et il reçut le signe de la circoncision comme la marque de la justice obtenue par la foi avant d’être circoncis. De cette façon, il est le père de tous ceux qui croient sans avoir la circoncision, pour qu’à eux aussi, il soit accordé d’être justes ;
+Cette béatitude-là concerne-t-elle seulement ceux qui ont la circoncision, ou bien aussi ceux qui ne l’ont pas? Nous disons, en effet: «C’est pour sa foi qu’il a été accordé à Abraham d’être juste.»
+Et quand cela lui fut-il accordé? Après la circoncision? ou avant? Non pas après, mais avant.
+Et il reçut le signe de la circoncision comme la marque de la justice obtenue par la foi avant d’être circoncis. De cette façon, il est le père de tous ceux qui croient sans avoir la circoncision, pour qu’à eux aussi, il soit accordé d’être justes;
 et il est également le père des circoncis, ceux qui non seulement ont la circoncision, mais qui marchent aussi sur les traces de la foi de notre père Abraham avant sa circoncision.
 
 \begin{paracol}{2}
@@ -494,7 +494,7 @@ et il est également le père des circoncis, ceux qui non seulement ont la circo
 \newpage
 \gregorioscore{partitions/re2--dies_sanctificatus_illuxit_(resp.)--gregofacsimil.gabc}
 
-\emph{\rr Un jour saint nous illumine : venez, peuples, et adorez le Seigneur, car aujourd'hui une grande lumière est descendue sur la terre. \\
+\emph{\rr Un jour saint nous illumine: venez, peuples, et adorez le Seigneur, car aujourd'hui une grande lumière est descendue sur la terre. \\
 \vv Venez, adorons-le, car il est le Seigneur notre Dieu.}
 
 ~
@@ -510,16 +510,16 @@ et il est également le père des circoncis, ceux qui non seulement ont la circo
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que la grâce du Saint-Esprit illumine nos esprits et nos cœurs.\\
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-\rubrique{Rom 4 : 13-17}
+\rubrique{Rom 4: 13-17}
 
 Car ce n’est pas en vertu de la Loi que la promesse de recevoir le monde en héritage a été faite à Abraham et à sa descendance, mais en vertu de la justice obtenue par la foi.
 En effet, si l’on devient héritier par la Loi, alors la foi est sans contenu, et la promesse, abolie.
 Car la Loi aboutit à la colère de Dieu, mais là où il n’y a pas de Loi, il n’y a pas non plus de transgression.
-Voilà pourquoi on devient héritier par la foi : c’est une grâce, et la promesse demeure ferme pour tous les descendants d’Abraham, non pour ceux qui se rattachent à la Loi seulement, mais pour ceux qui se rattachent aussi à la foi d’Abraham, lui qui est notre père à tous.
-C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre de nations. Il est notre père devant Dieu en qui il a cru, Dieu qui donne la vie aux morts et qui appelle à l’existence ce qui n’existe pas.
+Voilà pourquoi on devient héritier par la foi: c’est une grâce, et la promesse demeure ferme pour tous les descendants d’Abraham, non pour ceux qui se rattachent à la Loi seulement, mais pour ceux qui se rattachent aussi à la foi d’Abraham, lui qui est notre père à tous.
+C’est bien ce qui est écrit: J’ai fait de toi le père d’un grand nombre de nations. Il est notre père devant Dieu en qui il a cru, Dieu qui donne la vie aux morts et qui appelle à l’existence ce qui n’existe pas.
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -531,8 +531,8 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 
 \gregorioscore{partitions/re3--benedictus_qui_venit_(resp.)--gregofacsimil.gabc}
 
-\emph{\rr Béni soit celui qui vient au nom du Seigneur : le Seigneur notre Dieu nous illumine.
-\vv La pierre qu'ont rejetée les bâtisseurs est devenue la pierre d'angle : c'est là l'œuvre du Seigneur, la merveille devant nos yeux.}
+\emph{\rr Béni soit celui qui vient au nom du Seigneur: le Seigneur notre Dieu nous illumine.
+\vv La pierre qu'ont rejetée les bâtisseurs est devenue la pierre d'angle: c'est là l'œuvre du Seigneur, la merveille devant nos yeux.}
 
 \section{Deuxième nocturne}
 
@@ -549,7 +549,6 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Lingua mea \textbf{cá}lamus \textbf{scri}bæ:~* velóci\textit{ter} \textit{scri}\textbf{bén}tis.
 \item Speciósus forma præ fíliis hóminum,~† diffúsa est grátia in \textbf{lá}biis \textbf{tu}is:~* proptérea benedíxit te Deus \textit{in} \textit{æ}\textbf{tér}num.
 \item Accíngere gládio tuo super \textbf{fe}mur \textbf{tu}um,~* \textit{pot}\textit{en}\textbf{tís}sime.
@@ -571,33 +570,32 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \item Proptérea pópuli confitebúntur tibi \textbf{in} æ\textbf{tér}num:~* et in sǽ\textit{cu}\textit{lum} \textbf{sǽ}culi.
 \item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
 \item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\item D'une langue aussi vive que la plume du scribe !
-\item Tu es beau, comme aucun des enfants de l'homme, la grâce est répandue sur tes lèvres : oui, Dieu te bénit pour toujours.
-\item Guerrier valeureux, porte l'épée de noblesse et d'honneur !
+\item D'une langue aussi vive que la plume du scribe!
+\item Tu es beau, comme aucun des enfants de l'homme, la grâce est répandue sur tes lèvres: oui, Dieu te bénit pour toujours.
+\item Guerrier valeureux, porte l'épée de noblesse et d'honneur!
 \item Ton honneur, c'est de courir au combat pour la justice, la clémence et la vérité.
-\item Ta main jettera la stupeur, les flèches qui déchirent ; 
+\item Ta main jettera la stupeur, les flèches qui déchirent; 
 \item sous tes coups, les peuples s'abattront, les ennemis du roi, frappés en plein cœur.
-\item Ton trône est divin, un trône éternel ; ton sceptre royal est sceptre de droiture :
-\item tu aimes la justice, tu réprouves le mal. Oui, Dieu, ton Dieu t'a consacré d'une onction de joie, comme aucun de tes semblables ;
+\item Ton trône est divin, un trône éternel; ton sceptre royal est sceptre de droiture:
+\item tu aimes la justice, tu réprouves le mal. Oui, Dieu, ton Dieu t'a consacré d'une onction de joie, comme aucun de tes semblables;
 \item la myrrhe et l'aloès parfument ton vêtement. Des palais d'ivoire, la musique t'enchante.
-\item Parmi tes bien-aimées sont des filles de roi ; à ta droite, la préférée, sous les ors d'Ophir.
-\item Écoute, ma fille, regarde et tends l'oreille ; oublie ton peuple et la maison de ton père :
-\item le roi sera séduit par ta beauté. Il est ton Seigneur : prosterne-toi devant lui.
+\item Parmi tes bien-aimées sont des filles de roi; à ta droite, la préférée, sous les ors d'Ophir.
+\item Écoute, ma fille, regarde et tends l'oreille; oublie ton peuple et la maison de ton père:
+\item le roi sera séduit par ta beauté. Il est ton Seigneur: prosterne-toi devant lui.
 \item Alors, fille de Tyr, les plus riches du peuple, chargés de présents, quêteront ton sourire.
-\item Fille de roi, elle est là, dans sa gloire, vêtue d'étoffes d'or ;
-\item on la conduit, toute parée, vers le roi. Des jeunes filles, ses compagnes, lui font cortège ;
-\item on les conduit parmi les chants de fête : elles entrent au palais du roi.
-\item À la place de tes pères se lèveront tes fils ; sur toute la terre tu feras d'eux des princes.
-\item Je ferai vivre ton nom pour les âges des âges : 
-\item que les peuples te rendent grâce, toujours, à jamais !
+\item Fille de roi, elle est là, dans sa gloire, vêtue d'étoffes d'or;
+\item on la conduit, toute parée, vers le roi. Des jeunes filles, ses compagnes, lui font cortège;
+\item on les conduit parmi les chants de fête: elles entrent au palais du roi.
+\item À la place de tes pères se lèveront tes fils; sur toute la terre tu feras d'eux des princes.
+\item Je ferai vivre ton nom pour les âges des âges: 
+\item que les peuples te rendent grâce, toujours, à jamais!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 
 \end{paracol}
@@ -614,7 +612,6 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \begin{paracol}{2}
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Gloriósa \textbf{dic}ta sunt \textbf{de} te,~* \textbf{cí}vitas \textbf{De}i.
 \item Memor ero Rahab, et \textbf{Ba}by\textbf{ló}nis~* sci\textbf{én}ti\textbf{um} me.
 \item Ecce alienígenæ, et Tyrus, et pópu\textbf{lus} Æ\textbf{thí}opum,~* hi fu\textbf{é}runt \textbf{il}lic.
@@ -623,19 +620,18 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \item Sicut læ\textbf{tán}tium \textbf{óm}nium:~* habitáti\textbf{o} est \textbf{in} te.
 \item Glória \textbf{Pa}tri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
 \item Sicut erat in princípio, et \textbf{nunc}, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\item Pour ta gloire on parle de toi, ville de Dieu !
-\item « Je cite l'Égypte et Babylone entre celles qui me connaissent. » 
-\item Voyez Tyr, la Philistie, l'Éthiopie : chacune est née là-bas.
-\item Mais on appelle Sion : « Ma mère ! » car en elle, tout homme est né. C'est lui, le Très-Haut, qui la maintient.
-\item Au registre des peuples, le Seigneur écrit : « Chacun est né là-bas. »
-\item Tous ensemble ils dansent, et ils chantent : « En toi, toutes nos sources !
+\item Pour ta gloire on parle de toi, ville de Dieu!
+\item «Je cite l'Égypte et Babylone entre celles qui me connaissent.» 
+\item Voyez Tyr, la Philistie, l'Éthiopie: chacune est née là-bas.
+\item Mais on appelle Sion: «Ma mère!» car en elle, tout homme est né. C'est lui, le Très-Haut, qui la maintient.
+\item Au registre des peuples, le Seigneur écrit: «Chacun est né là-bas.»
+\item Tous ensemble ils dansent, et ils chantent: «En toi, toutes nos sources!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 \end{paracol}
 
@@ -652,7 +648,6 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Cantáte Dómino, et benedícite nómini \textbf{e}jus:~* annuntiáte de die in diem salu\textbf{tá}re \textbf{e}jus.
 \item Annuntiáte inter gentes glóriam \textbf{e}jus,~* in ómnibus pópulis mira\textbf{bí}lia \textbf{e}jus.
 \item Quóniam magnus Dóminus, et laudábilis \textbf{ni}mis:~* terríbilis est super \textbf{om}nes \textbf{de}os.
@@ -667,26 +662,25 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \item Judicábit orbem terræ in æqui\textbf{tá}te,~* et pópulos in veri\textbf{tá}te \textbf{su}a.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spi\textbf{rí}tui \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textbf{ló}rum. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\item Chantez au Seigneur et bénissez son nom ! De jour en jour, proclamez son salut,
-\item racontez à tous les peuples sa gloire, à toutes les nations ses merveilles !
-\item Il est grand, le Seigneur, hautement loué, redoutable au-dessus de tous les dieux :
-\item néant, tous les dieux des nations ! Lui, le Seigneur, a fait les cieux :
+\item Chantez au Seigneur et bénissez son nom! De jour en jour, proclamez son salut,
+\item racontez à tous les peuples sa gloire, à toutes les nations ses merveilles!
+\item Il est grand, le Seigneur, hautement loué, redoutable au-dessus de tous les dieux:
+\item néant, tous les dieux des nations! Lui, le Seigneur, a fait les cieux:
 \item devant lui, splendeur et majesté, dans son sanctuaire, puissance et beauté.
 \item Rendez au Seigneur, familles des peuples, rendez au Seigneur la gloire et la puissance,
 \item rendez au Seigneur la gloire de son nom. Apportez votre offrande, entrez dans ses parvis,
-\item adorez le Seigneur, éblouissant de sainteté : tremblez devant lui, terre entière.
-\item Allez dire aux nations : « Le Seigneur est roi ! » Le monde, inébranlable, tient bon. Il gouverne les peuples avec droiture.
-\item Joie au ciel ! Exulte la terre ! Les masses de la mer mugissent,
+\item adorez le Seigneur, éblouissant de sainteté: tremblez devant lui, terre entière.
+\item Allez dire aux nations: «Le Seigneur est roi!» Le monde, inébranlable, tient bon. Il gouverne les peuples avec droiture.
+\item Joie au ciel! Exulte la terre! Les masses de la mer mugissent,
 \item la campagne tout entière est en fête. Les arbres des forêts dansent de joie
-\item devant la face du Seigneur, car il vient, car il vient pour juger la terre. Il jugera le monde avec justice, * et les peuples selon sa vérité !
+\item devant la face du Seigneur, car il vient, car il vient pour juger la terre. Il jugera le monde avec justice, * et les peuples selon sa vérité!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 
 \end{paracol}
@@ -704,7 +698,7 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \rr La grâce est répandue sur tes lèvres. \\
 \vv Notre Père... Et ne nous laissez pas succomber à la tentation. \\
 \rr Mais délivrez-nous du mal. \\
-\vv Qu'il nous secoure par sa bonté et sa miséricorde, celui qui, avec le Père et le Saint-Esprit, vit et règne dans les siècles des siècles. \rr Ainsi soit-il.
+\vv Qu'il nous secoure par sa bonté et sa miséricorde, celui qui, avec le Père et le Saint-Esprit, vit et règne dans les siècles des siècles. \rr Amen.
 \end{paracol}
 
 \subsection{Quatrième leçon}
@@ -716,12 +710,12 @@ C’est bien ce qui est écrit : J’ai fait de toi le père d’un grand nombre
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que Dieu le Père tout-puissant soit pour nous propice et plein de clémence. \\
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
 \paragraph{Sermon de saint Léon, Pape}
 
-Celui, bien-aimés, qui accorde à la fête d'aujourd'hui une vénération conforme à la vérité et un honneur répondant à la piété, c'est celui qui n'a aucune pensée erronée en ce qui concerne l'incarnation du Seigneur, aucune pensée indigne en ce qui concerne sa divinité ; le mal et le danger, en effet, sont égaux à nier en lui ou la vérité de notre nature, ou l'égalité de gloire avec son Père. Lors donc que nous entreprenons de comprendre le mystère de la nativité du Christ, dans laquelle il est né d'une mère vierge, que se tiennent loin de nous les nuages obscurs des raisons de cette terre et que les fumées de la sagesse de ce monde restent à distance des yeux illuminés de notre foi ; car divine est l'autorité en laquelle nous croyons, divine est la doctrine que nous suivons.
+Celui, bien-aimés, qui accorde à la fête d'aujourd'hui une vénération conforme à la vérité et un honneur répondant à la piété, c'est celui qui n'a aucune pensée erronée en ce qui concerne l'incarnation du Seigneur, aucune pensée indigne en ce qui concerne sa divinité; le mal et le danger, en effet, sont égaux à nier en lui ou la vérité de notre nature, ou l'égalité de gloire avec son Père. Lors donc que nous entreprenons de comprendre le mystère de la nativité du Christ, dans laquelle il est né d'une mère vierge, que se tiennent loin de nous les nuages obscurs des raisons de cette terre et que les fumées de la sagesse de ce monde restent à distance des yeux illuminés de notre foi; car divine est l'autorité en laquelle nous croyons, divine est la doctrine que nous suivons.
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -750,10 +744,10 @@ un secret qu'elle ignorait.}
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que le Christ nous donne les joies de l'éternelle vie.
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-Que nous prêtions l'oreille de notre cœur au témoignage de la Loi, aux oracles des prophètes ou à l'annonce de l'Evangile, cette parole est vraie que fit retentit saint Jean rempli de l'Esprit-Saint : \og~Au commencement était le Verbe, et le Verbe était avec Dieu, et le Verbe était Dieu. Il était au commencement avec Dieu. Tout a été fait par lui et sans lui rien n'a été fait\fg. Pareillement vrai est ce qu'ajoute le même héraut : \og~Le Verbe s'est fait chair et il a demeuré parmi nous, et nous avons vu sa gloire, gloire qu'il tient de son Père comme Fils unique\fg.
+Que nous prêtions l'oreille de notre cœur au témoignage de la Loi, aux oracles des prophètes ou à l'annonce de l'Evangile, cette parole est vraie que fit retentit saint Jean rempli de l'Esprit-Saint: «Au commencement était le Verbe, et le Verbe était avec Dieu, et le Verbe était Dieu. Il était au commencement avec Dieu. Tout a été fait par lui et sans lui rien n'a été fait». Pareillement vrai est ce qu'ajoute le même héraut: «Le Verbe s'est fait chair et il a demeuré parmi nous, et nous avons vu sa gloire, gloire qu'il tient de son Père comme Fils unique».
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -771,7 +765,7 @@ Que nous prêtions l'oreille de notre cœur au témoignage de la Loi, aux oracle
 
 \emph{\rr Il ne se trouble pas, le cœur de la Vierge, au sein duquel, à la voix de l'ange, les saints mystères furent conçus. Toi, plus belle que les enfants des hommes, et bénie pour toujours, tu reçois dans ton sein notre Dieu fait homme.
 \vv La demeure de son coeur très pur
-devient soudain le temple de Dieu ;
+devient soudain le temple de Dieu;
 vierge n'ayant pas connu d'homme,
 d'une parole elle conçoit son Fils.}
 
@@ -784,10 +778,10 @@ d'une parole elle conçoit son Fils.}
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que Dieu daigne allumer dans nos cœurs le feu de son amour.\\
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-Il est donc le même Fils de Dieu dans l'une et l'autre nature, assumant ce qui nous appartient et ne se dessaisissant pas de ce qui lui est propre, renouvelant l'homme dans l'homme assumé, tout en demeurant en lui-même immuablement. La divinité qui lui est commune avec le Père n'a, en effet, subi aucun dommage de sa toute-puissance, et la condition divine n'a pas fait violence à la condition humaine, car l'Essence souveraine et éternelle, en s'abaissant vers l'humanité pour la sauver, nous a vraiment élevés dans sa gloire, mais n'a pas cessé d'être ce qu'elle était. Aussi lorsque le Fils unique de Dieu se reconnaît inférieur au Père, auquel il se dit aussi égal, il manifeste la vérité de l'une et l'autre condition en lui : l'inégalité démontre la nature humaine et l'égalité affirme la nature divine.
+Il est donc le même Fils de Dieu dans l'une et l'autre nature, assumant ce qui nous appartient et ne se dessaisissant pas de ce qui lui est propre, renouvelant l'homme dans l'homme assumé, tout en demeurant en lui-même immuablement. La divinité qui lui est commune avec le Père n'a, en effet, subi aucun dommage de sa toute-puissance, et la condition divine n'a pas fait violence à la condition humaine, car l'Essence souveraine et éternelle, en s'abaissant vers l'humanité pour la sauver, nous a vraiment élevés dans sa gloire, mais n'a pas cessé d'être ce qu'elle était. Aussi lorsque le Fils unique de Dieu se reconnaît inférieur au Père, auquel il se dit aussi égal, il manifeste la vérité de l'une et l'autre condition en lui: l'inégalité démontre la nature humaine et l'égalité affirme la nature divine.
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -815,12 +809,11 @@ de porter le Christ, le Seigneur.
 \gresetinitiallines{1}
 \aa \emph{Au commencement était le Verbe avant les siècles, et c'est lui qui est né aujourd'hui, le Sauveur du monde.}
 
-\un \emph{Le Seigneur est roi ! Exulte la terre ! Joie pour les îles sans nombre !}
+\un \emph{Le Seigneur est roi! Exulte la terre! Joie pour les îles sans nombre!}
 \begin{paracol}{2}
 
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Nubes, et calígo in circúitu \textbf{e}jus:~* justítia, et judícium corréctio \textit{se}\textit{dis} \textbf{e}jus.
 \item Ignis ante ipsum præ\textbf{cé}det:~* et inflammábit in circúitu ini\textit{mí}\textit{cos} \textbf{e}jus.
 \item Illuxérunt fúlgura ejus orbi \textbf{ter}ræ:~* vidit et commó\textit{ta} \textit{est} \textbf{ter}ra.
@@ -835,7 +828,6 @@ de porter le Christ, le Seigneur.
 \item Lætámini, justi in \textbf{Dó}mino:~* et confitémini memóriæ sanctificati\textit{ó}\textit{nis} \textbf{e}jus.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 
 \switchcolumn
@@ -843,18 +835,18 @@ de porter le Christ, le Seigneur.
 \setcounter{enumi}{1}
 \item Ténèbre et nuée l'entourent, justice et droit sont l'appui de son trône.
 \item Devant lui s'avance un feu qui consume alentour ses ennemis.
-\item Quand ses éclairs illuminèrent le monde, la terre le vit et s'affola ;
+\item Quand ses éclairs illuminèrent le monde, la terre le vit et s'affola;
 \item les montagnes fondaient comme cire devant le Seigneur, devant le Maître de toute la terre.
 \item Les cieux ont proclamé sa justice, et tous les peuples ont vu sa gloire.
-\item Honte aux serviteurs d'idoles qui se vantent de vanités ! 
-\item À genoux devant lui, tous les dieux ! Pour Sion qui entend, grande joie !
-\item Les villes de Juda exultent devant tes jugements, Seigneur !
-\item Tu es, Seigneur, le Très-Haut sur toute la terre : tu domines de haut tous les dieux.
+\item Honte aux serviteurs d'idoles qui se vantent de vanités! 
+\item À genoux devant lui, tous les dieux! Pour Sion qui entend, grande joie!
+\item Les villes de Juda exultent devant tes jugements, Seigneur!
+\item Tu es, Seigneur, le Très-Haut sur toute la terre: tu domines de haut tous les dieux.
 \item Haïssez le mal, vous qui aimez le Seigneur, car il garde la vie de ses fidèles et les arrache aux mains des impies.
 \item Une lumière est semée pour le juste, et pour le cœur simple, une joie.
-\item Que le Seigneur soit votre joie, hommes justes ; rendez grâce en rappelant son nom très saint.
+\item Que le Seigneur soit votre joie, hommes justes; rendez grâce en rappelant son nom très saint.
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 
 \end{paracol}
@@ -872,7 +864,6 @@ de porter le Christ, le Seigneur.
 
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Salvávit sibi déxtera \textbf{e}jus:~* et bráchium sanc\textit{tum} \textbf{e}jus.
 \item Notum fecit Dóminus salutáre \textbf{su}um:~* in conspéctu Géntium revelávit justíti\textit{am} \textbf{su}am.
 \item Recordátus est misericórdiæ \textbf{su}æ,~* et veritátis suæ dómu\textit{i} \textbf{Is}\textbf{ra}ël.
@@ -884,23 +875,22 @@ de porter le Christ, le Seigneur.
 \item Judicábit orbem terrárum in jus\textbf{tí}tia,~* et pópulos in æ\textit{qui}\textbf{tá}te.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spirítu\textit{i} \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæculó\textit{rum}. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
 \item Par son bras très saint, par sa main puissante, il s'est assuré la victoire.
-\item Le Seigneur a fait connaître sa victoire et révélé sa justice aux nations ;
-\item il s'est rappelé sa fidélité, son amour, en faveur de la maison d'Israël ; la terre tout entière a vu la victoire de notre Dieu.
-\item Acclamez le Seigneur, terre entière, sonnez, chantez, jouez ;
-\item jouez pour le Seigneur sur la cithare, sur la cithare et tous les instruments ;
-\item au son de la trompette et du cor, acclamez votre roi, le Seigneur !
-\item Que résonnent la mer et sa richesse, le monde et tous ses habitants ;
+\item Le Seigneur a fait connaître sa victoire et révélé sa justice aux nations;
+\item il s'est rappelé sa fidélité, son amour, en faveur de la maison d'Israël; la terre tout entière a vu la victoire de notre Dieu.
+\item Acclamez le Seigneur, terre entière, sonnez, chantez, jouez;
+\item jouez pour le Seigneur sur la cithare, sur la cithare et tous les instruments;
+\item au son de la trompette et du cor, acclamez votre roi, le Seigneur!
+\item Que résonnent la mer et sa richesse, le monde et tous ses habitants;
 \item que les fleuves battent des mains, que les montagnes chantent leur joie,
-\item à la face du Seigneur, car il vient pour gouverner la terre, pour gouverner le monde avec justice et les peuples avec droiture !
+\item à la face du Seigneur, car il vient pour gouverner la terre, pour gouverner le monde avec justice et les peuples avec droiture!
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 
 \end{paracol}
@@ -911,14 +901,13 @@ de porter le Christ, le Seigneur.
 \gresetinitiallines{0}
 \gregorioscore{partitions/ps9_98.gabc}
 \gresetinitiallines{1}
-\aa \emph{Quand le Seigneur fut né, le chœur des Anges chanta, en proclamant : le Salut est à notre Dieu, qui règne sur le trône, et à l'Agneau.}
+\aa \emph{Quand le Seigneur fut né, le chœur des Anges chanta, en proclamant: le Salut est à notre Dieu, qui règne sur le trône, et à l'Agneau.}
 
-\un \emph{Le Seigneur est roi : les peuples s'agitent. Il trône au-dessus des Kéroubim : la terre tremble.}
+\un \emph{Le Seigneur est roi: les peuples s'agitent. Il trône au-dessus des Kéroubim: la terre tremble.}
 \begin{paracol}{2}
 
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\selectlanguage{latin}
 \item Dóminus in Sion \textbf{ma}gnus:~* et excélsus super \textit{om}\textit{nes} \textbf{pó}pulos.
 \item Confiteántur nómini tuo magno: quóniam terríbile, et \textbf{sanc}tum est:~* et honor regis judí\textit{ci}\textit{um} \textbf{dí}ligit.
 \item Tu parásti directi\textbf{ó}nes:~* judícium et justítiam in Jacob \textit{tu} \textit{fe}\textbf{cís}ti.
@@ -930,23 +919,22 @@ de porter le Christ, le Seigneur.
 \item Exaltáte Dóminum Deum nostrum, et adoráte in monte sancto \textbf{e}jus:~* quóniam sanctus Dóminus \textit{De}\textit{us} \textbf{nos}ter.
 \item Glória Patri, et \textbf{Fí}lio,~* et Spirí\textit{tu}\textit{i} \textbf{Sanc}to.
 \item Sicut erat in princípio, et nunc, et \textbf{sem}per,~* et in sǽcula sæcu\textit{ló}\textit{rum}. \textbf{A}men.
-\selectlanguage{french}
 \end{enumerate}
 
 \switchcolumn
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
-\item En Sion le Seigneur est grand : c'est lui qui domine tous les peuples.
-\item Ils proclament ton nom, grand et redoutable, car il est saint !
+\item En Sion le Seigneur est grand: c'est lui qui domine tous les peuples.
+\item Ils proclament ton nom, grand et redoutable, car il est saint!
 \item Il est fort, le roi qui aime la justice. C'est toi, l'auteur du droit, toi qui assures en Jacob la justice et la droiture.
-\item Exaltez le Seigneur notre Dieu, prosternez-vous au pied de son trône, car il est saint !
+\item Exaltez le Seigneur notre Dieu, prosternez-vous au pied de son trône, car il est saint!
 \item Moïse et le prêtre Aaron, Samuel, le Suppliant, tous, 
-\item ils suppliaient le Seigneur, et lui leur répondait. Dans la colonne de nuée, il parlait avec eux ; 
+\item ils suppliaient le Seigneur, et lui leur répondait. Dans la colonne de nuée, il parlait avec eux; 
 \item ils ont gardé ses volontés, les lois qu'il leur donna.
-\item Seigneur notre Dieu, tu leur as répondu : avec eux, tu restais un Dieu patient, mais tu les punissais pour leurs fautes.
+\item Seigneur notre Dieu, tu leur as répondu: avec eux, tu restais un Dieu patient, mais tu les punissais pour leurs fautes.
 \item Exaltez le Seigneur notre Dieu, prosternez-vous devant sa sainte montagne, car il est saint, le Seigneur notre Dieu.
 \item Gloire au Père, au Fils, et au Saint-Esprit.
-\item Comme elle était au commencement, maintenant et toujours, dans les siècles des siècles. Ainsi-soit il.
+\item Comme il était au commencement, maintenant et toujours, dans les siècles des siècles. Amen.
 \end{enumerate}
 
 \end{paracol}
@@ -963,10 +951,9 @@ de porter le Christ, le Seigneur.
 \rr Son salut, alléluia. \\
 \vv Notre Père... Et ne nous laissez pas succomber à la tentation. \\
 \rr Mais délivrez-nous du mal. \\
-\vv Que le Dieu tout-puissant et miséricordieux daigne nous délivrer des liens de nos péchés. \rr Ainsi soit-il.
+\vv Que le Dieu tout-puissant et miséricordieux daigne nous délivrer des liens de nos péchés. \rr Amen.
 \end{paracol}
 
-\newpage
 \subsection{Septième leçon}
 
 \begin{paracol}{2}
@@ -976,19 +963,18 @@ de porter le Christ, le Seigneur.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que la lecture du saint Evangile nous soit salut et protection. 
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-\paragraph{Lecture du saint \'Evangile selon saint Luc} \rubrique{Luc 2 : 21-23}
+\paragraph{Lecture du saint \'Evangile selon saint Luc} \rubrique{Luc 2: 21-23}
 
-Quand fut arrivé le huitième jour, celui de la circoncision, l’enfant reçut le nom de Jésus, le nom que l’ange lui avait donné avant sa conception. Quand fut accompli le temps prescrit par la loi de Moïse pour la purification, les parents de Jésus l’amenèrent à Jérusalem pour le présenter au Seigneur, selon ce qui est écrit dans la Loi : Tout premier-né de sexe masculin sera consacré au Seigneur.
+Quand fut arrivé le huitième jour, celui de la circoncision, l’enfant reçut le nom de Jésus, le nom que l’ange lui avait donné avant sa conception. Quand fut accompli le temps prescrit par la loi de Moïse pour la purification, les parents de Jésus l’amenèrent à Jérusalem pour le présenter au Seigneur, selon ce qui est écrit dans la Loi: Tout premier-né de sexe masculin sera consacré au Seigneur.
 
 \paragraph{Homélie de saint Ambroise, Évêque}
 
-L'enfant est donc circoncis. Quel est cet enfant, sinon Celui dont il a été dit : \og Un enfant nous est né, un fils nous a été donné \fg~?
+L'enfant est donc circoncis. Quel est cet enfant, sinon celui dont il a été dit: «Un enfant nous est né, un fils nous a été donné»?
 Il s'est placé sous la Loi afin de gagner ceux qui étaient sous la Loi. 
-
-Circoncis des vices, II a été jugé digne du regard du Seigneur ; car « les yeux du Seigneur reposent sur les justes ». Vous le voyez, tout l'ensemble de la Loi ancienne a été figure de l'avenir car la circoncision même figure la purification des péchés.
+Circoncis des vices, il a été jugé digne du regard du Seigneur; car «les yeux du Seigneur reposent sur les justes». Vous le voyez, tout l'ensemble de la Loi ancienne a été figure de l'avenir car la circoncision même figure la purification des péchés.
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -1000,7 +986,7 @@ Circoncis des vices, II a été jugé digne du regard du Seigneur ; car « les y
 
 \gregorioscore{partitions/re7--sancta_et_immaculata_(resp.)--gregofacsimil.gabc}
 
-\emph{\rr Sainte et immaculée virginité, je ne sais comment assez te louer : car celui que les cieux ne pouvaient contenir, tu l'as tenu enfermé en ton sein. \\
+\emph{\rr Sainte et immaculée virginité, je ne sais comment assez te louer: car celui que les cieux ne pouvaient contenir, tu l'as tenu enfermé en ton sein. \\
 \vv Tu es bénie entre toutes les femmes, et le fruit de ton sein est béni.}
 
 \subsection{Huitième leçon}
@@ -1012,10 +998,10 @@ Circoncis des vices, II a été jugé digne du regard du Seigneur ; car « les y
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que l'assistance divine soit toujours avec nous.
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-Mais comme, inclinée par la convoitise au péché, la faiblesse humaine, corps et âme, est enlacée par les liens inextricables des vices, le huitième jour assigné pour la circoncision figurait que la purification de toutes fautes devait s'accomplir au temps de la Résurrection. C'est le sens du texte « tout mâle qui le premier ouvre le sein maternel sera appelé saint pour le Seigneur » : ces paroles de la Loi promettaient le fruit de la Vierge, vraiment saint, parce que sans tache. Au reste, qu'il soit bien Celui que la Loi désigne, la reprise par l'ange des mêmes expressions le manifeste : « L'enfant qui va naître, dit-il, sera appelé saint, Fils de Dieu »
+Mais comme, inclinée par la convoitise au péché, la faiblesse humaine, corps et âme, est enlacée par les liens inextricables des vices, le huitième jour assigné pour la circoncision figurait que la purification de toutes fautes devait s'accomplir au temps de la Résurrection. C'est le sens du texte «tout mâle qui le premier ouvre le sein maternel sera appelé saint pour le Seigneur»: ces paroles de la Loi promettaient le fruit de la Vierge, vraiment saint, parce que sans tache. Au reste, qu'il soit bien celui que la Loi désigne, la reprise par l'ange des mêmes expressions le manifeste: «L'enfant qui va naître, dit-il, sera appelé saint, Fils de Dieu.»
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -1027,7 +1013,7 @@ Mais comme, inclinée par la convoitise au péché, la faiblesse humaine, corps 
 
 \gregorioscore{partitions/re8--nesciens_mater_virgo_(resp.)--gregofacsimil.gabc}
 
-\emph{\rr Sans avoir connu d'homme, la Vierge Mère donne naissance, sans douleur, au Sauveur du monde : c'est lui, le Roi des anges, que la Vierge seule allaitait, d’un sein plein de ciel.
+\emph{\rr Sans avoir connu d'homme, la Vierge Mère donne naissance, sans douleur, au Sauveur du monde: c'est lui, le Roi des anges, que la Vierge seule allaitait, d’un sein plein de ciel.
 \vv Je te salue, Marie, pleine de grâce, le Seigneur est avec toi.}
 
 \subsection{Neuvième leçon}
@@ -1039,10 +1025,10 @@ Mais comme, inclinée par la convoitise au péché, la faiblesse humaine, corps 
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
 \vv Que le Roi des Anges nous fasse parvenir à la société des citoyens célestes.
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 
-Car nul commerce humain n'a pénétré le mystère du sein virginal, mais une semence sans tache a été déposée dans ses entrailles immaculées par l'Esprit Saint. Le seul, en effet, des enfants de la femme qui soit parfaitement saint, c'est le Seigneur Jésus, à qui toute atteinte de la corruption terrestre a été épargnée par la nouveauté de son enfantement sans tache, écartée par sa majesté céleste. En effet, à nous en tenir à la lettre, comment appeler saint tout enfant mâle, quand il est notoire que beaucoup furent de grands scélérats ? un saint, Achab ? des saints, les faux prophètes qu'à la prière d'Élie un feu vengeur de l'outrage fait au ciel a dévorés ? Mais voici le Saint en qui va s'accomplir le mystère dont les saintes prescriptions de la Loi divine dessinaient la figure, attendu que seul Il devait donner à l'Église, sainte et Vierge, d'enfanter de son sein entrouvert, par une fécondité sans tache, le peuple de Dieu.
+Car nul commerce humain n'a pénétré le mystère du sein virginal, mais une semence sans tache a été déposée dans ses entrailles immaculées par l'Esprit Saint. Le seul, en effet, des enfants de la femme qui soit parfaitement saint, c'est le Seigneur Jésus, à qui toute atteinte de la corruption terrestre a été épargnée par la nouveauté de son enfantement sans tache, écartée par sa majesté céleste. En effet, à nous en tenir à la lettre, comment appeler saint tout enfant mâle, quand il est notoire que beaucoup furent de grands scélérats? un saint, Achab? des saints, les faux prophètes qu'à la prière d'Élie un feu vengeur de l'outrage fait au ciel a dévorés? Mais voici le Saint en qui va s'accomplir le mystère dont les saintes prescriptions de la Loi divine dessinaient la figure, attendu que seul il devait donner à l'Église, sainte et Vierge, d'enfanter de son sein entrouvert, par une fécondité sans tache, le peuple de Dieu.
 
 \begin{paracol}{2}
 \vv Tu autem, Dómine, miserére nobis. \\
@@ -1054,27 +1040,27 @@ Car nul commerce humain n'a pénétré le mystère du sein virginal, mais une se
 
 \newpage
 
-\section{Hymne ambrosienne}
-
-\gregorioscore{partitions/hy--te_deum_(solemn_tone)--solesmes.gabc}
+\section{Te Deum}
+\gresetnabc{1}{invisible}
+\gregorioscore{partitions/ORTDb_dcrochu.gabc}
 
 ~
 
 \emph{{\footnotesize
-Nous Vous louons ô Dieu : * nous Vous reconnaissons pour le Seigneur. \\
+Nous Vous louons ô Dieu: * nous Vous reconnaissons pour le Seigneur. \\
 Ô Père éternel * toute la terre vous révère. \\
 Tous les Anges * les Cieux, et toutes les Puissances, \\
-Les Chérubins et les Séraphins * Vous proclament sans cesse : \\
+Les Chérubins et les Séraphins * Vous proclament sans cesse: \\
 Saint, Saint, Saint * le Seigneur, le Dieu des armées. \\
 Les Cieux et la terre sont remplis * de la majesté de Votre gloire. \\
 Le chœur glorieux * des Apôtres, \\
 Le phalange vénérable * des Prophètes, \\
-L'armée des Martyrs éclatante de blancheur * célèbre Vos louanges ; \\
+L'armée des Martyrs éclatante de blancheur * célèbre Vos louanges; \\
 La sainte Eglise confesse * Votre nom par toute la terre, \\
-Ô Père * d'infinie majesté ! \\
+Ô Père * d'infinie majesté! \\
 Et elle vénère Votre Fils * véritable et unique. \\
 Ainsi que le Saint-Esprit * consolateur. \\
-Vous êtes le Roi de gloire * ô Christ ! \\
+Vous êtes le Roi de gloire * ô Christ! \\
 Vus êtes du Père * le Fils éternel. \\
 Pour délivrer l'homme * Vous n'avez pas eu horreur du sein d'une Vierge. \\
 Vous avez brisé l'aiguillon de la mort * et ouvert aux fidèles le royaume des cieux. \\
@@ -1085,28 +1071,28 @@ Faites qu'ils soient au nombre des saints, * dans la gloire éternelle. \\
 Sauvez Votre peuple, Seigneur * et bénissez Votre héritage. \\
 Conduisez Vos serviteurs * et élevez-les jusque dans l'éternité. \\
 Chaque jour * nous Vous bénissons. \\
-Et nous louons Votre nom dans les siècles ; * et dans les siècles des siècles. \\
+Et nous louons Votre nom dans les siècles; * et dans les siècles des siècles. \\
 Daignez Seigneur, en ce jour * nous préserver de tout péché. \\
 Ayez pitié de nous Seigneur, * ayez pitié de nous. \\
 Que Votre miséricorde, Seigneur se répande sur nous, * selon que nous avons éspéré en Vous. \\
-J'ai éspéré en Vous Seigneur ; * que je ne sois pas confondu à jamais.}}
+J'ai éspéré en Vous Seigneur; * que je ne sois pas confondu à jamais.}}
 
 ~
 
 \begin{paracol}{2}
 \vv Dómine, exáudi oratiónem meam. \\
 \rr Et clamor meus ad te véniat.\\
-\rubrique{(ou, si le célébrant est au moins diacre :)}\\
+\rubrique{(ou, si le célébrant est au moins diacre:)}\\
 \vv Dóminus vobíscum.\\
 \rr Et cum spíritu tuo.
 \switchcolumn
 \vv Seigneur, exaucez ma prière. \\
-\vv Et que ma voix aille jusqu'à vous !\\
+\vv Et que ma voix aille jusqu'à vous.\\
  \\
 \vv Le Seigneur soit avec vous.\\
 \rr Et avec votre esprit.
 \switchcolumn*
-\vv Orémus. Deus, qui salútis ætérnæ, beátæ Maríæ virginitáte fecúnda, humáno géneri prǽmia præstitísti : tribue, quǽsumus ; ut ipsam pro nobis intercédere sentiámus, per quam merúimus auctórem vitæ suscípere, Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.
+\vv Orémus. Deus, qui salútis ætérnæ, beátæ Maríæ virginitáte fecúnda, humáno géneri prǽmia præstitísti: tribue, quǽsumus; ut ipsam pro nobis intercédere sentiámus, per quam merúimus auctórem vitæ suscípere, Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum.
 \rr Amen.
 \switchcolumn
 \vv Prions. Ô Dieu, qui, par la féconde virginité de la Bienheuseuse Marie, avez donné à l'humanité les félicités de la vie éternelle, faites, nous vous en prions, que nous puissions continuellement ressentir la puissance de son intercession, elle par qui nous avons pu mériter de recevoir Jésus-Christ, votre Fils, notre Seigneur, qui vit et règne avec vous et l'Esprit Saint, un seul Dieu, pour les siècles des siècles.
@@ -1114,27 +1100,24 @@ J'ai éspéré en Vous Seigneur ; * que je ne sois pas confondu à jamais.}}
 \switchcolumn*
 \vv Dómine, exáudi oratiónem meam. \\
 \rr Et clamor meus ad te véniat.\\
-\rubrique{(ou, si le célébrant est au moins diacre :)}\\
+\rubrique{(ou, si le célébrant est au moins diacre:)}\\
 \vv Dóminus vobíscum.\\
 \rr Et cum spíritu tuo.
 \switchcolumn
 \vv Seigneur, exaucez ma prière. \\
-\vv Et que ma voix aille jusqu'à vous !\\
+\vv Et que ma voix aille jusqu'à vous.\\
  \\
 \vv Le Seigneur soit avec vous.\\
 \rr Et avec votre esprit.
-\switchcolumn*
-\vv Benedicámus Dómino. \\
-\rr Deo grátias.
-\switchcolumn
-\vv Bénissons le Seigneur. \\
-\rr Rendons grâces à Dieu.
-\switchcolumn*
+\end{paracol}
+\gregorioscore{partitions/ORBDa_marteo}
+\emph{\vv Bénissons le Seigneur.\minisaut\rr Nous rendons grâces à Dieu.}
+\begin{paracol}{2}
 \vv Fidélium ánimæ \cc per misericórdiam Dei requiéscant in pace.
 \rr Amen.
 \switchcolumn
 \vv Que par la miséricorde de Dieu, les âmes des fidèles trépassés reposent en paix.
-\rr Ainsi soit-il.
+\rr Amen.
 \end{paracol}
 \newpage
 \begin{adjustwidth}{-5mm}{1cm}
