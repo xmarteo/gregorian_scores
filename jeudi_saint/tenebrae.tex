@@ -1,0 +1,1325 @@
+\documentclass[twoside]{book}
+
+\usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
+\usepackage{fontspec}
+%\usepackage[latin1]{inputenc}
+\usepackage[nolocalmarks]{polyglossia}
+\setdefaultlanguage[variant=french, frenchitemlabels=false]{french}
+\usepackage[strict]{changepage}
+\usepackage{fancyhdr}
+\usepackage{paracol}
+\usepackage{tableof}
+\usepackage{setspace}
+\usepackage{alltt}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{enumitem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Mise en page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on numérote les nbp par page et non globalement
+\usepackage[perpage]{footmisc}
+
+% définition des en-têtes et pieds de page
+\pagestyle{empty}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{10pt}
+\fancyhead[RO]{\small\thepage}
+\fancyhead[LE]{\small\thepage}
+% la commande titres permet de changer les titres de gauche et de droite.
+\newcommand{\titres}[2]{
+	\renewcommand{\rightmark}{\textcolor{red}{\sc #2}}
+	\renewcommand{\leftmark}{\textcolor{red}{\sc #1}}
+}
+\titres{}{}
+
+% pas d'indentation
+\setlength{\parindent}{0mm}
+
+\geometry{
+inner=25mm,
+outer=12mm,
+top=15mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Options gregorio %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[forcecompile]{gregoriotex}
+%\usepackage{gregoriotex}
+
+%% style général de gregorio :
+% lignes rouges, commenter pour du noir
+%\gresetlinecolor{gregoriocolor}
+
+% texte <alt> (au-dessus de la portée) en rouge et en petit, avec réglage de sa position verticale
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
+\newcommand{\altraise}{-1mm}
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+
+% taille des initiales
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman Caps}\fontsize{#1}{#1}\selectfont}
+}
+\newcommand{\defaultinitialsize}{28}
+\initialsize{\defaultinitialsize}
+% espace avant et après les initiales
+\newcommand{\initialspace}[1]{
+  \grechangedim{afterinitialshift}{#1}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+\newcommand{\defaultinitialspace}{0cm}
+\initialspace{\defaultinitialspace}
+
+
+% on définit le système qui capture des headers pour générer des annotations
+% cette commande sera appelée pour définir des abréviations ou autres substitutions
+\newcommand{\resultat}{}
+\newcommand{\abbrev}[3]{
+  \IfSubStr{#1}{#2}{ \renewcommand{\resultat}{#3} }{}
+}
+\newcommand{\officepartannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{ntro}{ {Intr.} }
+  \abbrev{#1}{espo}{Resp.}
+  \abbrev{#1}{ll}{All.}
+  \abbrev{#1}{act}{Tract.}
+  \abbrev{#1}{equen}{Seq.}
+  \abbrev{#1}{ffert}{Off.}
+  \abbrev{#1}{ommun}{Co.}
+  \abbrev{#1}{ntip}{Ant.}
+  \abbrev{#1}{ntic}{Cant.}
+  \abbrev{#1}{Toni Communes}{}
+  \abbrev{#1}{yrial}{}
+  \greannotation{\resultat}
+}
+\newcommand{\modeannotation}[1]{
+  \renewcommand{\resultat}{#1}
+  \abbrev{#1}{1}{ {\sc i} }
+  \abbrev{#1}{2}{ {\sc ii} }
+  \abbrev{#1}{3}{ {\sc iii} }
+  \abbrev{#1}{4}{ {\sc iv} }
+  \abbrev{#1}{5}{ {\sc v} }
+  \abbrev{#1}{6}{ {\sc vi} }
+  \abbrev{#1}{7}{ {\sc vii} }
+  \abbrev{#1}{8}{ {\sc viii} }
+  \greannotation{\resultat}
+}
+\gresetheadercapture{office-part}{officepartannotation}{}
+\gresetheadercapture{mode}{modeannotation}{string}
+
+%% sélection de la police de neumes
+\gresetnabcfont{gresgmodern}{12} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Graphisme %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% on définit l'échelle générale
+
+\newcommand{\echelle}{0.85}
+
+% on centre les titres et on ne les numérote pas
+\titleformat{\section}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\paragraph}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+% on diminue l'espace avant les titres
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+% commandes versets, repons et croix
+\newcommand{\vv}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}℣.\hspace{3mm}}}
+\newcommand{\rr}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}℟.\hspace{3mm}}}
+\newcommand{\cc}{\textcolor{red}{\fontspec[Scale=\echelle]{FreeSerif}\symbol{"2720}~}}
+\renewcommand{\aa}{\textcolor{red}{\fontspec[Scale=\echelle]{Charis SIL}\Abar.\hspace{3mm}}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec{Charis SIL}\Abar.~}}
+\gresetspecial{+}{{\fontspec{FreeSerif}†~}}
+\gresetspecial{*}{\gresixstar}
+\gresetspecial{cross}{\textcolor{gregoriocolor}{\fontspec{FreeSerif}\symbol{"2720}}}
+\gresetspecial{labiacross}{\textcolor{gregoriocolor}{+}}
+
+% commandes diverses
+\newcommand{\antiphona}{\textcolor{red}{\noindent Antiphona.\hspace{4mm}}}
+\newcommand{\antienne}{\textcolor{red}{\noindent Antienne.\hspace{4mm}}}
+\newcommand{\rubrique}[1]{\textcolor{red}{\emph{#1}}}
+\newcommand{\saut}{\hspace{1cm}}
+\newcommand{\minisaut}{\hspace{4mm}}
+\newcommand{\sautRV}{\\ \null \hspace{5.95mm}}
+\newcommand{\petitvspace}{\vspace{2mm}}
+\newcommand{\microvspace}{\vspace{0.8mm}}
+% pour affichier 1 en rouge et un peu d'espace
+\newcommand{\un}{{\color{gregoriocolor} 1~~~}}
+%% typographie des traductions en pleine page (pas sur deux colonnes) pour les pièces de chant
+\newcommand{\translation}[1]{{\small\emph{#1}}}
+
+% abréviations
+\newcommand{\tpalleluia}{\rubrique{(T.P.} \mbox{Allelúia.\rubrique{)}}}
+\newcommand{\tpalleluiafr}{\rubrique{(T.P.} \mbox{Alléluia.\rubrique{)}}}
+
+\newcommand{\tqomittitur}{{\small \rubrique{(In Tempore Quadragesimæ ommittitur} Allelúia.\rubrique{)}}}
+\newcommand{\careme}{{\small \rubrique{(Pendant le Carême on omet l'}Alléluia.\rubrique{)}}}
+
+% pour un psaume en double colonne
+\newcommand{\twocolpsalm}[2]{
+	\columnratio{0.53, 0.47}
+	\vspace{2mm}
+	\begin{paracol}{2}%
+	\vspace{-3mm}%
+	\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]%
+	\setcounter{enumi}{1}%
+	#1
+	\end{enumerate}
+	\switchcolumn%
+	\vspace{-3mm}%
+	\begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, before=\itshape\small, label=\color{gregoriocolor}\theenumi]%
+	\setcounter{enumi}{1}%
+	#2
+	\end{enumerate}
+	\end{paracol}
+	\columnratio{}
+}
+
+% pour une lecture en double colonne
+\newcommand{\twocolreading}[2]{
+	\columnratio{0.53, 0.47}
+	\begin{paracol}{2}
+	#1
+	\switchcolumn
+	\small{#2}
+	\end{paracol}
+	\columnratio{}
+}
+
+% environnement hymne : alltt + normalfont + marges custom
+\newenvironment{hymne}
+  {
+  \begin{adjustwidth}{1.6cm}{1mm}
+  \begin{alltt}\normalfont
+  }
+  {
+  \end{alltt}
+  \end{adjustwidth}
+  }
+  
+% la commande \u permet de souligner les inflexions
+\let\u\underline
+
+% pour revenir au texte normal dans les rubriques
+\newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
+
+% on définit la police par défaut
+\setmainfont[Ligatures=TeX, Scale=\echelle]{Charis SIL}
+%renderer=ICU a l'air de ne plus marcher...
+%\setmainfont[Renderer=ICU, Ligatures=TeX, Scale=\echelle]{Charis SIL}
+\setstretch{0.9}
+
+% paramétrage de paracol en mode 2 colonnes par page : taille des colonnes, séparateur
+\columnratio{0.5}
+\setlength{\columnsep}{1.5em}
+\setlength{\columnseprule}{0.3pt}
+
+\begin{document}
+
+% ceci est pour conserver une numérotation ordinaire malgré paracol
+\twosided[pcb]
+
+\begin{titlepage}
+\centering\null
+
+\vspace{1cm}
+
+{\scshape\LARGE Office des Ténèbres du Jeudi Saint}
+
+
+\end{titlepage}
+
+% tolérance infinie sur les sauts de lignes pour les colonnes étroites
+\sloppy
+
+\rubrique{On ne chante ni invitatoire, ni hymne, mais on commence directement par la premièere antienne, en se signant les lèevres.
+À la fin de chaque psaume, on éteint l'un des quinze cierges du chandelier qui aura été placé en avant de l'autel.}
+
+\section{Premier nocturne}
+
+\subsection{Psaume 68}
+
+\gregorioscore{partitions/Q6F5N1A1}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps68_8c}
+\gresetinitiallines{1}
+\aa \translation{Le zèle de Votre maison me dévore, et les opprobres de ceux qui Vous insultaient, sont retombées sur moi.}
+
+\un \translation{Sauvez-moi, ô Dieu, * car les eaux sont entrées jusqu'à mon âme.}
+\twocolpsalm{
+\item Infíxus sum in limo pro\textbf{fún}di:~* et non \textit{est} \textit{sub}\textbf{stán}tia.
+\item Veni in altitúdinem \textbf{ma}ris:~* et tempés\textit{tas} \textit{de}\textbf{mér}sit me.
+\item Laborávi clamans, raucæ factæ sunt fauces \textbf{me}æ:~* defecérunt óculi mei, dum spero in \textit{De}\textit{um} \textbf{me}um.
+\item Multiplicáti sunt super capíllos cápitis \textbf{me}i,~* qui odé\textit{runt} \textit{me} \textbf{gra}tis.
+\item Confortáti sunt qui persecúti sunt me inimíci mei in\textbf{jús}te:~* quæ non rápui, tunc \textit{ex}\textit{sol}\textbf{vé}bam.
+\item Deus, tu scis insipiéntiam \textbf{me}am:~* et delícta mea a te non \textit{sunt} \textit{abs}\textbf{cón}dita.
+\item Non erubéscant in me qui exspéctant te, \textbf{Dó}mine,~* Dómi\textit{ne} \textit{vir}\textbf{tú}tum
+\item Non confundántur \textbf{su}per me~* qui quærunt te, \textit{De}\textit{us} \textbf{Is}raël.
+\item Quóniam propter te sustínui op\textbf{pró}brium:~* opéruit confúsio fá\textit{ci}\textit{em} \textbf{me}am.
+\item Extráneus factus sum frátribus \textbf{me}is,~* et peregrínus fíliis \textit{ma}\textit{tris} \textbf{me}æ.
+\item Quóniam zelus domus tuæ com\textbf{é}dit me:~* et oppróbria exprobrántium tibi ceci\textit{dé}\textit{runt} \textbf{su}per me.
+\item Et opérui in jejúnio ánimam \textbf{me}am:~* et factum est in oppró\textit{bri}\textit{um} \textbf{mi}hi.
+\item Et pósui vestiméntum meum ci\textbf{lí}cium:~* et factus sum illis \textit{in} \textit{pa}\textbf{rá}bolam.
+\item Advérsum me loquebántur, qui sedébant in \textbf{por}ta:~* et in me psallébant qui bi\textit{bé}\textit{bant} \textbf{vi}num.
+\item Ego vero oratiónem meam ad te, \textbf{Dó}mine:~* tempus beneplá\textit{ci}\textit{ti}, \textbf{De}us.
+\item In multitúdine misericórdiæ tuæ ex\textbf{áu}di me,~* in veritáte sa\textit{lú}\textit{tis} \textbf{tu}æ:
+\item Eripe me de luto, ut non in\textbf{fí}gar:~* líbera me ab iis, qui odérunt me, et de profún\textit{dis} \textit{a}\textbf{quá}rum.
+\item Non me demérgat tempéstas aquæ,~† neque absórbeat me pro\textbf{fún}dum:~* neque úrgeat super me púte\textit{us} \textit{os} \textbf{su}um.
+\item Exáudi me, Dómine, quóniam benígna est misericórdia \textbf{tu}a:~* secúndum multitúdinem miseratiónum tuárum ré\textit{spi}\textit{ce} \textbf{in} me.
+\item Et ne avértas fáciem tuam a púero \textbf{tu}o:~* quóniam tríbulor, velóci\textit{ter} \textit{ex}\textbf{áu}di me.
+\item Inténde ánimæ meæ, et líbera \textbf{e}am:~* propter inimícos meos \textit{é}\textit{ri}\textbf{pe} me.
+\item Tu scis impropérium meum, et confusiónem \textbf{me}am,~* et reverén\textit{ti}\textit{am} \textbf{me}am.
+\item In conspéctu tuo sunt omnes qui tríbu\textbf{lant} me:~* impropérium exspectávit cor meum, \textit{et} \textit{mi}\textbf{sé}riam.
+\item Et sustínui qui simul contristarétur, et non \textbf{fu}it:~* et qui consolarétur, et \textit{non} \textit{in}\textbf{vé}ni.
+\item Et dedérunt in escam \textbf{me}am fel:~* et in siti mea potavérunt \textit{me} \textit{a}\textbf{cé}to.
+\item Fiat mensa eórum coram ipsis in \textbf{lá}queum,~* et in retributiónes, \textit{et} \textit{in} \textbf{scán}dalum.
+\item Obscuréntur óculi eórum ne \textbf{ví}deant:~* et dorsum eórum sem\textit{per} \textit{in}\textbf{cúr}va.
+\item Effúnde super eos iram \textbf{tu}am:~* et furor iræ tuæ compre\textit{hén}\textit{dat} \textbf{e}os.
+\item Fiat habitátio eórum de\textbf{sér}ta:~* et in tabernáculis eórum non sit \textit{qui} \textit{in}\textbf{há}bitet.
+\item Quóniam quem tu percussísti, perse\textbf{cú}ti sunt:~* et super dolórem vúlnerum meórum \textit{ad}\textit{di}\textbf{dé}runt.
+\item Appóne iniquitátem super iniquitátem e\textbf{ó}rum:~* et non intrent in justí\textit{ti}\textit{am} \textbf{tu}am.
+\item Deleántur de libro vi\textbf{vén}tium:~* et cum justis \textit{non} \textit{scri}\textbf{bán}tur.
+\item Ego sum pauper et \textbf{do}lens:~* salus tua, De\textit{us}, \textit{su}\textbf{scé}pit me.
+\item Laudábo nomen Dei cum \textbf{cán}tico:~* et magnificábo e\textit{um} \textit{in} \textbf{lau}de:
+\item Et placébit Deo super vítulum no\textbf{vél}lum:~* córnua producén\textit{tem} \textit{et} \textbf{ún}gulas.
+\item Vídeant páuperes et læ\textbf{tén}tur:~* quǽrite Deum, et vivet á\textit{ni}\textit{ma} \textbf{ves}tra.
+\item Quóniam exaudívit páuperes \textbf{Dó}minus:~* et vinctos suos \textit{non} \textit{de}\textbf{spé}xit.
+\item Laudent illum cæli et \textbf{ter}ra,~* mare et ómnia reptíli\textit{a} \textit{in} \textbf{e}is.
+\item Quóniam Deus salvam fáciet \textbf{Si}on:~* et ædificabúntur civi\textit{tá}\textit{tes} \textbf{Ju}da.
+\item Et inhabitábunt \textbf{i}bi,~* et hereditáte ac\textit{quí}\textit{rent} \textbf{e}am.
+\item Et semen servórum ejus possidébit \textbf{e}am:~* et qui díligunt nomen ejus, habitá\textit{bunt} \textit{in} \textbf{e}a.
+}{
+\item Je suis enfoncé dans une boue profonde, * où il n'y a pas de consistance.
+\item Je suis descendu au fond de la mer, * et la tempête m'a submergé.
+\item Je me suis fatigué à crier, ma gorge en a été enrouée ; * mes yeux se sont épuisés, tandis que j'attends mon Dieu.
+\item Ils sont devenus plus nombreux que les cheveux de ma tête, * ceux qui me haïssent sans cause.
+\item Ils sont devenus forts, mes ennemis qui me persécutent injustement ; * j'ai dû payer ce que je n'avais pas pris.
+\item O Dieu, Vous connaissez ma folie, * et mes péchés ne Vous sont point cachés.
+\item Que ceux qui espèrent en Vous ne rougissent pas à cause de moi, Seigneur, * Seigneur des armées.
+\item Qu'ils ne soient pas confondus à mon sujet, * ceux qui Vous cherchent, Dieu d'Israël.
+\item Car c'est à cause de Vous que j'ai souffert l'opprobre, * et que la confusion a couvert mon visage.
+\item Je suis devenu un étranger pour mes frères, * et un inconnu pour les fils de ma mère.
+\item Car le zèle de Votre maison m'a dévoré, * et les outrages de ceux qui Vous insultaient sont tombés sur moi.
+\item J'ai affligé mon âme par le jeûne, * et l'on m'en a fait un sujet d'opprobre.
+\item J'ai pris pour vêtement un cilice, * et je suis devenu leur fable.
+\item Ceux qui étaient assis à la porte parlaient contre moi, * et ceux qui buvaient du vin me raillaient par leurs chansons.
+\item Mais moi je Vous adresse, Seigneur, ma prière. * Voici le temps favorable, ô Dieu.
+\item Selon la grandeur de Votre miséricorde exaucez-moi, * selon la vérité de Vos promesses de salut.
+\item Retirez-moi de la boue, afin que je n'y enfonce pas ; * délivrez-moi de ceux qui me haïssent et des eaux profondes.
+\item Que les flots en fureur ne me submergent point ; que l'abîme ne m'engloutisse pas, * et que le puits ne ferme pas sa bouche sur moi.
+\item Exaucez-moi, Seigneur, car Votre miséricorde est toute suave ; * regardez- moi selon l'abondance de Vos bontés.
+\item Et ne détournez pas Votre visage de Votre serviteur ; * parce que je suis dans l'angoisse, exaucez-moi promptement.
+\item Soyez attentif sur mon âme, et délivrez-la * à cause de mes ennemis.
+\item Vous connaissez mon opprobre, et ma confusion, * et ma honte.
+\item Tous ceux qui me persécutent sont devant Vous ; * mon cœur s'attend à l'insulte et à la misère.
+\item Et j'ai attendu que quelqu'un s'attristât avec moi, mais nul ne l'a fait ; * et que quelqu'un me consolât, mais je n'ai trouvé personne.
+\item Et ils m'ont donné du fiel pour nourriture, * et dans ma soif ils m'ont abreuvé de vinaigre.
+\item Que leur table soit devant eux comme un filet, * un juste châtiment et une pierre de scandale.
+\item Que leurs yeux soient obscurcis, pour qu'ils cessent de voir, * et courbez à jamais leur dos.
+\item Déversez sur eux Votre colère, * et que la fureur de Votre courroux les saisisse.
+\item Que leur demeure devienne déserte, * et qu'il n'y ait personne qui habite dans leurs tentes.
+\item Parce qu'ils ont persécuté celui que Vous avez frappé, * et qu'ils ont ajouté à la douleur de mes blessures.
+\item Ajoutez l'iniquité à leur iniquité, * et qu'ils n'entrent pas dans Votre justice.
+\item Qu'ils soient effacés du livre des vivants, * et qu'ils ne soient point inscrits avec les justes.
+\item Pour moi, je suis pauvre et dans la douleur ; * Votre salut, ô Dieu, m'a relevé.
+\item Je louerai le Nom de Dieu par des cantiques, * et je le glorifierai par des louanges ;
+\item Et ce sera plus agréable à Dieu que le jeune veau, * à qui poussent les cornes et les ongles.
+\item Que les pauvres le voient et se réjouissent. * Cherchez Dieu, et votre âme vivra ;
+\item Car le Seigneur a exaucé les pauvres, * et Il n'a pas méprisé Ses captifs.
+\item Que les cieux et la terre Le louent ; * la mer, et tout ce qui s'y meut.
+\item Car Dieu sauvera Sion, * et les villes de Juda seront bâties.
+\item Ils y habiteront, * et ils l'acquerront en héritage.
+\item Et la race de Ses serviteurs la possédera, * et ceux qui aiment Son Nom y habiteront.
+}
+
+\subsection{Psaume 69}
+
+\gregorioscore{partitions/Q6F5N1A2}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps69_8c}
+\gresetinitiallines{1}
+\aa \translation{Que ceux qui me veulent du mal, soient repoussés en arrière, et couverts de confusion.}
+
+\un \translation{Ô Dieu, venez à mon aide ; * Seigneur, hâtez-Vous de me secourir.}
+\twocolpsalm{
+\item Confundántur et revere\textbf{án}tur,~* qui quærunt á\textit{ni}\textit{mam} \textbf{me}am.
+\item Avertántur retrórsum, et eru\textbf{bés}cant,~* qui volunt \textit{mi}\textit{hi} \textbf{ma}la.
+\item Avertántur statim erube\textbf{scén}tes,~* qui dicunt mihi: \textit{Eu}\textit{ge}, \textbf{eu}ge.
+\item Exsúltent et læténtur in te omnes qui \textbf{quæ}runt te,~* et dicant semper: Magnificétur Dóminus: qui díligunt salu\textit{tá}\textit{re} \textbf{tu}um.
+\item Ego vero egénus, et \textbf{pau}per sum:~* Deus, \textit{ád}\textit{ju}\textbf{va} me.
+\item Adjútor meus, et liberátor meus \textbf{es} tu:~* Dómine, \textit{ne} \textit{mo}\textbf{ré}ris.
+}{
+\item Qu'ils soient confondus et couverts de honte, * ceux qui cherchent à m'ôter la vie.
+\item Qu'ils reculent en arrière et soient dans la confusion, * ceux qui me veulent du mal.
+\item Qu'ils reculent aussitôt, rougissant de honte, * ceux qui me disent : Va ! va !
+\item Mais que tous ceux qui Vous cherchent tressaillent d'allégresse et de joie ; * et que ceux qui aiment Votre salut disent sans cesse : Que le Seigneur soit glorifié !
+\item Pour moi, je suis pauvre et indigent ; * ô Dieu, aidez-moi.
+\item Vous êtes mon aide et mon libérateur. * Seigneur, ne tardez pas.
+}
+
+\subsection{Psaume 70}
+
+\gregorioscore{partitions/Q6F5N1A3}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps70_8c}
+\gresetinitiallines{1}
+\aa \translation{Mon Dieu, délivrez-moi de la main du pécheur.}
+
+\un \translation{C'est en Vous, Seigneur, que j'ai espéré ; que je ne sois pas à jamais confondu. * Dans Votre justice, délivrez-moi et secourez-moi.}
+\twocolpsalm{
+\item Inclína ad me aurem \textbf{tu}am,~* \textit{et} \textbf{sal}va me.
+\item Esto mihi in Deum protectórem, et in locum mu\textbf{ní}tum:~* ut sal\textit{vum} \textit{me} \textbf{fá}cias.
+\item Quóniam firmaméntum \textbf{me}um,~* et refúgium \textit{me}\textit{um} \textbf{es} tu.
+\item Deus meus, éripe me de manu pecca\textbf{tó}ris,~* et de manu contra legem agéntis \textit{et} \textit{in}\textbf{í}qui:
+\item Quóniam tu es patiéntia mea, \textbf{Dó}mine:~* Dómine, spes mea a juven\textit{tú}\textit{te} \textbf{me}a.
+\item In te confirmátus sum ex \textbf{ú}tero:~* de ventre matris meæ tu es pro\textit{téc}\textit{tor} \textbf{me}us.
+\item In te cantátio mea semper:~† tamquam prodígium factus sum \textbf{mul}tis:~* et tu ad\textit{jú}\textit{tor} \textbf{for}tis.
+\item Repleátur os meum laude, ut cantem glóriam \textbf{tu}am:~* tota die magnitú\textit{di}\textit{nem} \textbf{tu}am.
+\item Ne projícias me in témpore senec\textbf{tú}tis:~* cum defécerit virtus mea, ne \textit{de}\textit{re}\textbf{lín}quas me.
+\item Quia dixérunt inimíci mei \textbf{mi}hi:~* et qui custodiébant ánimam meam, consílium fecé\textit{runt} \textit{in} \textbf{u}num.
+\item Dicéntes: Deus derelíquit eum,~† persequímini, et comprehéndite \textbf{e}um:~* quia non est \textit{qui} \textit{e}\textbf{rí}piat.
+\item Deus ne elongéris \textbf{a} me:~* Deus meus, in auxílium \textit{me}\textit{um} \textbf{ré}spice.
+\item Confundántur, et defíciant detrahéntes ánimæ \textbf{me}æ:~* operiántur confusióne et pudóre, qui quærunt \textit{ma}\textit{la} \textbf{mi}hi.
+\item Ego autem semper spe\textbf{rá}bo:~* et adjíciam super omnem \textit{lau}\textit{dem} \textbf{tu}am.
+\item Os meum annuntiábit justítiam \textbf{tu}am:~* tota die salu\textit{tá}\textit{re} \textbf{tu}um.
+\item Quóniam non cognóvi litteratúram,~† introíbo in poténtias \textbf{Dó}mini:~* Dómine, memorábor justítiæ tu\textit{æ} \textit{so}\textbf{lí}us.
+\item Deus, docuísti me a juventúte \textbf{me}a:~* et usque nunc pronuntiábo mirabí\textit{li}\textit{a} \textbf{tu}a.
+\item Et usque in senéctam et \textbf{sé}nium:~* Deus, ne \textit{de}\textit{re}\textbf{lín}quas me,
+\item Donec annúntiem bráchium \textbf{tu}um~* generatióni omni, \textit{quæ} \textit{ven}\textbf{tú}ra est:
+\item Poténtiam tuam, et justítiam tuam, Deus,~† usque in altíssima, quæ fecísti ma\textbf{gná}lia:~* Deus, quis sí\textit{mi}\textit{lis} \textbf{ti}bi?
+\item Quantas ostendísti mihi tribulatiónes multas et malas:~† et convérsus vivifi\textbf{cás}ti me:~* et de abýssis terræ íterum \textit{re}\textit{du}\textbf{xís}ti me:
+\item Multiplicásti magnificéntiam \textbf{tu}am:~* et convérsus conso\textit{lá}\textit{tus} \textbf{es} me.
+\item Nam et ego confitébor tibi in vasis psalmi veritátem \textbf{tu}am:~* Deus, psallam tibi in cíthara, \textit{Sanc}\textit{tus} \textbf{Is}raël.
+\item Exsultábunt lábia mea cum cantávero \textbf{ti}bi:~* et ánima mea, quam \textit{red}\textit{e}\textbf{mís}ti.
+\item Sed et lingua mea tota die meditábitur justítiam \textbf{tu}am:~* cum confúsi et revériti fúerint, qui quærunt \textit{ma}\textit{la} \textbf{mi}hi.
+}{
+\item Inclinez vers moi Votre oreille, * et sauvez-moi.
+\item Soyez-moi un Dieu protecteur et un asile fortifié, * afin de me sauver ;
+\item Car Vous êtes ma force * et mon refuge.
+\item Mon Dieu, tirez-moi de la main du pécheur, * et de la main de celui qui agit contre la loi, et du pervers ;
+\item Car Vous êtes mon attente, Seigneur ; * Seigneur, Vous êtes mon espérance depuis ma jeunesse.
+\item Sur Vous je me suis appuyé dès ma naissance ; * dès le sein de ma mère Vous êtes mon protecteur.
+\item Vous serez toujours le sujet de mes chants. * Je suis devenu pour beaucoup comme un prodige ; et Vous, Vous êtes un puissant secours.
+\item Que ma bouche soit remplie de louanges, pour que je chante Votre gloire, * et chaque jour Votre grandeur.
+\item Ne me rejetez pas au temps de la vieillesse ; * lorsque ma force se sera épuisée, ne m'abandonnez pas.
+\item Car mes ennemis ont parlé contre moi, * et ceux qui épiaient ma vie ont tenu conseil ensemble,
+\item Disant : Dieu l'a abandonné ; poursuivez-le et saisissez-le; * il n'y a personne pour le délivrer.
+\item O Dieu, ne Vous éloignez pas de moi ; * mon Dieu, voyez à me secourir.
+\item Qu'ils soient confondus et réduits à néant, ceux qui en veulent à ma vie ; * qu'ils soient couverts de confusion et de honte, ceux qui cherchent mon mal.
+\item Mais moi, j'espérerai toujours, * et j'ajouterai à toutes Vos louanges.
+\item Ma bouche publiera Votre justice, * et tout le jour Votre assistance salutaire.
+\item Ne connaissant pas la science humaine, je contemplerai les œuvres puissantes du Seigneur ; * Seigneur, je me rappellerai Votre justice, la Vôtre seule.
+\item O Dieu, Vous m'avez instruit dès ma jeunesse, * et je publierai Vos merveilles que j'ai éprouvées jusqu'à présent.
+\item Et jusqu'à la vieillesse et aux cheveux blancs, * ô Dieu, ne m'abandonnez pas,
+\item Jusqu'à ce que j'aie annoncé la force de Votre bras * à toutes les générations à venir, Votre puissance
+\item Et Votre justice qui atteint, ô Dieu, jusqu'aux cieux. * Dans les grandes choses que Vous avez faites, ô Dieu, qui est semblable à Vous ?
+\item Que de tribulations nombreuses et cruelles Vous m'avez fait éprouver ! Et Vous retournant, Vous m'avez rendu la vie, * et Vous m'avez retiré des abîmes de la terre.
+\item Vous avez fait éclater Votre magnificence, * et, Vous retournant, Vous m'avez consolé.
+\item Car je célébrerai encore, ô Dieu, Votre vérité au son des instruments ; * je Vous chanterai sur la harpe, ô Saint d'Israël.
+\item L'allégresse sera sur mes lèvres lorsque je Vous chanterai, * et dans mon âme, que Vous avez rachetée.
+\item Et ma langue annoncera tout le jour Votre justice, * lorsque ceux qui cherchent mon mal seront couverts de confusion et de honte.
+}
+
+\subsection{Versicule}
+\gresetinitiallines{0}
+\gregorioscore{partitions/Q6F5N1W}
+\gresetinitiallines{1}
+\translation{\rr Qu'ils soient repoussés et couverts de confusion.\\
+\vv Ceux qui me veulent du mal.}
+
+\rubrique{\normaltext{Pater Noster} entièrement en silence. Puis, sans absolution ni bénédiction, on chante la première leçon.}
+
+\subsection{Première leçon}
+
+\twocolreading{
+Incipit Lamentátio Jeremíæ Prophétæ.\\
+
+Aleph. Quómodo sedet sola cívitas plena pópulo: facta est quasi vídua dómina géntium: princeps provinciárum facta est sub tribúto.
+
+Beth. Plorans plorávit in nocte, et lácrimæ ejus in maxíllis ejus: non est qui consolétur eam ex ómnibus caris ejus: omnes amíci ejus sprevérunt eam, et facti sunt ei inimíci.
+
+Ghimel. Migrávit Judas propter afflictiónem, et multitúdinem servitútis: habitávit inter gentes, nec invénit réquiem: omnes persecutóres ejus apprehendérunt eam inter angústias.
+
+Daleth. Viæ Sion lugent eo quod non sint qui véniant ad solemnitátem: omnes portæ ejus destrúctæ: sacerdótes ejus geméntes: vírgines ejus squálidæ, et ipsa oppréssa amaritúdine.
+
+He. Facti sunt hostes ejus in cápite, inimíci ejus locupletáti sunt: quia Dóminus locútus est super eam propter multitúdinem iniquitátum ejus: párvuli ejus ducti sunt in captivitátem, ante fáciem tribulántis.
+
+Jerúsalem, Jerúsalem, convértere ad Dóminum Deum tuum.
+}{
+Commencement des Lamentations du Prophète Jérémie.\\
+
+Aleph. Comment est-elle assise solitaire, cette ville pleine de peuple ? Elle est devenue comme veuve, la maîtresse des nations ; la souveraine des provinces est devenue tributaire.
+
+Beth. Elle n'a pas cessé de pleurer pendant la nuit, et ses larmes coulent sur ses joues ; il n'y a personne qui la console parmi tous ceux qui lui étaient chers; tous ses amis l'ont méprisée et sont devenus ses ennemis.
+
+Ghimel. Juda est allé en exil, à cause de l'affliction et de la grande servitude ; il a habité parmi les nations, et il n'a pas trouvé de repos; tous ses persécuteurs l'ont saisi dans ses angoisses.
+
+Daleth. Les chemins de Sion sont en deuil, parce qu'il n'y a plus personne qui vienne aux solennités ; toutes ses portes sont détruites, ses prêtres gémissent; ses vierges sont défigurées, et elle est elle-même accablée d'amertume.
+
+Hé. Ses ennemis sont devenus les maîtres, ses adversaires se sont enrichis, car le Seigneur a parlé contre elle, à cause de la multitude de ses iniquités ; ses petits enfants ont été conduits en captivité devant l'oppresseur.
+
+Jérusalem, Jérusalem, reviens au Seigneur ton Dieu.
+}
+
+\rubrique{Aucune autre conclusion n'est ajoutée.}
+
+\gregorioscore{partitions/Q6F5N1R1}
+
+\translation{\rr Jésus pria son Père sur la montagne des Oliviers : Mon Père, s’il est possible, faites que ce calice s’éloigne de moi.\\
+\GreSpecial{*} L’esprit est prompt mais la chair est faible : Que Votre volonté soit faite.\\
+\vv Veillez, et priez, afin que vous ne tombiez point en tentation.\\
+\GreSpecial{*} L’esprit est prompt mais la chair est faible : Que Votre volonté soit faite.}
+
+\subsection{Deuxième leçon}
+
+\twocolreading{
+Vau. Et egréssus est a fília Sion omnis decor ejus: facti sunt príncipes ejus velut aríetes non inveniéntes páscua: et abiérunt absque fortitúdine ante fáciem subsequéntis.
+
+Zain. Recordáta est Jerúsalem diérum afflictiónis suæ, et prævaricatiónis ómnium desiderabílium suórum, quæ habúerat a diébus antíquis, cum cáderet pópulus ejus in manu hostíli, et non esset auxiliátor: vidérunt eam hostes, et derisérunt sábbata ejus.
+
+Heth. Peccátum peccávit Jerúsalem, proptérea instábilis facta est: omnes, qui glorificábant eam, sprevérunt illam, quia vidérunt ignomíniam ejus: ipsa autem gemens convérsa est retrórsum.
+
+Teth. Sordes ejus in pédibus ejus, nec recordáta est finis sui: depósita est veheménter, non habens consolatórem: vide, Dómine, afflictiónem meam, quóniam eréctus est inimícus.
+
+Jerúsalem, Jerúsalem, convértere ad Dóminum Deum tuum.
+}{
+Vau. La fille de Sion a perdu toute sa beauté: ses princes sont devenus comme des béliers qui ne trouvent point de pâturages, et ils sont allés sans force devant celui qui les poursuivait.
+
+Zain. Jérusalem s'est souvenue des jours de son affliction et de sa prévarication, de tous les objets désirables qu'elle avait eus depuis les jours anciens, lorsque son peuple tombait sous la main de l'ennemi, sans qu'il y eût personne pour le secourir. Ses ennemis l'ont vue, et ils se sont moqués de ses sabbats.
+
+Héth. Jérusalem a grandement péché, c'est pourquoi elle est devenue chancelante ; tous ceux qui l'honoraient l'ont méprisée, parce qu'ils ont vu son ignominie; elle-même, gémissante, s'est tournée en arrière.
+
+Teth. Ses souillures sont sur ses pieds, et elle ne s'est pas souvenue de sa fin ; elle a été étonnamment abaissée, et elle n'a pas eu de consolateur. Voyez, Seigneur, mon affliction, parce que l'ennemi s'est élevé avec orgueil.
+
+Jérusalem, Jérusalem, reviens au Seigneur ton Dieu.
+}
+
+\gregorioscore{partitions/Q6F5N1R2}
+
+\translation{\rr Mon âme est triste jusqu'à la mort ; attendez-Moi ici et veillez avec Moi ; vous allez voir la foule qui M'entourera :\\
+\GreSpecial{*} Vous prendrez la fuite et Moi J'irai M'immoler pour vous.\\
+\vv Voici que l'heure approche et le FIls de l'Homme sera livré aux mains des pécheurs.\\
+\GreSpecial{*} Vous prendrez la fuite et Moi J'irai M'immoler pour vous.
+}
+
+\subsection{Troisième leçon}
+
+\twocolreading{
+Jod. Manum suam misit hostis ad ómnia desiderabília ejus: quia vidit gentes ingréssas sanctuárium suum, de quibus præcéperas ne intrárent in ecclésiam tuam.
+
+Caph. Omnis pópulus ejus gemens, et quærens panem: dedérunt pretiósa quæque pro cibo ad refocillándam ánimam. Vide, Dómine, et consídera, quóniam facta sum vilis.
+
+Lamed. O vos omnes, qui transítis per viam, atténdite, et vidéte, si est dolor sicut dolor meus: quóniam vindemiávit me, ut locútus est Dóminus in die iræ furóris sui.
+
+Mem. De excélso misit ignem in óssibus meis, et erudívit me: expándit rete pédibus meis, convértit me retrórsum: pósuit me desolátam, tota die mæróre conféctam.
+
+Nun. Vigilávit jugum iniquitátum meárum: in manu ejus convolútæ sunt, et impósitæ collo meo: infirmáta est virtus mea: dedit me Dóminus in manu, de qua non pótero súrgere.
+
+Jerúsalem, Jerúsalem, convértere ad Dóminum Deum tuum.
+}{
+Jod. L'ennemi a étendu sa main sur tout ce qu'elle avait de précieux, car elle a vu entrer dans son sanctuaire les nations, au sujet desquelles Vous aviez ordonné qu'elles n'entreraient pas dans Votre assemblée.
+
+Caph. Tout son peuple gémit et cherche du pain ; ils ont donné toutes leurs choses précieuses pour soutenir leur vie. Voyez, Seigneur, et considérez comme je suis devenue vile.
+
+Lamed. O vous tous qui passez par le chemin, regardez et voyez s'il est une douleur comme ma douleur ; car le Seigneur m'a vendangée, comme Il l'avait dit, au jour de Sa fureur.
+
+Mém. D'en haut Il a envoyé un feu dans mes os, et Il m'a châtiée ; Il a tendu un filet sous mes pieds, Il m'a fait tomber en arrière; Il m'a rendue désolée, accablée de tristesse tout le jour.
+
+Nun. Le joug de mes iniquités m'a accablé soudain ; elles ont été enlacées dans Sa main, et Il les a mises sur mon cou; ma force a été affaiblie; le Seigneur m'a livré à une main dont je ne pourrai pas sortir.
+
+Jérusalem, Jérusalem, reviens au Seigneur ton Dieu.
+}
+
+\gregorioscore{partitions/Q6F5N1R3}
+
+\translation{\rr Voici que Nous L'avons vu : Il n'a plus de beauté ni d'éclat ; Il n'a plus d'apparence ; c'est Lui qui a porté nos péchés et pleure pour nous ; Lui-même a été blessé par nos péchés.\\
+\GreSpecial{*} C'est par Ses plaies que nous avons été guéris.\\
+\vv Il a vraiment pris sur Lui nos langueurs et Il a porté nos iniquités.\\
+\GreSpecial{*} C'est par Ses plaies que nous avons été guéris.\\
+\rr Voici...}
+
+\section{Deuxième nocturne}
+
+\subsection{Psaume 71}
+
+\gregorioscore{partitions/Q6F5N2A1}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps71_7c}
+\gresetinitiallines{1}
+\aa \translation{Le Seigneur a délivré le pauvre de la main du puissant, et soutenu l’indigent qui n’avait point de protecteur.}
+
+\un \translation{Ô Dieu, donnez au Roi Votre jugement, * et au Fils du roi Votre justice.}
+\twocolpsalm{
+\item Judicáre pópulum tuum \textbf{in} jus\textbf{tí}tia,~* et páuperes tuos \textbf{in} ju\textbf{dí}cio.
+\item Suscípiant montes \textbf{pa}cem \textbf{pó}pulo:~* et \textbf{col}les jus\textbf{tí}tiam.
+\item Judicábit páuperes pópuli, et salvos fáciet \textbf{fí}lios \textbf{páu}perum:~* et humiliábit calum\textbf{ni}a\textbf{tó}rem.
+\item Et permanébit cum sole, et \textbf{an}te \textbf{lu}nam,~* in generatióne et gene\textbf{ra}ti\textbf{ó}nem.
+\item Descéndet sicut plúvi\textbf{a} in \textbf{vel}lus:~* et sicut stillicídia stillántia \textbf{su}per \textbf{ter}ram.
+\item Oriétur in diébus ejus justítia, et abun\textbf{dán}tia \textbf{pa}cis:~* donec aufe\textbf{rá}tur \textbf{lu}na.
+\item Et dominábitur a mari \textbf{us}que ad \textbf{ma}re:~* et a flúmine usque ad términos \textbf{or}bis ter\textbf{rá}rum.
+\item Coram illo próci\textbf{dent} Æ\textbf{thí}opes:~* et inimíci ejus \textbf{ter}ram \textbf{lin}gent.
+\item Reges Tharsis, et ínsulæ \textbf{mú}nera \textbf{óf}ferent:~* reges Arabum et Saba \textbf{do}na ad\textbf{dú}cent.
+\item Et adorábunt eum omnes \textbf{re}ges \textbf{ter}ræ:~* omnes Gentes \textbf{sér}vient \textbf{e}i:
+\item Quia liberábit páuperem \textbf{a} pot\textbf{én}te:~* et páuperem, cui non \textbf{e}rat ad\textbf{jú}tor.
+\item Parcet páupe\textbf{ri} et \textbf{ín}opi:~* et ánimas páuperum \textbf{sal}vas \textbf{fá}ciet.
+\item Ex usúris et iniquitáte rédimet áni\textbf{mas} e\textbf{ó}rum:~* et honorábile nomen eórum \textbf{co}ram \textbf{il}lo.
+\item Et vivet, et dábitur ei de auro Arábiæ,~† et adorábunt de \textbf{ip}so \textbf{sem}per:~* tota die bene\textbf{dí}cent \textbf{e}i.
+\item Et erit firmaméntum in terra in summis móntium,~† superextollétur super Líbanum \textbf{fruc}tus \textbf{e}jus:~* et florébunt de civitáte sicut \textbf{fe}num \textbf{ter}ræ.
+\item Sit nomen ejus bene\textbf{díc}tum in \textbf{sǽ}cula:~* ante solem pérmanet \textbf{no}men \textbf{e}jus.
+\item Et benedicéntur in ipso omnes \textbf{tri}bus \textbf{ter}ræ:~* omnes Gentes magnifi\textbf{cá}bunt \textbf{e}um.
+\item Benedíctus Dóminus, \textbf{De}us \textbf{Is}raël,~* qui facit mira\textbf{bí}lia \textbf{so}lus.
+\item Et benedíctum nomen majestátis ejus \textbf{in} æ\textbf{tér}num:~* et replébitur majestáte ejus omnis terra: \textbf{fi}at, \textbf{fi}at.
+}{
+\item Pour qu'Il juge Votre peuple avec justice, * et Vos pauvres selon l'équité.
+\item Que les montagnes reçoivent la paix pour le peuple, * et les collines la justice !
+\item Il jugera les pauvres du peuple, et sauvera les enfants des pauvres, * et humiliera le calomniateur.
+\item Et Il durera autant que le soleil et que la lune, * de génération en génération.
+\item Il descendra comme la pluie sur une toison, * et comme les eaux qui tombent goutte à goutte sur la terre.
+\item En Ses jours apparaîtra la justice et l'abondance de la paix, * jusqu'à ce que la lune soit détruite.
+\item Et Il dominera de la mer à la mer, * et depuis le fleuve jusqu'aux extrémités de la terre.
+\item Devant Lui se prosterneront les Ethiopiens, * et Ses ennemis lécheront la terre.
+\item Les rois de Tharsis et les îles Lui offriront des présents ; * les rois d'Arabie et de Saba apporteront des dons;
+\item Et tous les rois de la terre L'adoreront, * toutes les nations Lui seront assujetties.
+\item Car Il délivrera le pauvre des mains du puissant, * et l'indigent qui n'avait personne pour l'assister.
+\item Il aura compassion du pauvre et de l'indigent, * et Il sauvera les âmes des pauvres.
+\item Il affranchira leurs âmes de l'usure et de l'iniquité, * et leur nom sera en honneur devant Lui.
+\item Et Il vivra, et on Lui donnera de l'or d'Arabie ; on L'adorera sans cesse, * tout le jour on Le bénira.
+\item Et le blé sera sur la terre au sommet des montagnes ; son fruit s'élèvera plus haut que le Liban, * et on fleurira dans la cité comme l'herbe des champs.
+\item Que Son Nom soit béni dans tous les siècles : * Son Nom durera autant que le soleil.
+\item Et toutes les tribus de la terre seront bénies en Lui ; * toutes les nations Le glorifieront.
+\item Béni soit le Seigneur, Dieu d'Israël, * qui opère seul des merveilles.
+\item Et béni soit éternellement le Nom de Sa majesté, * et que toute la terre soit remplie de Sa majesté. Ainsi soit-il, ainsi soit-il.
+}
+
+\subsection{Psaume 72}
+
+\gregorioscore{partitions/Q6F5N2A2}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps72_8c}
+\gresetinitiallines{1}
+\aa \translation{Les pensées et les paroles des impies sont remplies de malice : ils ont fait éclater leur iniquité.}
+
+\un \translation{Que Dieu est bon pour Israël, * pour ceux qui ont le cœur droit !}
+\twocolpsalm{
+\item Mei autem pene moti sunt \textbf{pe}des:~* pene effúsi sunt \textit{gres}\textit{sus} \textbf{me}i.
+\item Quia zelávi super in\textbf{í}quos,~* pacem pecca\textit{tó}\textit{rum} \textbf{vi}dens.
+\item Quia non est respéctus morti e\textbf{ó}rum:~* et firmaméntum in pla\textit{ga} \textit{e}\textbf{ó}rum.
+\item In labóre hóminum \textbf{non} sunt:~* et cum homínibus non fla\textit{gel}\textit{la}\textbf{bún}tur:
+\item Ideo ténuit eos su\textbf{pér}bia,~* opérti sunt iniquitáte et impie\textit{tá}\textit{te} \textbf{su}a.
+\item Pródiit quasi ex ádipe iníquitas e\textbf{ó}rum:~* transiérunt in af\textit{féc}\textit{tum} \textbf{cor}dis.
+\item Cogitavérunt, et locúti sunt ne\textbf{quí}tiam:~* iniquitátem in excél\textit{so} \textit{lo}\textbf{cú}ti sunt.
+\item Posuérunt in cælum os \textbf{su}um:~* et lingua eórum transí\textit{vit} \textit{in} \textbf{ter}ra.
+\item Ideo convertétur pópulus \textbf{me}us hic:~* et dies pleni invenién\textit{tur} \textit{in} \textbf{e}is.
+\item Et dixérunt: Quómodo scit \textbf{De}us,~* et si est sciéntia \textit{in} \textit{ex}\textbf{cél}so?
+\item Ecce ipsi peccatóres, et abundántes in \textbf{sǽ}culo,~* obtinué\textit{runt} \textit{di}\textbf{ví}tias.
+\item Et dixi: Ergo sine causa justificávi cor \textbf{me}um,~* et lavi inter innocéntes \textit{ma}\textit{nus} \textbf{me}as.
+\item Et fui flagellátus tota \textbf{di}e,~* et castigátio mea in \textit{ma}\textit{tu}\textbf{tí}nis.
+\item Si dicébam: Nar\textbf{rá}bo sic:~* ecce natiónem filiórum tuórum \textit{re}\textit{pro}\textbf{bá}vi.
+\item Existimábam ut cognósce\textbf{rem} hoc,~* la\textit{bor} \textit{est} \textbf{an}te me.
+\item Donec intrem in Sanctuárium \textbf{De}i:~* et intélligam in novíssi\textit{mis} \textit{e}\textbf{ó}rum.
+\item Verúmtamen propter dolos posuísti \textbf{e}is:~* dejecísti eos dum al\textit{le}\textit{va}\textbf{rén}tur.
+\item Quómodo facti sunt in desolatiónem, súbito defe\textbf{cé}runt:~* periérunt propter iniqui\textit{tá}\textit{tem} \textbf{su}am.
+\item Velut sómnium surgéntium, \textbf{Dó}mine,~* in civitáte tua imáginem ipsórum ad ní\textit{hi}\textit{lum} \textbf{réd}iges.
+\item Quia inflammátum est cor meum, et renes mei commu\textbf{tá}ti sunt:~* et ego ad níhilum redáctus sum, \textit{et} \textit{ne}\textbf{scí}vi.
+\item Ut juméntum factus sum \textbf{a}pud te:~* et ego \textit{sem}\textit{per} \textbf{te}cum.
+\item Tenuísti manum déxteram meam:~† et in voluntáte tua dedu\textbf{xís}ti me,~* et cum glória \textit{su}\textit{sce}\textbf{pís}ti me.
+\item Quid enim mihi est in \textbf{cæ}lo?~* et a te quid vólui \textit{su}\textit{per} \textbf{ter}ram?
+\item Defécit caro mea, et cor \textbf{me}um:~* Deus cordis mei, et pars mea Deus \textit{in} \textit{æ}\textbf{tér}num.
+\item Quia ecce, qui elóngant se a te, per\textbf{í}bunt:~* perdidísti omnes, qui forni\textit{cán}\textit{tur} \textbf{abs} te.
+\item Mihi autem adhærére Deo \textbf{bo}num est:~* pónere in Dómino De\textit{o} \textit{spem} \textbf{me}am:
+\item Ut annúntiem omnes prædicatiónes \textbf{tu}as,~* in portis fí\textit{li}\textit{æ} \textbf{Si}on.
+}{
+\item Mes pieds ont été presque ébranlés, * mes pas presque renversés,
+\item Parce que j'ai porté envie aux méchants, * en voyant la paix des pécheurs.
+\item Car la mort paraît les oublier, * et leurs blessures ne durent pas.
+\item Ils n'ont point de part au labeur des mortels, * et ils ne sont pas frappés comme les autres hommes.
+\item Aussi l'orgueil les a-t-il saisis ; * ils sont couverts de leur iniquité et de leur impiété.
+\item L'iniquité sort comme de leur graisse ; * ils se sont abandonnés aux passions de leur cœur.
+\item Leurs pensées et leurs paroles n'ont été que malice ; * ils ont proféré hautement l'iniquité.
+\item Ils ont ouvert leur bouche contre le Ciel, * et leur langue a parcouru la terre.
+\item C'est pourquoi mon peuple se tourne de ce côté, * et on trouve en eux des jours pleins.
+\item Et ils ont dit : Comment Dieu le sait-Il ? * et le Très-Haut en a-t-Il connaissance ?
+\item Voyez ces pécheurs qui abondent en tout en ce monde : * ils ont acquis de nouvelles richesses.
+\item Et j'ai dit : C'est en vain que j'ai purifié mon cœur, * et que j'ai lavé mes mains parmi les innocents,
+\item Puisque j'ai été affligé tout le jour, * et châtié dès le matin.
+\item Si j'avais dit : Je parlerai en ce sens, * j'aurais condamné la race de Vos enfants.
+\item Je songeais à pénétrer ce secret ; * la difficulté fut grande devant moi,
+\item Jusqu'à ce que je fusse entré dans le sanctuaire de Dieu, * et que j'eusse compris ce que sera leur fin.
+\item En vérité, ce sont des pièges que Vous avez placés devant eux ; * Vous les avez renversés au moment même où ils s'élevaient.
+\item Comment sont-ils tombés dans la désolation ? * Ils ont disparu soudain ; ils ont péri à cause de leur iniquité.
+\item Comme le songe de ceux qui s'éveillent, Seigneur, * Vous réduirez au néant dans Votre cité leur image.
+\item Parce que mon cœur s'est enflammé, * et que mes reins ont été altérés,
+\item J'ai été réduit au néant, et plongé dans l'ignorance. Je suis devenu devant Vous comme une bête de somme, * et cependant je suis toujours avec Vous.
+\item Vous avez tenu ma main droite, et Vous m'avez conduit selon Votre volonté, * et Vous m'avez reçu avec gloire.
+\item Car qu'y a-t-il pour moi dans le Ciel ? * et qu'ai-je désiré de Vous sur la terre ?
+\item Ma chair et mon cœur ont défailli, * ô Dieu, qui êtes le Dieu de mon cœur, et mon partage pour l'éternité.
+\item Car voici que ceux qui s'éloignent de Vous périront ; * Vous avez résolu de perdre tous ceux qui se prostituent en s'éloignant de Vous.
+\item Pour moi, c'est mon bonheur de m'attacher à Dieu, * de mettre mon espérance dans le Seigneur Dieu ;
+\item Afin de publier toutes Vos louanges * aux portes de la fille de Sion.
+}
+
+\subsection{Psaume 73}
+
+\gregorioscore{partitions/Q6F5N2A3}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps73_1g}
+\gresetinitiallines{1}
+\aa \translation{Levez-vous, Seigneur, et jugez ma cause.}
+
+\un \translation{Pourquoi, ô Dieu, nous avez-Vous rejetés pour toujours ? * pourquoi Votre fureur s'est-elle allumée contre les brebis de Votre pâturage ?}
+\twocolpsalm{
+\item Memor esto congregati\textbf{ó}nis \textbf{tu}æ:~* quam possedísti \textit{ab} \textit{in}\textbf{í}tio.
+\item Redemísti virgam heredi\textbf{tá}tis \textbf{tu}æ:~* mons Sion, in quo habitás\textit{ti} \textit{in} \textbf{e}o.
+\item Leva manus tuas in supérbias e\textbf{ó}rum in \textbf{fi}nem:~* quanta malignátus est inimí\textit{cus} \textit{in} \textbf{sanc}to!
+\item Et gloriáti sunt \textbf{qui} o\textbf{dé}runt te:~* in médio solemni\textit{tá}\textit{tis} \textbf{tu}æ.
+\item Posuérunt signa \textbf{su}a, \textbf{si}gna:~* et non cognovérunt sicut in éxitu \textit{su}\textit{per} \textbf{sum}mum.
+\item Quasi in silva lignórum secúribus excidérunt jánuas ejus \textbf{in} id\textbf{íp}sum:~* in secúri et áscia deje\textit{cé}\textit{runt} \textbf{e}am.
+\item Incendérunt igni sanctu\textbf{á}rium \textbf{tu}um:~* in terra polluérunt tabernáculum nó\textit{mi}\textit{nis} \textbf{tu}i.
+\item Dixérunt in corde suo cognátio e\textbf{ó}rum \textbf{si}mul:~* Quiéscere faciámus omnes dies festos De\textit{i} \textit{a} \textbf{ter}ra.
+\item Signa nostra non vídimus, jam non \textbf{est} pro\textbf{phé}ta:~* et nos non co\textit{gnó}\textit{scet} \textbf{ám}plius.
+\item Usquequo, Deus, improperábit \textbf{in}i\textbf{mí}cus:~* irrítat adversárius nomen tu\textit{um} \textit{in} \textbf{fi}nem?
+\item Ut quid avértis manum tuam, et \textbf{déx}teram \textbf{tu}am,~* de médio sinu tu\textit{o} \textit{in} \textbf{fi}nem?
+\item Deus autem Rex noster \textbf{an}te \textbf{sǽ}cula:~* operátus est salútem in mé\textit{di}\textit{o} \textbf{ter}ræ.
+\item Tu confirmásti in virtúte \textbf{tu}a \textbf{ma}re:~* contribulásti cápita dracó\textit{num} \textit{in} \textbf{a}quis.
+\item Tu confregísti cápi\textbf{ta} dra\textbf{có}nis:~* dedísti eum escam pópu\textit{lis} \textit{Æ}\textbf{thí}opum.
+\item Tu dirupísti fontes, \textbf{et} tor\textbf{rén}tes~* tu siccásti flú\textit{vi}\textit{os} \textbf{E}than.
+\item Tuus est dies, et \textbf{tu}a \textbf{est} nox:~* tu fabricátus es auró\textit{ram} \textit{et} \textbf{so}lem.
+\item Tu fecísti omnes \textbf{tér}minos \textbf{ter}ræ:~* æstátem et ver tu plas\textit{más}\textit{ti} \textbf{e}a.
+\item Memor esto hujus, inimícus imprope\textbf{rá}vit \textbf{Dó}mino:~* et pópulus insípiens incitávit \textit{no}\textit{men} \textbf{tu}um.
+\item Ne tradas béstiis ánimas confi\textbf{tén}tes \textbf{ti}bi,~* et ánimas páuperum tuórum ne obliviscá\textit{ris} \textit{in} \textbf{fi}nem.
+\item Réspice in testa\textbf{mén}tum \textbf{tu}um:~* quia repléti sunt, qui obscuráti sunt terræ dómibus in\textit{i}\textit{qui}\textbf{tá}tum.
+\item Ne avertátur húmilis \textbf{fac}tus con\textbf{fú}sus:~* pauper et inops laudábunt \textit{no}\textit{men} \textbf{tu}um.
+\item Exsúrge, Deus, júdica \textbf{cau}sam \textbf{tu}am:~* memor esto improperiórum tuórum, eórum quæ ab insipiénte sunt \textit{to}\textit{ta} \textbf{di}e.
+\item Ne obliviscáris voces inimi\textbf{có}rum tu\textbf{ó}rum:~* supérbia eórum, qui te odérunt, a\textit{scén}\textit{dit} \textbf{sem}per.
+}{
+\item Souvenez-Vous de Votre famille, * que Vous avez possédé dès le commencement.
+\item Vous avez racheté le sceptre de Votre héritage : * c'est le mont Sion, où Vous avez habité.
+\item Levez Vos mains contre leur insolence sans bornes. * Que de forfaits l'ennemi a commis dans le sanctuaire !
+\item Ceux qui Vous haïssent ont fait leur gloire * de Vous insulter au milieu de Votre solennité.
+\item Ils ont placé leurs étendards comme étendards, * et ils n'ont pas plus respecté le sommet que les issues.
+\item Comme dans une forêt d'arbres, à coups de hache, ils ont brisé les portes à l'envi. * Avec la hache et la cognée ils ont tout renversé.
+\item Ils ont mis le feu à Votre sanctuaire ; * ils ont renversé et profané le tabernacle de Votre Nom.
+\item Ils ont dit dans leur cœur, eux et toute leur bande : * Faisons cesser dans le pays tous les jours de fête consacrés à Dieu.
+\item Nous ne voyons plus nos étendards ; * il n'y a plus de prophète, et on ne nous connaîtra plus.
+\item Jusques à quand, ô Dieu, l'ennemi insultera-t-il ? * L'adversaire outragera-t-il sans fin Votre Nom ?
+\item Pourquoi retirez-Vous sans cesse Votre main et Votre droite * de Votre sein ?
+\item Cependant Dieu est notre Roi depuis des siècles ; * Il a opéré notre salut au milieu de la terre.
+\item C'est Vous qui avez affermi la mer par Votre puissance, * qui avez brisé les têtes des dragons dans les eaux.
+\item C'est Vous qui avez écrasé les têtes du dragon, * qui l'avez donné en nourriture aux peuples d'Ethiopie.
+\item C'est Vous qui avez fait jaillir des fontaines et des torrents, * qui avez desséché les fleuves intarissables.
+\item A Vous est le jour, et à Vous est la nuit ; * c'est Vous qui avez créé l'aurore et le soleil.
+\item C'est Vous qui avez établi toutes les limites de la terre, * Vous qui avez formé l'été et le printemps.
+\item Souvenez-Vous-en : l'ennemi a outragé le Seigneur, * et un peuple insensé a irrité Votre Nom.
+\item Ne livrez pas aux bêtes les âmes qui Vous louent, * et n'oubliez pas pour toujours les âmes de Vos pauvres.
+\item Ayez égard à Votre alliance, * car les lieux sombres du pays sont remplis de repaires d'iniquité.
+\item Que l'humble ne s'en retourne pas couvert de confusion ; * le pauvre et l'indigent loueront Votre Nom.
+\item Levez-Vous, ô Dieu, jugez Votre cause ; * souvenez-Vous des outrages qui Vous viennent tout le jour de l'insensé.
+\item N'oubliez pas les clameurs de Vos ennemis. * L'orgueil de ceux qui Vous haïssent monte toujours.
+}
+
+\subsection{Versicule}
+
+\gresetinitiallines{0}
+\gregorioscore{partitions/Q6F5N2W}
+\gresetinitiallines{1}
+\translation{\rr Mon Dieu, délivrez-moi des mains du pécheur.\\
+\vv Et des mains de celui qui agit contre la loi, et du méchant.}
+
+\rubrique{\normaltext{Pater Noster} entièrement en silence. Puis, sans absolution ni bénédiction, on chante la quatrième leçon.}
+
+\subsection{Quatrième leçon}
+
+\twocolreading{
+Ex tractátu sancti Augustíni Epíscopi super Psalmos.\\
+
+Exáudi, Deus, oratiónem meam, et ne despéxeris deprecatiónem meam: inténde mihi, et exáudi me. Satagéntis, sollíciti, in tribulatióne pósiti, verba sunt ista. Orat multa pátiens, de malo liberári desíderans. Súperest ut videámus in quo malo sit: et cum dícere cœ́perit, agnoscámus ibi nos esse: ut communicáta tribulatióne, conjungámus oratiónem. Contristátus sum, inquit, in exercitatióne mea, et conturbátus sum. Ubi contristátus? ubi conturbátus? In exercitatióne mea, inquit. Hómines malos, quos pátitur, commemorátus est: eandémque passiónem malórum hóminum exercitatiónem suam dixit. Ne putétis gratis esse malos in hoc mundo, et nihil boni de illis ágere Deum. Omnis malus aut ídeo vivit, ut corrigátur; aut ídeo vivit, ut per illum bonus exerceátur.
+}{
+Du Traité de saint Augustin sur les Psaumes.\\
+
+« Mon Dieu, écoutez ma prière et ne méprisez pas ma demande : soyez attentifs à me secourir et exaucez-moi ». Ces paroles sont celles d’un homme affligé, accablé d’ennuis et de tribulations. Livré à une épreuve pénible, brûlé du désir d’en être délivré, il a recours à la prière. Il nous reste maintenant à apprendre en quels maux il se trouve plongé ; et, quand il nous l’aura dit, nous devrons reconnaître que nous avons part à son affliction : unis dans la souffrance, nous le serons aussi dans la prière. « Je suis affligé dans mon exercice et je suis troublé ». Affligé, troublé, en quoi ? « Dans mon exercice » Il va parler des méchants qui le font souffrir et des épreuves qu’ils lui font subir : voilà son exercice. Ne vous imaginez point que les méchants sont inutiles en ce monde et que Dieu ne les emploie pas à opérer le bien. Il accorde la vie aux méchants, soit pour leur donner le temps de se convertir, soit afin de les faire servir à éprouver les bons.
+}
+
+\gregorioscore{partitions/Q6F5N2R1}
+
+\translation{\rr Mon ami M'a trahi par le signe d'un baiser : Celui que je baiserai, c'est Lui, saisissez-le : voilà le signe coupable que donna celui qui, par un baiser, consomma l'homicide.\\
+\GreSpecial{*} Malheureux, il abandonna le prix du sang et, finalement, se pendit.\\
+\vv Il eût été bon à cet homme de n'être pas né.\\
+\GreSpecial{*} Malheureux, il abandonna le prix du sang et, finalement, se pendit.}
+
+\subsection{Cinquième leçon}
+
+\twocolreading{
+Utinam ergo qui nos modo exércent, convertántur, et nobíscum exerceántur: tamen quámdiu ita sunt ut exérceant, non eos odérimus: quia in eo quod malus est quis eórum, utrum usque in finem perseveratúrus sit, ignorámus. Et plerúmque cum tibi vidéris odísse inimícum, fratrem odísti, et nescis. Diábolus, et ángeli ejus in Scriptúris sanctis manifestáti sunt nobis, quod ad ignem ætérnum sint destináti. Ipsórum tantum desperánda est corréctio, contra quos habémus occúltam luctam: ad quam luctam nos armat Apóstolus, dicens: Non est nobis colluctátio advérsus carnem et sánguinem: id est, non advérsus hómines, quos vidétis, sed advérsus príncipes, et potestátes, et rectóres mundi, tenebrárum harum. Ne forte cum dixísset, mundi, intellégeres dǽmones esse rectóres cæli et terræ. Mundi dixit, tenebrárum harum: mundi dixit, amatórum mundi: mundi dixit, impiórum et iniquórum: mundi dixit, de quo dicit Evangélium: Et mundus eum non cognóvit.
+}{
+Puissent ceux qui nous persécutent aujourd’hui, revenir au bien et partager nos épreuves : néanmoins, aussi longtemps qu’ils nous tourmentent, puissions-nous à notre tour ne pas les prendre en haine ! En effet, de ce qu’ils sont aujourd’hui dans la mauvaise voie, il nous est impossible de conclure que, plus tard, ils ne se convertiront pas : bien souvent il arrive que, au lieu de haïr un ennemi comme tu le crois, tu détestes sans le savoir un de tes frères. Les saintes Ecritures nous l’attestent : le démon et ses anges sont condamnés au feu éternel : eux seuls ne nous laissent aucun espoir de les voir revenir au bien : nous avons à soutenir contre eux une lutte invisible et c’est à cette lutte que l’Apôtre veut nous préparer quand il nous dit : « Nous n’avons pas à combattre contre la « chair et le sang », c’est-à-dire, contre des hommes que nous sommes à même de voir ; « mais contre les principautés et les puissances, contre les princes de ce monde, de ces ténèbres ». A l’entendre s’exprimer de la sorte et dire : « lie ce monde », tu croirais peut-être que le gouvernement du ciel et de la terre appartient au démon, mais ne t’y trompe pas ; aux mots « de ce monde », il a ajouté : de ces ténèbres. Par « le monde », il a entendu les amis du monde. « Le monde » selon lui, ce sont les impies et les pécheurs : c’est du monde que l’Evangile a dit : « Le monde ne l’a pas connu ».
+}
+
+\gregorioscore{partitions/Q6F5N2R2}
+
+\translation{\rr Judas, le pire des trafiquants, a abordé le Seigneur avec un baiser ; et Lui, comme un agneau innocent, n'a pas refusé le baiser de Judas.\\
+\GreSpecial{*} Pour quelques deniers, il a livré le Christ aux Juifs.\\
+\vv Mieux lui eût valu n'être pas né.\\
+\GreSpecial{*} Pour quelques deniers, il a livré le Christ aux Juifs.
+}
+
+\subsection{Sixième leçon}
+
+\begin{paracol}{2}
+Quóniam vidi iniquitátem, et contradictiónem in civitáte. Atténde glóriam crucis ipsíus. Jam in fronte regum crux illa fixa est, cui inimíci insultavérunt. Efféctus probávit virtútem: dómuit orbem non ferro, sed ligno. Lignum crucis contuméliis dignum visum est inimícis, et ante ipsum lignum stantes caput agitábant, et dicébant: Si Fílius Dei est, descéndat de cruce. Extendébat ille manus suas ad pópulum non credéntem, et contradicéntem. Si enim justus est, qui ex fide vivit; iníquus est, qui non habet fidem. Quod ergo hic ait, iniquitátem: perfídiam intéllege. Vidébat ergo Dóminus in civitáte iniquitátem et contradictiónem, et extendébat manus suas ad pópulum non credéntem et contradicéntem: et tamen et ipsos exspéctans dicébat: Pater, ignósce illis, quia nésciunt quid fáciunt.
+\switchcolumn
+« Car j’ai vu l’injustice et la contradiction dans leur ville ». Remarque au moins le glorieux éclat de sa croix. Cette croix, que ses ennemis ont insultée, a déjà trouvé place au front des rois ; l’événement a déjà prouvé la puissance de Celui qui y a été attaché ; il a dompté le monde, non par les armes, mais par le bois de sa croix. Ses ennemis avaient cru que ce bois était digne de tous les mépris ; ils s’arrêtaient devant lui, secouaient la tête et disaient : « S’il est le Fils de Dieu, qu’il descende de sa croix ». Cloué à ce bois, il tendait les bras à ce peuple incrédule et ennemi. Si celui qui vit de la foi est juste, celui-là est injuste qui n’a pas la foi. Par le mot « injustice », j’entends donc la perfidie. Le Seigneur voyait donc l’iniquité et la contradiction dans la ville ; il étendait ses bras vers un peuple incrédule et ennemi ; il en attendait patiemment le retour au bien et disait : « Mon Père, pardonnez-leur, car ils ne savent ce qu’ils font ».
+\end{paracol}
+
+\gregorioscore{partitions/Q6F5N2R3}
+
+\translation{\rr Un de Mes disciples Me trahira aujourd'hui ; malheur à celui par qui Je serai livré.\\
+\GreSpecial{*} Mieux lui eût valu n'être pas né.\\
+\vv Celui qui met la main au plat avec Moi, voilà celui qui doit Me livrer aux mains des pécheurs.\\
+\GreSpecial{*} Mieux lui eût valu n'être pas né.\\
+\rr Un de Mes disciples...}
+
+\section{Troisième nocturne}
+
+\subsection{Psaume 74}
+
+\gregorioscore{partitions/Q6F5N3A1}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps74_7c}
+\gresetinitiallines{1}
+\aa \translation{J’ai dit aux méchants : Ne parlez point avec iniquité contre Dieu.}
+
+\un \translation{Nous Vous louerons, ô Dieu, * nous Vous louerons, et nous invoquerons Votre Nom.}
+\twocolpsalm{
+\item Narrábimus mira\textbf{bí}lia \textbf{tu}a:~* cum accépero tempus, ego justítias \textbf{ju}di\textbf{cá}bo.
+\item Liquefácta est terra, et omnes qui hábi\textbf{tant} in \textbf{e}a:~* ego confirmávi co\textbf{lúm}nas \textbf{e}jus.
+\item Dixi iníquis: Nolíte in\textbf{í}que \textbf{á}gere:~* et delinquéntibus: Nolíte exal\textbf{tá}re \textbf{cor}nu:
+\item Nolíte extóllere in altum \textbf{cor}nu \textbf{ves}trum:~* nolíte loqui advérsus Deum in\textbf{i}qui\textbf{tá}tem.
+\item Quia neque ab Oriénte, neque ab Occidénte, neque a de\textbf{sér}tis \textbf{món}tibus:~* quóniam \textbf{De}us \textbf{ju}dex est.
+\item Hunc humíliat, et \textbf{hunc} ex\textbf{ál}tat:~* quia calix in manu Dómini vini meri \textbf{ple}nus \textbf{mis}to.
+\item Et inclinávit ex hoc in hoc:~† verúmtamen fæx ejus non est ex\textbf{i}na\textbf{ní}ta:~* bibent omnes pecca\textbf{tó}res \textbf{ter}ræ.
+\item Ego autem annunti\textbf{á}bo in \textbf{sǽ}culum:~* cantábo \textbf{De}o \textbf{Ja}cob.
+\item Et ómnia córnua pecca\textbf{tó}rum con\textbf{frín}gam:~* et exaltabúntur \textbf{cór}nua \textbf{jus}ti.
+}{
+\item Nous raconterons Vos merveilles. * Au temps que J'aurai fixé, Je ferai parfaite justice.
+\item La terre s'est dissoute, avec tous ceux qui l'habitent. * Moi J'ai affermi ses colonnes.
+\item J'ai dit aux méchants : Ne commettez plus l'iniquité ; * et aux pécheurs : N'élevez plus un front superbe.
+\item Ne levez plus si haut la tête ; * cessez de proférer des blasphèmes contre Dieu.
+\item Car ce n'est ni de l'orient, ni de l'occident, ni des montagnes désertes, que vous viendra le secours, * parce que c'est Dieu qui est juge.
+\item Il humilie celui-ci, et Il élève celui-là ; * car il y a dans la main du Seigneur une coupe de vin pur, pleine d'aromates.
+\item Il en verse de côté et d'autre, et pourtant la lie n'en est pas encore épuisée ; * tous les pécheurs de la terre en boiront.
+\item Pour moi, j'annoncerai ces choses à jamais ; * je chanterai à la gloire du Dieu de Jacob.
+\item Et Je briserai toutes les cornes des pécheurs, * et les cornes du juste se redresseront.
+}
+
+\subsection{Psaume 75}
+
+\gregorioscore{partitions/Q6F5N3A2}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps75_8c}
+\gresetinitiallines{1}
+\aa \translation{La terre a tremblé, et elle s’est reposée ; tandis que Dieu se préparait à juger.}
+
+\un \translation{Dieu S'est fait connaître en Judée ; * Son Nom est grand dans Israël.}
+\twocolpsalm{
+\item Et factus est in pace locus \textbf{e}jus:~* et habitátio e\textit{jus} \textit{in} \textbf{Si}on.
+\item Ibi confrégit poténtias \textbf{ár}cuum:~* scutum, gládi\textit{um}, \textit{et} \textbf{bel}lum.
+\item Illúminans tu mirabíliter a móntibus æ\textbf{tér}nis:~* turbáti sunt omnes insipi\textit{én}\textit{tes} \textbf{cor}de.
+\item Dormiérunt somnum \textbf{su}um:~* et nihil invenérunt omnes viri divitiárum in má\textit{ni}\textit{bus} \textbf{su}is.
+\item Ab increpatióne tua, Deus \textbf{Ja}cob,~* dormitavérunt qui ascen\textit{dé}\textit{runt} \textbf{e}quos.
+\item Tu terríbilis es, et quis resístet \textbf{ti}bi?~* ex tunc \textit{i}\textit{ra} \textbf{tu}a.
+\item De cælo audítum fecísti ju\textbf{dí}cium:~* terra trémuit \textit{et} \textit{qui}\textbf{é}vit.
+\item Cum exsúrgeret in judícium \textbf{De}us,~* ut salvos fáceret omnes mansu\textit{é}\textit{tos} \textbf{ter}ræ.
+\item Quóniam cogitátio hóminis confitébitur \textbf{ti}bi:~* et relíquiæ cogitatiónis diem festum \textit{a}\textit{gent} \textbf{ti}bi.
+\item Vovéte, et réddite Dómino Deo \textbf{ves}tro:~* omnes, qui in circúitu ejus af\textit{fér}\textit{tis} \textbf{mú}nera.
+\item Terríbili et ei qui aufert spíritum \textbf{prín}cipum,~* terríbili apud \textit{re}\textit{ges} \textbf{ter}ræ.
+}{
+\item Il a fixé Son séjour dans la ville de paix, * et Sa demeure dans Sion.
+\item C'est là qu'Il a brisé toute la force des arcs, * le bouclier, le glaive et la guerre.
+\item Vous projetez un merveilleux éclat du haut des montagnes éternelles ; * tous ceux dont le cœur était rempli de folie ont été consternés.
+\item Ils ont dormi leur sommeil, * et tous ces hommes de richesses n'ont rien trouvé dans leurs mains.
+\item A Votre menace, ô Dieu de Jacob, * se sont endormis ceux qui étaient montés sur des chevaux.
+\item Vous êtes terrible, et qui pourra Vous résister * au moment de Votre colère ?
+\item Du Ciel, Vous avez fait entendre la sentence ; * la terre a tremblé et s'est tue,
+\item Lorsque Dieu S'est levé pour rendre justice, * afin de sauver tous ceux qui sont doux sur la terre.
+\item Aussi la pensée de l'homme Vous louera, * et le souvenir qui lui restera Vous fera fête.
+\item Faites des vœux, et acquittez-les au Seigneur votre Dieu, * vous tous qui des alentours apportez des présents à ce Dieu terrible,
+\item Qui ôte la vie aux princes, * qui est terrible aux rois de la terre.
+}
+
+\subsection{Psaume 76}
+
+\gregorioscore{partitions/Q6F5N3A3}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps76_7a}
+\gresetinitiallines{1}
+\aa \translation{Au jour de mon affliction, j’ai cherché Dieu, et j’ai tendu mes mains vers Lui.}
+
+\un \translation{J'ai élevé ma voix, et j'ai crié vers le Seigneur ; * j'ai élevé ma voix vers Dieu, et Il m'a entendu.}
+\twocolpsalm{
+\item In die tribulatiónis meæ Deum exquisívi,~† mánibus meis nocte \textbf{con}tra \textbf{e}um:~* et non \textbf{sum} de\textbf{cép}tus.
+\item Rénuit consolári ánima mea:~† memor fui Dei, et delectátus sum, et ex\textbf{er}ci\textbf{tá}tus sum:~* et defécit \textbf{spí}ritus \textbf{me}us.
+\item Anticipavérunt vigílias \textbf{ó}culi \textbf{me}i:~* turbátus sum, et non \textbf{sum} lo\textbf{cú}tus.
+\item Cogitávi \textbf{di}es an\textbf{tí}quos:~* et annos ætérnos in \textbf{men}te \textbf{há}bui.
+\item Et meditátus sum nocte cum \textbf{cor}de \textbf{me}o,~* et exercitábar, et scopébam \textbf{spí}ritum \textbf{me}um.
+\item Numquid in ætérnum pro\textbf{jí}ciet \textbf{De}us:~* aut non appónet ut complacíti\textbf{or} sit \textbf{ad}huc?
+\item Aut in finem misericórdiam \textbf{su}am ab\textbf{scín}det,~* a generatióne in gene\textbf{ra}ti\textbf{ó}nem?
+\item Aut obliviscétur mise\textbf{ré}ri \textbf{De}us:~* aut continébit in ira sua miseri\textbf{cór}dias \textbf{su}as?
+\item Et \textbf{di}xi: Nunc \textbf{cœ}pi:~* hæc mutátio déxte\textbf{ræ} Ex\textbf{cél}si.
+\item Memor fui \textbf{ó}perum \textbf{Dó}mini:~* quia memor ero ab inítio mirabíli\textbf{um} tu\textbf{ó}rum.
+\item Et meditábor in ómnibus o\textbf{pé}ribus \textbf{tu}is:~* et in adinventiónibus tuis \textbf{ex}er\textbf{cé}bor.
+\item Deus, in sancto via tua:~† quis Deus magnus sicut \textbf{De}us \textbf{nos}ter?~* tu es Deus qui facis \textbf{mi}ra\textbf{bí}lia.
+\item Notam fecísti in pópulis vir\textbf{tú}tem \textbf{tu}am:~* redemísti in bráchio tuo pópulum tuum fílios \textbf{Ja}cob et \textbf{Jo}seph.
+\item Vidérunt te aquæ, Deus, vi\textbf{dé}runt te \textbf{a}quæ:~* et timuérunt et turbátæ \textbf{sunt} a\textbf{býs}si.
+\item Multitúdo sóni\textbf{tus} a\textbf{quá}rum:~* vocem de\textbf{dé}runt \textbf{nu}bes.
+\item Etenim sagíttæ \textbf{tu}æ \textbf{tráns}eunt:~* vox tonítrui \textbf{tu}i in \textbf{ro}ta.
+\item Illuxérunt coruscatiónes tuæ \textbf{or}bi \textbf{ter}ræ:~* commóta est, et con\textbf{tré}muit \textbf{ter}ra.
+\item In mari via tua, et sémitæ tuæ in \textbf{a}quis \textbf{mul}tis:~* et vestígia tua non \textbf{co}gno\textbf{scén}tur.
+\item Deduxísti sicut oves \textbf{pó}pulum \textbf{tu}um,~* in manu Móy\textbf{si} et \textbf{A}aron.
+}{
+\item Au jour de ma tribulation, j'ai cherché Dieu ; * la nuit, j'ai tendu mes mains vers Lui, et je n'ai pas été déçu.
+\item Mon âme a refusé toute consolation ; * je me suis souvenu de Dieu, et j'en ai été ravi; je me suis troublé, et mon esprit a défailli.
+\item Mes yeux ont devancé les veilles de la nuit ; * j'ai été dans le trouble, et je ne pouvais parler.
+\item Je pensais aux jours anciens, * et j'avais dans l'esprit les années éternelles.
+\item Et je méditais la nuit dans mon cœur, * et je réfléchissais, et je tourmentais mon esprit.
+\item Dieu nous rejettera-t-Il pour toujours ? * ou ne pourra-t-Il plus nous être favorable ?
+\item Nous privera-t-Il à jamais de Sa miséricorde, * de génération en génération ?
+\item Dieu oubliera-t-Il d'avoir pitié ? * et, dans Sa colère, arrêtera-t-Il Ses miséricordes ?
+\item Et j'ai dit : Maintenant je commence. * Ce changement vient de la droite du Très-Haut.
+\item Je me suis souvenu des œuvres du Seigneur ; * car je me souviendrai de Vos merveilles d'autrefois.
+\item Et je méditerai sur toutes Vos œuvres, * et je réfléchirai sur Vos desseins.
+\item O Dieu, Votre voie est sainte. Quel Dieu est grand comme notre Dieu ? * Vous êtes le Dieu qui opérez des merveilles.
+\item Vous avez fait connaître parmi les peuples Votre puissance. * Vous avez racheté par Votre bras Votre peuple, les fils de Jacob et de Joseph.
+\item Les eaux Vous ont vu, ô Dieu ; les eaux Vous ont vu, * et elles ont eu peur, et les abîmes ont été troublés.
+\item Redoublement du fracas des eaux ; * les nuées ont fait retentir leur voix.
+\item Vos flèches aussi ont été lancées ; * voix de Votre tonnerre tout autour.
+\item Vos éclairs ont illuminé le monde ; * la terre a été émue et a tremblé.
+\item La mer fut Votre chemin, les grandes eaux furent Vos sentiers, * et Vos traces ne seront point connues.
+\item Vous avez conduit Votre peuple comme des brebis, * par la main de Moïse et d'Aaron.
+}
+
+\subsection{Versicule}
+
+\gresetinitiallines{0}
+\gregorioscore{partitions/Q6F5N3W}
+\gresetinitiallines{1}
+\translation{\rr Levez-Vous, Seigneur.\\
+\vv Et jugez ma cause.}
+
+\rubrique{\normaltext{Pater Noster} entièrement en silence. Puis, sans absolution ni bénédiction, on chante la septième leçon.}
+
+
+\subsection{Septième leçon}
+
+\twocolreading{
+De Epístola prima beáti Pauli Apóstoli ad Corínthios\\\\
+
+Hoc autem præcípio: non laudans quod non in mélius, sed in detérius convenítis.
+
+Primum quidem conveniéntibus vobis in Ecclésiam, áudio scissúras esse inter vos, et ex parte credo.
+
+Nam opórtet et hǽreses esse, ut et qui probáti sunt, manifésti fiant in vobis.
+
+Conveniéntibus ergo vobis in unum, jam non est Domínicam cenam manducáre.
+
+Unusquísque enim suam cenam præsúmit ad manducándum. Et álius quidem ésurit, álius autem ébrius est.
+
+Numquid domos non habétis ad manducándum et bibéndum? aut Ecclésiam Dei contémnitis, et confúnditis eos, qui non habent? Quid dicam vobis? Laudo vos? In hoc non laudo.
+}{
+De la première épitre du bienheureux apôtre Paul aux Corinthiens\\
+\rubrique{(1 Co. 11: 17-34)}\\
+
+Mais en vous recommandant ce point, je n'ai garde de vous louer de ce que vous vous assemblez, non pour votre avantage, mais pour votre préjudice.
+
+Et d'abord j'apprends que, lorsque vous vous réunissez en assemblée, il y a des scissions parmi vous - et je le crois en partie ;
+
+Car il faut qu'il y ait parmi vous même des sectes, afin que les frères d'une vertu éprouvée soient manifestés parmi vous.
+
+Lors donc que vous vous réunissez ce n'est plus le repas du Seigneur que vous célébrez ;
+
+Car, à table, chacun commence par prendre son propre repas, en sorte que tels ont faim, tandis que d'autres se gorgent.
+
+N'avez-vous pas des maisons pour y manger et boire ? Ou méprisez-vous l'Eglise de Dieu et voulez-vous faire un affront à ceux qui n'ont rien ? Que vous dirai-je ? Que je vous loue ? Non, je ne vous loue point en cela.
+}
+
+\gregorioscore{partitions/Q6F5N3R1}
+
+\translation{\rr J'étais comme un agneau innocent, conduit à l'immolation et Je ne le savais pas. Mes ennemis ont tenu conseil contre Moi, disant :\\
+\GreSpecial{*} Venez, mettons du bois dans Son pain et rayons-Le de la terre des vivants.\\
+\vv Tous Mes ennemis complotaient contre Moi Mon malheur ; ils donnèrent contre Moi un ordre inique disant :\\
+\GreSpecial{*} Venez, mettons du bois dans Son pain et rayons-Le de la terre des vivants.}
+
+\subsection{Huitième leçon}
+
+\twocolreading{
+Ego enim accépi a Dómino quod et trádidi vobis, quóniam Dóminus Jesus, in qua nocte tradebátur, accépit panem,
+
+Et grátias agens fregit, et dixit: Accípite, et manducáte: hoc est corpus meum, quod pro vobis tradétur: hoc fácite in meam commemoratiónem.
+
+Simíliter et cálicem, postquam cœnávit, dicens: Hic calix novum testaméntum est in meo sánguine: hoc fácite, quotiescúmque bibétis, in meam commemoratiónem.
+
+Quotiescúmque enim manducábitis panem hunc, et cálicem bibétis, mortem Dómini annuntiábitis donec véniat.
+}{
+Car, pour moi, j'ai reçu du Seigneur, ce que je vous ai aussi transmis, savoir, que le Seigneur Jésus, dans la nuit où il fut livré, prit du pain,
+
+Et après avoir rendu grâces, le rompit et dit : «Prenez et mangez ; ceci est Mon corps, qui sera livré pour vous ; faites ceci en mémoire de Moi.»
+
+De même, après avoir soupé, Il prit le calice et dit : «Ce calice est la nouvelle alliance en Mon sang ; faites ceci, toutes les fois que vous en boirez, en mémoire de Moi.»
+
+Car toutes les fois que vous mangez ce pain et que vous buvez ce calice, vous annoncez la mort du Seigneur, jusqu'à ce qu'Il vienne.
+}
+
+\gregorioscore{partitions/Q6F5N3R2}
+
+\translation{\rr Vous n'avez pu veiller une heure avec Moi, vous qui vous exhortiez à mourir avec Moi ?\\
+\GreSpecial{*} Ne voyez-vous donc pas Judas, comment il ne dort pas mais se hâte de Me livrer aux Juifs ?\\
+\vv Pourquoi dormez-vous ? Levez-vous et prier de peur d'entrer en tentation.
+\GreSpecial{*} Ne voyez-vous donc pas Judas, comment il ne dort pas mais se hâte de Me livrer aux Juifs ?}
+
+\subsection{Neuvième leçon}
+
+\twocolreading{
+Itaque quicúmque manducáverit panem hunc, vel bíberit cálicem Dómini indígne, reus erit córporis et sánguinis Dómini.
+
+Probet autem seípsum homo: et sic de pane illo edat, et de cálice bibat.
+
+Qui enim mandúcat et bibit indígne, judícium sibi mandúcat et bibit, non dijúdicans corpus Dómini.
+
+Ideo inter vos multi infírmi et imbecílles, et dórmiunt multi.
+
+Quod, si nosmetípsos dijudicarémus, non útique judicarémur.
+
+Dum judicámur autem, a Dómino corrípimur, ut non cum hoc mundo damnémur.
+
+Itaque, fratres mei, cum convenítis ad manducándum, ínvicem exspectáte.
+
+Si quis ésurit, domi mandúcet: ut non in judícium conveniátis. Cétera autem, cum vénero, dispónam.
+}{
+C'est pourquoi celui qui mangera le pain ou boira le calice du Seigneur indignement, sera coupable envers le corps et le sang du Seigneur.
+
+Que chacun donc s'éprouve soi-même, et qu'ainsi il mange de ce pain et boive de ce calice ;
+
+Car celui qui mange et boit indignement, sans discerner le corps du Seigneur, mange et boit son propre jugement.
+
+C'est pour cela qu'il y a parmi vous beaucoup de gens débiles et de malades et qu'un grand nombre sont morts.
+
+Si nous nous examinions nous-mêmes nous ne serions pas jugés.
+
+Mais le Seigneur nous juge et nous châtie, afin que nous ne soyons pas condamnés avec ce monde.
+
+Ainsi, mes frères, lorsque vous vous réunissez pour le repas, attendez-vous les uns les autres.
+
+Si quelqu'un a faim qu'il mange chez lui, afin que vous ne vous réunissiez pas pour votre condamnation. Je règlerai les autres choses quand je serai arrivé chez vous.
+}
+
+\gregorioscore{partitions/Q6F5N3R3}
+
+
+\translation{Les anciens du peuple tinrent conseil,\\
+\GreSpecial{*} afin de prendre Jésus par ruse et de Le tuer ; ils sortirent avec des glaives et des bâtons comme pour un brigand.\\
+\vv Les prêtres et les pharisiens réunirent le Conseil\\
+\GreSpecial{*} afin de prendre Jésus par ruse et de Le tuer ; ils sortirent avec des glaives et des bâtons comme pour un brigand.\\
+\rr Les anciens du peuple tinrent conseil...
+}
+
+\section{Laudes}
+
+\subsection{Psaume 50}
+
+\gregorioscore{partitions/Q6F5LA1}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps50_8g}
+\gresetinitiallines{1}
+\aa \translation{Soyez trouvé juste, Seigneur, dans Vos paroles et victorieux dans Votre jugement.}
+
+\un \translation{Ayez pitié de moi, ô Dieu, * selon Votre grande miséricorde.}
+\twocolpsalm{
+\item Et secúndum multitúdinem miseratiónum tu\textbf{á}rum,~* dele iniqui\textit{tá}\textit{tem} \textbf{me}am.
+\item Amplius lava me ab iniquitáte \textbf{me}a:~* et a peccáto \textit{me}\textit{o} \textbf{mun}da me.
+\item Quóniam iniquitátem meam ego co\textbf{gnós}co:~* et peccátum meum contra \textit{me} \textit{est} \textbf{sem}per.
+\item Tibi soli peccávi, et malum coram te \textbf{fe}ci:~* ut justificéris in sermónibus tuis, et vincas cum \textit{ju}\textit{di}\textbf{cá}ris.
+\item Ecce enim in iniquitátibus con\textbf{cép}tus sum:~* et in peccátis concépit me \textit{ma}\textit{ter} \textbf{me}a.
+\item Ecce enim veritátem dile\textbf{xís}ti:~* incérta et occúlta sapiéntiæ tuæ manifes\textit{tás}\textit{ti} \textbf{mi}hi.
+\item Aspérges me hyssópo, et mun\textbf{dá}bor:~* lavábis me, et super nivem \textit{de}\textit{al}\textbf{bá}bor.
+\item Audítui meo dabis gáudium et læ\textbf{tí}tiam:~* et exsultábunt ossa hu\textit{mi}\textit{li}\textbf{á}ta.
+\item Avérte fáciem tuam a peccátis \textbf{me}is:~* et omnes iniquitátes \textit{me}\textit{as} \textbf{de}le.
+\item Cor mundum crea in me, \textbf{De}us:~* et spíritum rectum ínnova in viscé\textit{ri}\textit{bus} \textbf{me}is.
+\item Ne projícias me a fácie \textbf{tu}a:~* et spíritum sanctum tuum ne áu\textit{fe}\textit{ras} \textbf{a} me.
+\item Redde mihi lætítiam salutáris \textbf{tu}i:~* et spíritu principá\textit{li} \textit{con}\textbf{fír}ma me.
+\item Docébo iníquos vias \textbf{tu}as:~* et ímpii ad te \textit{con}\textit{ver}\textbf{tén}tur.
+\item Líbera me de sanguínibus, Deus, Deus salútis \textbf{me}æ:~* et exsultábit lingua mea justí\textit{ti}\textit{am} \textbf{tu}am.
+\item Dómine, lábia mea a\textbf{pé}ries:~* et os meum annuntiábit \textit{lau}\textit{dem} \textbf{tu}am.
+\item Quóniam si voluísses sacrifícium, dedíssem \textbf{ú}tique:~* holocáustis non \textit{de}\textit{lec}\textbf{tá}beris.
+\item Sacrifícium Deo spíritus contribu\textbf{lá}tus:~* cor contrítum et humiliátum, Deus, \textit{non} \textit{de}\textbf{spí}cies.
+\item Benígne fac, Dómine, in bona voluntáte tua \textbf{Si}on:~* ut ædificéntur mu\textit{ri} \textit{Je}\textbf{rú}salem.
+\item Tunc acceptábis sacrifícium justítiæ, oblatiónes, et holo\textbf{cáus}ta:~* tunc impónent super altáre \textit{tu}\textit{um} \textbf{ví}tulos.
+}{
+\item Et selon la multitude de Vos bontés, * effacez mon iniquité.
+\item Lavez-moi de plus en plus de mon iniquité, * et purifiez-moi de mon péché.
+\item Car je connais mon iniquité, * et mon péché est toujours devant moi.
+\item J'ai péché contre Vous seul, et j'ai fait ce qui est mal à Vos yeux, * afin que Vous soyez trouvé juste dans Vos paroles, et victorieux dans Votre jugement.
+\item Car j'ai été conçu dans l'iniquité, * et ma mère m'a conçu dans le péché.
+\item Car Vous avez aimé la vérité ; * Vous m'avez révélé les secrets et les mystères de Votre sagesse.
+\item Vous m'arroserez avec l'hysope, et je serai purifié ; * Vous me laverez, et je deviendrai plus blanc que la neige.
+\item Vous me ferez entendre une parole de joie et de bonheur, * et mes os, qui sont brisés et humiliés, tressailliront d'allégresse.
+\item Détournez Votre face de mes péchés, * et effacez toutes mes iniquités.
+\item O Dieu, créez en moi un cœur pur, * et renouvelez un esprit droit dans mon sein.
+\item Ne me rejetez pas de devant Votre face, * et ne retirez pas de moi Votre Esprit-Saint.
+\item Rendez-moi la joie de Votre salut, * et affermissez-moi par un esprit généreux.
+\item J'enseignerai Vos voies aux méchants, * et les impies se convertiront à Vous.
+\item Délivrez-moi du sang que j'ai versé, ô Dieu, Dieu de mon salut, * et ma langue célébrera avec joie Votre justice.
+\item Seigneur, Vous ouvrirez mes lèvres, * et ma bouche publiera Vos louanges.
+\item Car si Vous aviez désiré un sacrifice, je Vous l'aurais offert ; * mais Vous ne prenez pas plaisir aux holocaustes.
+\item Le sacrifice digne de Dieu, c'est un esprit brisé ; * Vous ne mépriserez pas, ô Dieu, un cœur contrit et humilié.
+\item Seigneur, traitez favorablement Sion dans Votre bonté, * afin que les murs de Jérusalem soient bâtis.
+\item Alors Vous agréerez un sacrifice de justice, les oblations et les holocaustes ; * alors on offrira de jeunes taureaux sur Votre autel.
+}
+
+\subsection{Psaume 89}
+
+\gregorioscore{partitions/Q6F5LA2}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps89_2d}
+\gresetinitiallines{1}
+\aa \translation{Le Seigneur a été conduit comme une brebis au sacrifice et Il n’a pas ouvert la bouche.}
+
+\un \translation{Seigneur, Vous avez été pour nous un refuge, * de génération en génération.}
+\twocolpsalm{
+\item Priúsquam montes fíerent, aut formarétur terra et \textbf{or}bis:~* a sǽculo et usque in sǽculum tu \textit{es}, \textbf{De}us.
+\item Ne avértas hóminem in humili\textbf{tá}tem:~* et dixísti: Convertímini, fíli\textit{i} \textbf{hó}minum.
+\item Quóniam mille anni ante óculos \textbf{tu}os,~* tamquam dies hestérna, quæ \textit{præ}\textbf{tér}iit.
+\item Et custódia in \textbf{noc}te,~* quæ pro níhilo habéntur, eórum an\textit{ni} \textbf{e}runt.
+\item Mane sicut herba tránseat,~† mane flóreat, et \textbf{tráns}eat:~* véspere décidat, indúret et \textit{a}\textbf{rés}cat.
+\item Quia defécimus in ira \textbf{tu}a,~* et in furóre tuo turbá\textit{ti} \textbf{su}mus.
+\item Posuísti iniquitátes nostras in conspéctu \textbf{tu}o:~* sǽculum nostrum in illuminatióne vul\textit{tus} \textbf{tu}i.
+\item Quóniam omnes dies nostri defe\textbf{cé}runt:~* et in ira tua \textit{de}\textbf{fé}cimus.
+\item Anni nostri sicut aránea medita\textbf{bún}tur:~* dies annórum nostrórum in ipsis, septuagín\textit{ta} \textbf{an}ni.
+\item Si autem in potentátibus, octogínta \textbf{an}ni:~* et ámplius eórum, labor \textit{et} \textbf{do}lor.
+\item Quóniam supervénit mansue\textbf{tú}do:~* et corri\textit{pi}\textbf{é}mur.
+\item Quis novit potestátem iræ \textbf{tu}æ:~* et præ timóre tuo iram tuam dinu\textit{me}\textbf{rá}re?
+\item Déxteram tuam sic \textbf{no}tam fac:~* et erudítos corde in sa\textit{pi}\textbf{én}tia.
+\item Convértere, Dómine, \textbf{ús}quequo?~* et deprecábilis esto super ser\textit{vos} \textbf{tu}os.
+\item Repléti sumus mane misericórdia \textbf{tu}a:~* et exsultávimus, et delectáti sumus ómnibus dié\textit{bus} \textbf{nos}tris.
+\item Lætáti sumus pro diébus, quibus nos humili\textbf{ás}ti:~* annis, quibus vídi\textit{mus} \textbf{ma}la.
+\item Réspice in servos tuos, et in ópera \textbf{tu}a:~* et dírige fílios \textit{e}\textbf{ó}rum.
+\item Et sit splendor Dómini Dei nostri super nos,~† et ópera mánuum nostrárum dírige \textbf{su}per nos:~* et opus mánuum nostrá\textit{rum} \textbf{dí}rige.
+}{
+\item Avant que les montagnes eussent été faites, ou que la terre et le monde eussent été formés, * Vous êtes Dieu de toute éternité, et dans tous les siècles.
+\item Ne réduisez pas l'homme à l'abaissement, * Vous qui avez dit : Revenez, enfants des hommes.
+\item Car mille ans sont à Vos yeux * comme le jour d'hier qui n'est plus,
+\item Et comme une veille de la nuit ; * on les compte pour rien; tel est le cas que l'on fait de leurs années.
+\item Comme l'herbe, il passe en un matin ; * le matin elle fleurit, et elle passe; le soir elle tombe, se durcit et se dessèche.
+\item Car nous sommes consumés par Votre colère, * et nous avons été troublés par Votre fureur.
+\item Vous avez mis nos iniquités en Votre présence, * et notre vie à la lumière de Votre visage.
+\item C'est pourquoi tous nos jours se sont évanouis, * et nous avons été consumés par Votre colère.
+\item Nos années se passent en de vains soucis, comme pour l'araignée. * Les jours de nos années sont en tout de soixante-dix ans ;
+\item Pour les plus forts, de quatre-vingts ans. * Le surplus n'est que peine et que douleur ;
+\item Car alors survient la faiblesse, * et nous sommes affligés.
+\item Qui connaît la puissance de Votre colère, * et qui comprend combien Votre colère est redoutable ?
+\item Apprenez-nous à reconnaître Votre droite, * et instruisez notre cœur dans la sagesse.
+\item Revenez, Seigneur ; jusques à quand nous rejetterez-Vous ? * Laissez-Vous fléchir en faveur de Vos serviteurs.
+\item Nous avons été comblés, dès le matin, de Votre miséricorde ; * nous avons tressailli d'allégresse et de bonheur tous les jours de notre vie.
+\item Nous nous sommes réjouis à proportion des jours où Vous nous avez humiliés, * et des années où nous avons vu le malheur.
+\item Jetez un regard sur Vos serviteurs et sur Vos œuvres, * et guidez leurs enfants.
+\item Que la lumière du Seigneur notre Dieu brille sur nous ; dirigez d'en haut les ouvrages de nos mains; * oui, dirigez l'œuvre de nos mains.
+}
+
+\subsection{Psaume 35}
+
+\gregorioscore{partitions/Q6F5LA3}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps35_8g}
+\gresetinitiallines{1}
+\aa \translation{Mon cœur a été broyé dans Ma poitrine ; ils ont tremblé, tous Mes os.}
+
+\un \translation{L'injuste a dit en lui-même qu'il voulait pécher ; * la crainte de Dieu n'est point devant ses yeux.}
+\twocolpsalm{
+\item Quóniam dolóse egit in conspéctu \textbf{e}jus:~* ut inveniátur iníquitas e\textit{jus} \textit{ad} \textbf{ó}dium.
+\item Verba oris ejus iníquitas, et \textbf{do}lus:~* nóluit intellígere ut \textit{be}\textit{ne} \textbf{á}geret.
+\item Iniquitátem meditátus est in cubíli \textbf{su}o:~* ástitit omni viæ non bonæ, malítiam autem \textit{non} \textit{o}\textbf{dí}vit.
+\item Dómine, in cælo misericórdia \textbf{tu}a:~* et véritas tua us\textit{que} \textit{ad} \textbf{nu}bes.
+\item Justítia tua sicut montes \textbf{De}i:~* judícia tua a\textit{býs}\textit{sus} \textbf{mul}ta.
+\item Hómines, et juménta salvábis, \textbf{Dó}mine:~* quemádmodum multiplicásti misericórdiam \textit{tu}\textit{am}, \textbf{De}us,
+\item Fílii autem \textbf{hó}minum,~* in tégmine alárum tuá\textit{rum} \textit{spe}\textbf{rá}bunt.
+\item Inebriabúntur ab ubertáte domus \textbf{tu}æ:~* et torrénte voluptátis tuæ po\textit{tá}\textit{bis} \textbf{e}os.
+\item Quóniam apud te est fons \textbf{vi}tæ:~* et in lúmine tuo vidé\textit{bi}\textit{mus} \textbf{lu}men.
+\item Præténde misericórdiam tuam sciénti\textbf{bus} te,~* et justítiam tuam his, qui rec\textit{to} \textit{sunt} \textbf{cor}de.
+\item Non véniat mihi pes su\textbf{pér}biæ:~* et manus peccatóris non \textit{mó}\textit{ve}\textbf{at} me.
+\item Ibi cecidérunt qui operántur iniqui\textbf{tá}tem:~* expúlsi sunt, nec potu\textit{é}\textit{runt} \textbf{sta}re.
+}{
+\item Car il a agi avec tromperie en Sa présence, * afin que son iniquité se trouvât digne de haine.
+\item Les paroles de sa bouche sont iniquité et tromperie ; * il n'a point voulu devenir intelligent pour faire le bien.
+\item Il a médité l'iniquité sur sa couche ; * il s'est arrêté sur toute voie mauvaise, et il n'a pas eu de haine pour la malice.
+\item Seigneur, Votre miséricorde est dans le Ciel, * et Votre vérité s'élève jusqu'aux nues.
+\item Votre justice est comme les montagnes de Dieu ; * Vos jugements sont un profond abîme.
+\item Vous sauverez, Seigneur, les hommes et les bêtes. * Comme Vous avez multiplié Votre miséricorde, ô Dieu !
+\item Mais les enfants des hommes espéreront, * à couvert sous Vos ailes.
+\item Ils seront enivrés de l'abondance de Votre maison, * et Vous les ferez boire au torrent de Vos délices.
+\item Car en Vous est la source de la vie, * et dans Votre lumière nous verrons la lumière.
+\item Etendez Votre miséricorde sur ceux qui Vous connaissent, * et Votre justice sur ceux qui ont le cœur droit.
+\item Que le pied du superbe ne vienne point jusqu'à moi, * et que la main du pécheur ne m'ébranle pas.
+\item C'est là que sont tombés ceux qui commettent l'iniquité ; * ils ont été chassés, et ils n'ont pu se tenir debout.
+}
+
+\subsection{Cantique de Moïse}
+
+\gregorioscore{partitions/Q6F5LA4}
+\gresetinitiallines{0}
+\gregorioscore{partitions/cantMoysis_4a}
+\gresetinitiallines{1}
+\aa \translation{Vous avez été exhorté * dans Votre puissance et dans Votre saint réconfort, Seigneur.}
+
+\un \translation{Chantons au Seigneur, car Il a fait éclater Sa gloire ; * Il a précipité dans la mer le cheval et le cavalier.}
+\twocolpsalm{
+\item Fortitúdo mea, et laus \textit{me}\textit{a} \textbf{Dó}minus,~* et factus est mi\textit{hi} \textit{in} \textit{sa}\textbf{lú}tem.
+\item Iste Deus meus, et glorifi\textit{cá}\textit{bo} \textbf{e}um:~* Deus patris mei, et ex\textit{al}\textit{tá}\textit{bo} \textbf{e}um.
+\item Dóminus quasi vir pugnátor,~† Omnípotens \textit{no}\textit{men} \textbf{e}jus.~* Currus Pharaónis et exércitum ejus pro\textit{jé}\textit{cit} \textit{in} \textbf{ma}re.
+\item Elécti príncipes ejus submérsi sunt in \textit{Ma}\textit{ri} \textbf{Ru}bro:~* abýssi operuérunt eos, descendérunt in profún\textit{dum} \textit{qua}\textit{si} \textbf{la}pis.
+\item Déxtera tua, Dómine, magnificáta est in fortitúdine:~† déxtera tua, Dómine, percússit \textit{in}\textit{i}\textbf{mí}cum.~* Et in multitúdine glóriæ tuæ deposuísti adver\textit{sá}\textit{ri}\textit{os} \textbf{tu}os:
+\item Misísti iram tuam, quæ devorávit eos \textit{sic}\textit{ut} \textbf{stí}pulam.~* Et in spíritu furóris tui congre\textit{gá}\textit{tæ} \textit{sunt} \textbf{a}quæ:
+\item Stetit \textit{un}\textit{da} \textbf{flu}ens,~* congregátæ sunt abýssi in \textit{mé}\textit{di}\textit{o} \textbf{ma}ri.
+\item Dixit inimícus: Pérsequar et \textit{com}\textit{pre}\textbf{hén}dam,~* dívidam spólia, implébitur \textit{á}\textit{ni}\textit{ma} \textbf{me}a:
+\item Evaginábo glá\textit{di}\textit{um} \textbf{me}um,~* interfíciet e\textit{os} \textit{ma}\textit{nus} \textbf{me}a.
+\item Flavit spíritus tuus, et opéruit \textit{e}\textit{os} \textbf{ma}re:~* submérsi sunt quasi plumbum in a\textit{quis} \textit{ve}\textit{he}\textbf{mén}tibus.
+\item Quis símilis tui in fór\textit{ti}\textit{bus}, \textbf{Dó}mine?~* quis símilis tui, magníficus in sanctitáte, terríbilis atque laudábilis, fáci\textit{ens} \textit{mi}\textit{ra}\textbf{bí}lia?
+\item Extendísti manum tuam, et devorávit \textit{e}\textit{os} \textbf{ter}ra.~* Dux fuísti in misericórdia tua pópulo \textit{quem} \textit{red}\textit{e}\textbf{mís}ti:
+\item Et portásti eum in fortitú\textit{di}\textit{ne} \textbf{tu}a,~* ad habitácu\textit{lum} \textit{sanc}\textit{tum} \textbf{tu}um.
+\item Ascendérunt pópuli, \textit{et} \textit{i}\textbf{rá}ti sunt:~* dolóres obtinuérunt habita\textit{tó}\textit{res} \textit{Phi}\textbf{lís}thiim.
+\item Tunc conturbáti sunt príncipes Edom,~† robústos Moab obtí\textit{nu}\textit{it} \textbf{tre}mor:~* obriguérunt omnes habi\textit{ta}\textit{tó}\textit{res} \textbf{Chá}naan.
+\item Irruat super eos formí\textit{do} \textit{et} \textbf{pa}vor,~* in magnitúdine \textit{brá}\textit{chi}\textit{i} \textbf{tu}i:
+\item Fiant immóbiles quasi lapis,~† donec pertránseat pópulus \textit{tu}\textit{us}, \textbf{Dó}mine,~* donec pertránseat pópulus tuus iste, \textit{quem} \textit{pos}\textit{se}\textbf{dís}ti.
+\item Introdúces eos, et plantábis in monte heredi\textit{tá}\textit{tis} \textbf{tu}æ,~* firmíssimo habitáculo tuo quod ope\textit{rá}\textit{tus} \textit{es}, \textbf{Dó}mine:
+\item Sanctuárium tuum, Dómine, quod firmavérunt \textit{ma}\textit{nus} \textbf{tu}æ.~* Dóminus regnábit in æ\textit{tér}\textit{num} \textit{et} \textbf{ul}tra.
+\item Ingréssus est enim eques Phárao cum cúrribus et equítibus e\textit{jus} \textit{in} \textbf{ma}re:~* et redúxit super eos Dómi\textit{nus} \textit{a}\textit{quas} \textbf{ma}ris:
+\item Fílii autem Israël ambulavé\textit{runt} \textit{per} \textbf{sic}cum~* in \textit{mé}\textit{di}\textit{o} \textbf{e}jus.
+}{
+\item Le Seigneur est ma force et le sujet de mes louanges, * c'est Lui qui m'a sauvé :
+\item Il est mon Dieu, et je publierai Sa gloire ; * Il est le Dieu de mon père, et je L'exalterai.
+\item Le Seigneur a paru comme un guerrier ; le Tout-Puissant, voilà Son nom. * Il a fait tomber dans la mer les chars du Pharaon et son armée
+\item Les plus grands d'entre les princes ont été submergés dans la mer Rouge. * Ils ont été ensevelis dans les abîmes, ils sont tombés comme une pierre au fond des eaux.
+\item Votre droite, Seigneur, a signalé sa force ; votre droite, Seigneur, a frappé l'ennemi. * Et Vous avez renversé Vos adversaires par la grandeur de Votre gloire.
+\item Vous avez lancé Votre colère, qui les a dévorés comme du chaume. * Et au souffle de Votre fureur les eaux se sont amoncelées,
+\item L'onde mobile s'est dressée, * les flots se sont accumulés au milieu de la mer.
+\item L'ennemi avait dit : Je les poursuivrai et je les atteindrai ; * je partagerai leurs dépouilles, et je me satisferai pleinement;
+\item Je tirerai mon épée, * et ma main les fera mourir.
+\item Votre haleine a soufflé, et la mer les a enveloppés ; * ils ont été submergés sous la violence des eaux comme du plomb.
+\item Qui d'entre les forts est semblable à Vous, Seigneur ? * Qui Vous est semblable, à Vous qui êtes magnifique en sainteté, terrible et digne de louange, et opérant des prodiges ?
+\item Vous avez étendu Votre main, et la terre les a dévorés. * Vous Vous êtes fait, par Votre miséricorde, le guide du peuple que Vous avez racheté,
+\item Et Vous l'avez porté par Votre puissance * jusqu'à Votre demeure sainte.
+\item Les peuples se sont élevés et ils se sont irrités ; * ceux qui habitaient la Palestine ont été saisis de vives douleurs.
+\item Alors les princes d'Edom ont été troublés, l'épouvante a surpris les forts de Moab, * et tous les habitants de Chanaan ont séché de crainte.
+\item Que l'épouvante et l'effroi tombe sur eux, Seigneur, * à cause de la puissance de Votre bras ;
+\item Qu'ils deviennent immobiles comme une pierre jusqu'à ce que Votre peuple ait passé, * jusqu'à ce qu'ait passé ce peuple que Vous Vous êtes acquis.
+\item Vous les introduirez et Vous les établirez, Seigneur, sur la montagne de Votre héritage, * sur cette demeure très ferme que Vous Vous êtes préparée Vous-même, Seigneur,
+\item Dans Votre sanctuaire affermi par Vos mains. * Le Seigneur règnera dans l'éternité et au-delà des siècles.
+\item Car le Pharaon est entré à cheval dans la mer avec ses chars et ses cavaliers, * et le Seigneur a ramené sur eux les eaux de la mer ;
+\item Mais les enfants d'Israël ont passé à sec * au milieu des eaux.
+}
+
+\subsection{Psaume 146}
+
+\gregorioscore{partitions/Q6F5LA5}
+\gresetinitiallines{0}
+\gregorioscore{partitions/ps146_2d}
+\gresetinitiallines{1}
+\aa \translation{Il S’est offert parce que Lui-même l’a voulu et Il a porté Lui-même nos péchés.}
+
+\un \translation{Louez le Seigneur, car Il est bon de Le chanter ; * que la louange soit agréable à notre Dieu et digne de Lui.}
+\twocolpsalm{
+\item Ædíficans Jerúsalem \textbf{Dó}minus:~* dispersiónes Israélis con\textit{gre}\textbf{gá}bit.
+\item Qui sanat contrítos \textbf{cor}de:~* et álligat contritiónes \textit{e}\textbf{ó}rum.
+\item Qui númerat multitúdinem stel\textbf{lá}rum:~* et ómnibus eis nómi\textit{na} \textbf{vo}cat.
+\item Magnus Dóminus noster, et magna virtus \textbf{e}jus:~* et sapiéntiæ ejus non \textit{est} \textbf{nú}merus.
+\item Suscípiens mansuétos \textbf{Dó}minus:~* humílians autem peccatóres usque \textit{ad} \textbf{ter}ram.
+\item Præcínite Dómino in confessi\textbf{ó}ne:~* psállite Deo nostro \textit{in} \textbf{cí}thara.
+\item Qui óperit cælum \textbf{nú}bibus:~* et parat ter\textit{ræ} \textbf{plú}viam.
+\item Qui prodúcit in móntibus \textbf{fe}num:~* et herbam servitú\textit{ti} \textbf{hó}minum.
+\item Qui dat juméntis escam ip\textbf{só}rum:~* et pullis corvórum invocánti\textit{bus} \textbf{e}um.
+\item Non in fortitúdine equi voluntátem ha\textbf{bé}bit:~* nec in tíbiis viri beneplácitum e\textit{rit} \textbf{e}i.
+\item Beneplácitum est Dómino super timéntes \textbf{e}um:~* et in eis, qui sperant super misericórdi\textit{a} \textbf{e}jus.
+}{
+\item C'est le Seigneur qui bâtit Jérusalem, * et qui doit rassembler les dispersés d'Israël.
+\item Il guérit ceux dont le cœur est brisé, * et Il bande leurs plaies ;
+\item Il compte la multitude des étoiles, * et Il leur donne des noms à toutes.
+\item Notre Seigneur est grand, et Sa puissance est grande, * et Sa sagesse n'a point de bornes.
+\item Le Seigneur protège ceux qui sont doux ; * mais Il abaisse les pécheurs jusqu'à terre.
+\item Chantez au Seigneur une action de grâces ; * célébrez notre Dieu sur la harpe.
+\item C'est Lui qui couvre le ciel de nuages, * et qui prépare la pluie pour la terre ;
+\item Qui fait croître l'herbe sur les montagnes, * et les plantes pour l'usage des hommes ;
+\item Qui donne leur nourriture aux bêtes, * et aux petits des corbeaux qui crient vers Lui.
+\item Ce n'est pas dans la force du cheval qu'Il Se complaît, * et Il ne met pas Son plaisir dans les jambes de l'homme.
+\item Le Seigneur met Son plaisir en ceux qui Le craignent, * et en ceux qui espèrent en Sa miséricorde.
+}
+
+\subsection{Versicule}
+
+\gresetinitiallines{0}
+\gregorioscore{partitions/Q6F5LW}
+\gresetinitiallines{1}
+\translation{\rr L’homme de Ma paix, en qui J’avais toute confiance,\\
+\vv Qui mangeait Mon pain, a préparé contre Moi une grande trahison.}
+
+\subsection{Cantique de Zacharie}
+
+\rubrique{Pendant le \normaltext{Benedictus}, on éteint les six bougies de l'autel, de telle sorte que seule la dernière bougie du grand chandelier éclaire l'église.}
+
+\gregorioscore{partitions/Q6F5LAB}
+\gresetinitiallines{0}
+\gregorioscore{partitions/cantZach_1g_solemnis}
+\gresetinitiallines{1}
+\aa \translation{Le traître leur a donné un signe, disant : Celui que j’embrasserai, c’est Lui, prenez-Le.}
+
+\un \translation{Béni soit le Seigneur, le Dieu d'Israël, * de ce qu'Il a visité et racheté Son peuple.}
+\twocolpsalm{
+\item Et eréxit cornu \textit{sa}\textit{lú}\textit{tis} \textbf{no}bis:~* in domo David, pú\textit{e}\textit{ri} \textbf{su}i.
+\item Sicut locútus est \textit{per} \textit{os} \textit{sanc}\textbf{tó}rum,~* qui a sǽculo sunt, prophe\textit{tá}\textit{rum} \textbf{e}jus:
+\item Salútem ex in\textit{i}\textit{mí}\textit{cis} \textbf{nos}tris,~* et de manu ómnium, \textit{qui} \textit{o}\textbf{dé}runt nos.
+\item Ad faciéndam misericórdiam cum \textit{pá}\textit{tri}\textit{bus} \textbf{nos}tris:~* et memorári testaménti \textit{su}\textit{i} \textbf{sanc}ti.
+\item Jusjurándum, quod jurávit ad Abra\textit{ham} \textit{pa}\textit{trem} \textbf{nos}trum,~* datú\textit{rum} \textit{se} \textbf{no}bis:
+\item Ut sine timóre, de manu inimicórum nostró\textit{rum} \textit{li}\textit{be}\textbf{rá}ti,~* servi\textit{á}\textit{mus} \textbf{il}li.
+\item In sanctitáte, et justíti\textit{a} \textit{co}\textit{ram} \textbf{ip}so,~* ómnibus di\textit{é}\textit{bus} \textbf{nos}tris.
+\item Et tu, puer, Prophéta Altís\textit{si}\textit{mi} \textit{vo}\textbf{cá}\textbf{be}ris:~* præíbis enim ante fáciem Dómini, paráre \textit{vi}\textit{as} \textbf{e}jus:
+\item Ad dandam sciéntiam salú\textit{tis} \textit{ple}\textit{bi} \textbf{e}jus:~* in remissiónem peccató\textit{rum} \textit{e}\textbf{ó}rum:
+\item Per víscera misericórdi\textit{æ} \textit{De}\textit{i} \textbf{nos}tri:~* in quibus visitávit nos, óri\textit{ens} \textit{ex} \textbf{al}to:
+\item Illumináre his, qui in ténebris, et in um\textit{bra} \textit{mor}\textit{tis} \textbf{se}dent:~* ad dirigéndos pedes nostros in \textit{vi}\textit{am} \textbf{pa}cis.
+}{
+\item Et nous a suscité un puissant Sauveur * dans la maison de David, Son serviteur,
+\item Ainsi qu'Il a dit par la bouche de Ses saints, * prophètes des temps anciens,
+\item Qu'Il nous délivrerait de nos ennemis * et de la main de tous ceux qui nous haïssent,
+\item Pour exercer Sa miséricorde envers nos pères, * et Se souvenir de Son alliance sainte,
+\item Selon le serment qu'Il a juré à Abraham, notre père, * de nous accorder cette grâce,
+\item Qu'étant délivrés de la main de nos ennemis, * nous Le servions sans crainte,
+\item Marchant devant Lui dans la sainteté et la justice, * tous les jours de notre vie.
+\item Et toi, petit enfant, tu seras appelé le prophète du Très-Haut : * car tu marcheras devant la face du Seigneur, pour préparer Ses voies,
+\item Afin de donner à Son peuple la connaissance du salut, * pour la rémission de leurs péchés,
+\item Par les entrailles de la miséricorde de notre Dieu, * grâce auxquelles le Soleil levant nous a visités d'en haut,
+\item Pour éclairer ceux qui sont assis dans les ténèbres et à l'ombre de la mort, * pour diriger nos pas dans la voie de la paix.
+}
+
+\rubrique{Au début du chant du \normaltext{Christus factus est}, la dernière bougie est placée derrière l'autel.}
+
+\gregorioscore{partitions/Q6F5LGr}
+
+\translation{Le Christ s’est fait obéissant pour nous, jusqu’à la mort.}
+
+\rubrique{On récite un \normaltext{Pater Noster} entièrement en silence, pendant lequel la bougie placée derrière l'autel est remise à sa place sur le chandelier. Puis, le célébrant chante l'oraison suivante, qu'il conclut à voix basse.}
+
+\begin{paracol}{2}
+
+Réspice, quǽsumus, Dómine, super hanc famíliam tuam, pro qua Dóminus noster Iesus Christus non dubitávit mánibus tradi nocéntium, et crucis subíre torméntum:
+Qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum. Amen.
+
+\switchcolumn
+
+Daignez jeter un regard favorable, Seigneur, sur Votre famille que voici et pour laquelle Notre Seigneur Jésus-Christ n’a pas hésité à Se laisser livrer aux mains des bourreaux et à subir le supplice de la croix,
+Lui qui avec Vous vit et règne dans l'unité du Saint-Esprit, Dieu, pour les siècles des siècles. Ainsi soit-il.
+\end{paracol}
+
+\rubrique{Le clergé et les fidèles se dispersent en silence.}
+
+\end{document} 
