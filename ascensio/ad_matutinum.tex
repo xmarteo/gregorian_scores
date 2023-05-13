@@ -20,12 +20,20 @@
 % on numérote les nbp par page et non globalement
 \usepackage[perpage]{footmisc}
 
+\geometry{
+inner=25mm,
+outer=12mm,
+top=15mm,
+bottom=15mm,
+headsep=6mm,
+}
+
 % définition des en-têtes et pieds de page
-\pagestyle{empty}
+\pagestyle{fancy}
 \fancyhead{}
 \fancyfoot{}
-\renewcommand{\headrulewidth}{0pt}
-\setlength{\headheight}{10pt}
+\renewcommand{\headrulewidth}{1pt}
+\setlength{\headheight}{11pt}
 \fancyhead[RO]{\small\thepage}
 \fancyhead[LE]{\small\thepage}
 % la commande titres permet de changer les titres de gauche et de droite.
@@ -38,13 +46,6 @@
 % pas d'indentation
 \setlength{\parindent}{0mm}
 
-\geometry{
-inner=25mm,
-outer=12mm,
-top=15mm,
-bottom=15mm,
-headsep=3mm,
-}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Options gregorio %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -225,7 +226,7 @@ headsep=3mm,
 
 \gregorioscore{partitions/P5F5I_marteo}
 
-\vfill
+~
 
 \emph{Venez, chantons avec allégresse au Seigneur, faisons monter l'expression d'une joie vers Dieu, notre salut.
 Hâtons-nous de nous présenter devant lui avec des louanges et, dans des psaumes célébrons sa gloire.\\
@@ -241,40 +242,42 @@ Pendant quarante ans, j'ai été proche de cette génération et j'ai dit: Toujo
 ~
 
 \begin{paracol}{2}
-\begin{alltt}\normalfont        Roi éternel et très haut,
-        Rédempteur des fidèles,
-        à qui la mort détruite a donné
-        le triomphe de la gloire souveraine.
+\begin{alltt}\normalfont    Roi éternel et très haut,
+    Rédempteur des fidèles,
+    à qui la mort détruite a donné
+    le triomphe de la gloire souveraine.
 
-        Vous montez au-dessus des astres,
-        où vous appelait la puissance
-        sur toutes les choses,
-        Puissance céleste et non humaine :
-
-        Pour que le triple monde créé,
-        du ciel, de la terre et des enfers,
-        désormais soumis à votre empire,
-        fléchissent le genou devant votre majesté.
-
-        Les Anges tremblent en voyant
-        renversé le sort des mortels :
-        la chair pèche, la chair purifie,
-        un Dieu règne dans la chair d’un Dieu.\end{alltt}
+    Vous montez au-dessus des astres,
+    où vous appelait la puissance
+    sur toutes les choses,
+    Puissance céleste et non humaine :\end{alltt}
 
 \switchcolumn
+\begin{alltt}\normalfont{}    Pour que le triple monde créé,
+    du ciel, de la terre et des enfers,
+    désormais soumis à votre empire,
+    fléchissent le genou.
+
+    Les Anges tremblent en voyant
+    renversé le sort des mortels :
+    la chair pèche, la chair purifie,
+    un Dieu règne dans la chair d’un Dieu.\end{alltt}
+\pagebreak
+\switchcolumn*
 \begin{alltt}\normalfont    Soyez vous-même notre joie,
     demeurant au ciel notre récompense,
     vous qui gouvernez l’univers créé,
     triomphant des joies du monde.
 
-    D’ici-bas, nous vous demandons instamment,
+    D’ici-bas, nous vous le demandons,
     pardonnez toutes les offenses,
     élevez vers vous les cœurs,
-    par la vertu de la céleste grâce.
+    par la vertu de la céleste grâce.\end{alltt}
 
-    Afin qu’au moment où, soudain, vous commencerez
+\switchcolumn
+\begin{alltt}\normalfont{}    Afin que quand vous commencerez
     à briller sur la nuée du juge
-    vous écartiez de nous les châtiments mérités,
+    vous écartiez les châtiments,
     vous rendiez les couronnes perdues.
 
     O Jésus, à Vous soit la gloire,
@@ -478,7 +481,6 @@ Pendant quarante ans, j'ai été proche de cette génération et j'ai dit: Toujo
 \end{paracol}
 
 \paragraph{Commencement du Livre des Aces des Apôtres.} \rubrique{Ac 1: 1-5}
-
 \begin{alltt}\normalfont{}Cher Théophile, dans mon premier livre,
 	j’ai parlé de tout ce que Jésus a fait et enseigné,
 	depuis le moment où il commença,
@@ -557,7 +559,7 @@ Après ces paroles, tandis que les Apôtres le regardaient,
 
 \begin{paracol}{2}
 \vv Jube, domne, benedícere. \\
-\vv Spíritus \text{Sancti} \textbf{grá}tia illúminet sensus et corda nostra.\\
+\vv Spíritus \textit{Sancti} \textbf{grá}tia illúminet sensus et corda nostra.\\
 \rr Amen.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
@@ -735,8 +737,8 @@ Tous, d’un même cœur, étaient assidus à la prière,
 \gresetinitiallines{1}
 
 \un \emph{Nations, frappez toutes des mains ; * célébrez Dieu par des cris d'allégresse.}
-\begin{paracol}{2}
 
+\begin{paracol}{2}
 \begin{enumerate}[wide, itemsep=0mm, labelwidth=!, labelindent=0pt, label=\color{gregoriocolor}\theenumi]
 \setcounter{enumi}{1}
 \item Quóniam Dóminus excél\textit{sus}, \textit{ter}\textbf{rí}bilis:~* Rex magnus su\textit{per} \textit{om}\textit{nem} \textbf{ter}ram.
@@ -758,7 +760,6 @@ Tous, d’un même cœur, étaient assidus à la prière,
 \item Glória Pa\textit{tri}, \textit{et} \textbf{Fí}lio,~* et Spi\textit{rí}\textit{tu}\textit{i} \textbf{Sanc}to.
 
 \item Sicut erat in princípio, et \textit{nunc}, \textit{et} \textbf{sem}per,~* et in sǽcula sæ\textit{cu}\textit{ló}\textit{rum}. \textbf{A}men.
-
 
 \end{enumerate}
 
@@ -827,7 +828,7 @@ Depuis la bienheureuse et glorieuse résurrection de Notre Seigneur Jésus-Chris
 
 \begin{paracol}{2}
 \vv Jube, domne, benedícere. \\
-\vv Chris\texit{tus per}\textbf{pé}tuæ * det nobis gáudia vitæ.\\
+\vv Chris\textit{tus per}\textbf{pé}tuæ * det nobis gáudia vitæ.\\
 \rr Amen.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
@@ -853,7 +854,7 @@ Et c’est ainsi que les bienheureux Apôtres et tous les disciples, d’abord e
 
 \begin{paracol}{2}
 \vv Jube, domne, benedícere. \\
-\vv Ignem su\texit{i a}\textbf{mó}ris * accéndat Deus in córdibus nostris. \\
+\vv Ignem su\textit{i a}\textbf{mó}ris * accéndat Deus in córdibus nostris. \\
 \rr Amen.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
@@ -1106,7 +1107,7 @@ Puisque l’Ascension du Christ est notre propre élévation et qu’il y a espo
 
 \begin{paracol}{2}
 \vv Jube, domne, benedícere. \\
-\vv Evangé\textit{lica} \texbf{lé}ctio * sit nobis salus et protéctio.
+\vv Evangé\textit{lica} \textbf{lé}ctio * sit nobis salus et protéctio.
 \rr Amen.
 \switchcolumn
 \vv Veuillez, Seigneur, bénir. \\
@@ -1234,7 +1235,7 @@ J'ai éspéré en Vous Seigneur; * que je ne sois pas confondu à jamais.}}
 \switchcolumn*
 \vv Orémus.\\
 Concéde, quǽsumus, omnípotens Deus: ut, qui hodiérna die Unigénitum tuum, Redemptórem nostrum, ad cælos ascendísse crédimus; ipsi quoque mente in cæléstibus habitémus.
-Per eúmdem Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum. \rrrub Amen.
+Per eúmdem Dóminum nostrum Jesum Christum Fílium tuum, qui tecum vivit et regnat in unitáte Spíritus Sancti, Deus, per ómnia sǽcula sæculórum. \minisaut\rr Amen.
 \switchcolumn
 \vv Prions.  Accordez à notre prière, Dieu tout-puissant, puisque nous croyons qu’aujourd’hui Votre Fils unique, notre Rédempteur, est monté aux cieux, que nous habitions aussi en esprit au céleste séjour.
 Par le même Jésus Christ, Votre Fils, notre Seigneur, Lui qui vit et règne avec Vous et le Saint-Esprit, Dieu, maintenant et pour les siècles des siècles.
@@ -1255,8 +1256,5 @@ Par le même Jésus Christ, Votre Fils, notre Seigneur, Lui qui vit et règne av
 \vv Que par la miséricorde de Dieu, les âmes des fidèles trépassés reposent en paix.
 \rr Amen.
 \end{paracol}
-\newpage
-\begin{adjustwidth}{-5mm}{1cm}
-\includegraphics[width=13cm]{4ecouv.png}
-\end{adjustwidth}
+
 \end{document} 
