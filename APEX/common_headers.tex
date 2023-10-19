@@ -134,7 +134,7 @@ headsep=3mm,
 \grechangedim{maxbaroffsettextright}{0.5mm}{scalable}
 
 %% in case we show NABC, font selection
-\gresetnabcfont{gresgmodern}{12} 
+\gresetnabcfont{gregall}{12} 
 
 %% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
 %% storing the result into \result.
@@ -403,7 +403,7 @@ end
 		labelwidth=0pt, 
 		rightmargin=0pt, 
 		parsep=0pt, 
-		itemsep=0pt,
+		itemsep=0pt plus 1pt,
 		topsep=-2mm]
 	\input{#1}%
 	\end{itemize}%
@@ -419,7 +419,7 @@ end
 		labelwidth=0pt, 
 		rightmargin=0pt, 
 		parsep=0pt, 
-		itemsep=0pt,
+		itemsep=0pt plus 1pt,
 		topsep=-2mm]
 	\input{#1}%
 	\end{itemize}%
