@@ -1,15 +1,17 @@
 
 %%%%%%%%%%%% GEOMETRY
 \usepackage{geometry}
+\usepackage{fancyhdr}
 \geometry{
 	paperwidth=148mm,
 	paperheight=210mm,
-	inner=15mm,
-	outer=10mm,
-	top=12mm,
-	bottom=10mm,
+	inner=20mm,
+	outer=12mm,
+	top=15mm,
+	bottom=12mm,
 	headsep=2mm,
 }
+\pagestyle{empty}
 
 %%%%%%%%%%%% LANGUAGE
 \usepackage[nolocalmarks]{polyglossia}
@@ -21,6 +23,9 @@
 \usepackage{paracol}
 \usepackage[forcecompile]{gregoriotex}
 
+%% No paragraph indentation
+\setlength{\parindent}{0mm}
+
 %% Macro to print rubrics
 \newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
 
@@ -29,7 +34,7 @@
 \newcommand{\vv}{%
 	{%
 		\fontspec[Scale=1]{Charis SIL}%
-		℣.%
+		℣.~%
 		\nolinebreak[4]%
 	}%
 }
@@ -42,7 +47,7 @@
 \newcommand{\rr}{%
 	{%
 		\fontspec[Scale=1]{Charis SIL}%
-		℟.%
+		℟.~%
 		\nolinebreak[4]%
 	}%
 }
@@ -54,8 +59,9 @@
 }
 \newcommand{\cc}{
 	\textcolor{gregoriocolor}{
+		\normalfont
 		\fontspec[Scale=1]{FreeSerif}
-		\symbol{"2720}~
+		\symbol{"2720}
 	}
 }
 
@@ -86,9 +92,13 @@
 	\smalltitle{Capitule}
 	\begin{paracol}{2}%
 	\rubric{#1}
-	#2
-	\switchcolumn%
-	#3
+	#2\\%
+	\gresetinitiallines{0}%
+	\gabcsnippet{(c3) <sp>R/</sp> De(h)o(h) <b>grá</b>(f)ti(e)as.(ef..) (::)}%
+	\gresetinitiallines{1}%
+	\switchcolumn
+	#3\\
+	\redrr Nous rendons grâces à Dieu.
 	\end{paracol}%
 }
 
@@ -215,4 +225,8 @@
 
 \newcommand{\smalltitle}[1]{
   \par{\centering\textbf{#1}\par}
+}
+
+\newcommand{\largetitle}[1]{
+  \par{\centering\Huge\textsc{#1}\par}
 }
