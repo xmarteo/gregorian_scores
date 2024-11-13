@@ -153,6 +153,7 @@
 \setlength\columnseprule{0.4pt}
 \setlength{\multicolsep}{6pt plus 2pt minus 1.5pt}
 \newcommand{\hymnus}[2]{
+	\smalltitle{Hymne}
 	\gscore{#1}{H}{}
 	\begin{multicols}{2}%
 	\translation{#2}%
@@ -206,25 +207,23 @@
 }
 
 \newcommand{\psalmus}[2]{
-	\vspace{0.5\baselineskip}
 	\needspace{4\baselineskip}
 	\smalltitle{Psaume #1}
-	\vspace{2mm}
 	\parallelitems{#1}{#2}
 }
 
 \newcommand{\magnificat}[1]{
-	\vspace{0.5\baselineskip}
 	\needspace{4\baselineskip}
 	\smalltitle{Magnificat}
-	\vspace{2mm}
 	\parallelitems{magn}{#1}
 }
 
 %%%%%%%%%%%% TITLE STYLES
 
 \newcommand{\smalltitle}[1]{
+  \vspace{0.3\baselineskip}
   \par{\centering\textbf{#1}\par}
+  \vspace{0.3\baselineskip}
 }
 
 \newcommand{\largetitle}[1]{
