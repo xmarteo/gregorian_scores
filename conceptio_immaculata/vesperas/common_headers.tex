@@ -1,0 +1,231 @@
+
+%%%%%%%%%%%% GEOMETRY
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\geometry{
+	paperwidth=148mm,
+	paperheight=210mm,
+	inner=20mm,
+	outer=12mm,
+	top=15mm,
+	bottom=12mm,
+	headsep=2mm,
+}
+\pagestyle{empty}
+
+%%%%%%%%%%%% LANGUAGE
+\usepackage[nolocalmarks]{polyglossia}
+\setdefaultlanguage[variant=french, frenchitemlabels=false]{french}
+
+%%%%%%%%%%%% FONTS AND BASE STYLES
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX, Scale=1]{Charis SIL}
+\usepackage{paracol}
+\usepackage[forcecompile]{gregoriotex}
+
+%% No paragraph indentation
+\setlength{\parindent}{0mm}
+
+%% Macro to print rubrics
+\newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macros to print V/ R/ A/ * + symbols in various contexts
+\newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/ outside rubrics
+\newcommand{\vv}{%
+	{%
+		\fontspec[Scale=1]{Charis SIL}%
+		℣.~%
+		\nolinebreak[4]%
+	}%
+}
+\newcommand{\redvv}{%
+	\textcolor{gregoriocolor}%
+	\vv%
+	\hspace{\specialcharhsep}%
+	\nolinebreak[4]%
+}
+\newcommand{\rr}{%
+	{%
+		\fontspec[Scale=1]{Charis SIL}%
+		℟.~%
+		\nolinebreak[4]%
+	}%
+}
+\newcommand{\redrr}{%
+	\textcolor{gregoriocolor}%
+	\rr%
+	\hspace{\specialcharhsep}%
+	\nolinebreak[4]%
+}
+\newcommand{\cc}{
+	\textcolor{gregoriocolor}{
+		\normalfont
+		\fontspec[Scale=1]{FreeSerif}
+		\symbol{"2720}
+	}
+}
+
+%% Same special characters, for in-score use (<sp>V/ R/ A/ +</sp>)
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}\Abar.~}}
+\gresetspecial{+}{{\fontspec[Scale=1]{FreeSerif}†~}}
+\gresetspecial{*}{\gresixstar}
+\gresetspecial{cross}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{FreeSerif}\symbol{"2720}}}
+\gresetspecial{labiacross}{\textcolor{gregoriocolor}{+}}
+
+%% the asterisk as found in the mediants of text-only psalms
+\newcommand{\psstar}{\GreSpecial{*}}
+\newcommand{\pscross}{\GreSpecial{+}}
+
+%% Macro to print versicles in two languages
+\newcommand{\versiculus}[4]{%
+	\begin{paracol}{2}%
+	\par\redvv #1 \\ \redrr #2\par%
+	\switchcolumn%
+	\par\redvv #3 \\ \redrr #4\par%
+	\end{paracol}%
+}
+
+%% Macro to print capitulum
+\newcommand{\capitulum}[3]{%
+	\smalltitle{Capitule}
+	\begin{paracol}{2}%
+	\rubric{#1}
+	#2\\%
+	\gresetinitiallines{0}%
+	\gabcsnippet{(c3) <sp>R/</sp> De(h)o(h) <b>grá</b>(f)ti(e)as.(ef..) (::)}%
+	\gresetinitiallines{1}%
+	\switchcolumn
+	#3\\
+	\redrr Nous rendons grâces à Dieu.
+	\end{paracol}%
+}
+
+%% Macro to print oratio
+\newcommand{\oratio}[2]{%
+	\versiculus{Orémus.\\#1}{Amen.}{Prions.\\#2}{Amen.}
+}
+
+%%%%%%%%%%%% GREGORIO CONFIG
+
+%% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
+%% storing the result into \result.
+\newcommand{\result}{}
+\newcommand{\lookup}[3]{%
+  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+}%
+\newcommand{\officepartannotation}[1]{%
+  \renewcommand{\result}{#1}%
+  \lookup{#1}{T}{}%
+  \lookup{#1}{H}{Hymn.}%
+  \lookup{#1}{A}{Ant.}%
+  \lookup{#1}{P}{}%
+  \lookup{#1}{R}{Resp.}%
+  \lookup{#1}{I}{Invit.}%
+  \result%
+}%
+
+%% header capture setup for the mode
+\newcommand{\defaultannotationshift}{-2mm}
+\newcommand{\modeannotation}[1]{\greannotation{\hspace{\defaultannotationshift}#1}}
+\gresetheadercapture{mode}{modeannotation}{string}
+
+%% outputs a score without annotations or initial
+\newcommand{\smallscore}[1]{
+	\gresetinitiallines{0}
+	\gregorioscore{gabc/#1}
+	\gresetinitiallines{1}
+}
+
+%% outputs a score with annotations and initial
+\newcommand{\gscore}[3]{
+	\greannotation[c]{
+		\hspace{-1.4mm}
+		\hspace{\defaultannotationshift}
+		\officepartannotation{#2}#3
+	}
+	\gregorioscore{gabc/#1}
+}
+
+%% outputs a hymn with translation
+\usepackage{multicol}
+\setlength\columnseprule{0.4pt}
+\setlength{\multicolsep}{6pt plus 2pt minus 1.5pt}
+\newcommand{\hymnus}[2]{
+	\smalltitle{Hymne}
+	\gscore{#1}{H}{}
+	\begin{multicols}{2}%
+	\translation{#2}%
+	\end{multicols}%
+}
+
+%% Initial style
+\grechangestyle{initial}{\fontspec{Zallman Caps}\fontsize{28}{28}\selectfont}
+
+
+%%%%%%%%%%%% TRANSLATION STYLE
+\newcommand{\translation}[1]{
+	\emph{#1}
+}
+
+%%%%%%%%%%%% PSALMODY STYLE
+\usepackage{enumitem}
+\usepackage{needspace}
+%% We want to allow large inter-words space 
+%% to avoid overfull boxes in two-columns rubrics.
+\sloppy
+
+\newcommand{\parallelitems}[2]{
+	\begin{paracol}{2}
+	\begin{itemize}[
+		label=\null, 
+		leftmargin=0pt, 
+		itemindent=10pt, 
+		labelsep=0pt, 
+		labelwidth=0pt, 
+		rightmargin=0pt, 
+		parsep=0pt, 
+		itemsep=0pt,
+		topsep=-2mm]
+	\input{psalmi_la/#1_#2.tex}
+	\end{itemize}
+	\switchcolumn
+	\begin{itemize}[
+		label=\null, 
+		leftmargin=0pt, 
+		itemindent=10pt, 
+		labelsep=0pt, 
+		labelwidth=0pt, 
+		rightmargin=0pt, 
+		parsep=0pt, 
+		itemsep=0pt,
+		topsep=-2mm]
+	\input{psalmi_fr/#1.tex}
+	\end{itemize}
+	\end{paracol}
+}
+
+\newcommand{\psalmus}[2]{
+	\needspace{4\baselineskip}
+	\smalltitle{Psaume #1}
+	\parallelitems{#1}{#2}
+}
+
+\newcommand{\magnificat}[1]{
+	\needspace{4\baselineskip}
+	\smalltitle{Magnificat}
+	\parallelitems{magn}{#1}
+}
+
+%%%%%%%%%%%% TITLE STYLES
+
+\newcommand{\smalltitle}[1]{
+  \vspace{0.3\baselineskip}
+  \par{\centering\textbf{#1}\par}
+  \vspace{0.3\baselineskip}
+}
+
+\newcommand{\largetitle}[1]{
+  \par{\centering\Huge\textsc{#1}\par}
+}
