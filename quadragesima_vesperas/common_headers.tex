@@ -11,7 +11,16 @@
 	bottom=12mm,
 	headsep=2mm,
 }
-\pagestyle{empty}
+
+%%%%%%%%%%%% HEADER STYLE
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\fancyhead[RO]{\small\thepage}
+\fancyhead[LE]{\small\thepage}
 
 %%%%%%%%%%%% LANGUAGE
 \usepackage[nolocalmarks]{polyglossia}
@@ -91,9 +100,9 @@
 \newcommand{\capitulum}[3]{%
 	\begin{paracol}{2}%
 	\rubric{#1}
-	#2\\%
+	#2%
 	\switchcolumn
-	#3\\
+	#3%
 	\end{paracol}%
 }
 
@@ -220,20 +229,21 @@
 
 \newcommand{\magnificat}[1]{
 	\needspace{4\baselineskip}
-	\smalltitle{Magnificat}
+%	\smalltitle{Magnificat}
 	\parallelitems{magn}{#1}
 }
 
 %%%%%%%%%%%% TITLE STYLES
 
+\usepackage{hyperref}
 \newcommand{\smalltitle}[1]{
-  \vspace{0.3\baselineskip}
+  \vspace{0.6\baselineskip}
   \par{\centering\textbf{#1}\par}
   \vspace{0.3\baselineskip}
 }
 
 \newcommand{\intermediatetitle}[1]{
-  \par{\centering\Large\textsc{#1}\par}
+  \par{\centering\Large\textsc{#1}\phantomsection\par}
 }
 
 
