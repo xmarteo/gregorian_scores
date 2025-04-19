@@ -1,0 +1,563 @@
+%%%%%%%%%%%%%%% INDICES %%%%%%%%%%%%%%%
+
+\usepackage{imakeidx}
+
+%% This is deep magic required to make dotted_mode.ist work.
+%% Found in https://tex.stackexchange.com/questions/594568/how-to-integrate-a-tabular-environment-in-the-index
+\setlength{\columnseprule}{0.4pt}
+\newsavebox\ltmcbox
+\newlength\mysavecolroom
+
+%% This is a special macro to be used for explicit newlines
+%% inside indices where a tabular is used,
+%% which are indices where the mode is printed,
+%% to be used in the indexed value (i.e. the piece's title)
+\newcommand{\idxnewline}{\newline\null\hspace{4mm}}
+%% a simple newline\null can be added if it is at the end of the title.
+
+\indexsetup{level=\section*,toclevel=section,noclearpage,othercode=\footnotesize\thispagestyle{empty}}
+\makeindex[name=R,title=Index Responsoriorum, columns=2,columnseprule, options=-s dotted_mode.ist]
+\makeindex[name=T,title=Toni Communes, columns=2,columnseprule, options=-s dotted.ist]
+\makeindex[name=F,title=Index Festorum, columns=2,columnseprule, options=-s dotted.ist]
+
+%%%%%%%%%%%%%%% STANDARD PACKAGES %%%%%%%%%%%%%%%
+
+%% This is the format of the recent Solesmes books.
+%%\usepackage[paperwidth=135mm, paperheight=205mm]{geometry}
+
+%% This reuses the text area width of the recent Solesmes books, with more inner margin, to get an aspect ratio of 1,33
+%% which corresponds to the largest KDP hardcover format (8,25 in x 11 in)
+\usepackage[paperwidth=170mm, paperheight=240mm]{geometry}
+
+%% This is the format of the 1912 Antiphonale Romanum
+%\usepackage[paperwidth=160mm, paperheight=240mm]{geometry}
+
+\usepackage{fontspec}
+\usepackage[nolocalmarks]{polyglossia}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{expl3}
+\usepackage{hyperref}
+\usepackage{refcount}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{enumitem}
+\usepackage{lettrine}
+\usepackage{tocloft}
+\usepackage{longtable}
+\usepackage{luacode}
+
+%%%%%%%%%%%%%%% HYPHENATION AND TYPOGRAPHICAL CONVENTIONS %%%%%%%%%%%%%%
+
+%\setdefaultlanguage[variant=ecclesiastic, hyphenation=liturgical, usej=true, babelshorthands=false]{latin}
+\setdefaultlanguage[variant=french, frenchitemlabels=false]{french}
+\setotherlanguage{english}
+%% this latin option basically boils down to French with slightly thinner pre-punctuation spaces 
+%% and slightly different hyphenation (but how different?)
+%% for some reason, it produces more underfull hboxes in two-col psalms, than French; and about 0.5% more pages.
+%% French is therefore to be kept until further notice.
+%\setotherlanguage[variant=ecclesiastic, hyphenation=liturgical, usej=true]{latin}
+
+%% Specifically for the Liber Responsorialis, we need to be able to create widows and orphans.
+\widowpenalty=0
+\clubpenalty=0
+\flushbottom
+
+%%%%%%%%%%%%%%% GEOMETRY %%%%%%%%%%%%%%%
+
+%% This should mimic the layout of the recent Solesmes books.
+\geometry{
+inner=25mm,
+outer=15mm,
+top=12mm,
+bottom=15mm,
+headsep=3mm,
+}
+
+%% General scale of all graphical elements.
+%% Values different from 1 are largely untested.
+%% Used in those commands (e.g. everything FontSpec) that use a scale parameter.
+\newcommand{\customscale}{1}
+
+%% Provide the command \fpevalc as a copy of the code-level \fp_eval:n.
+%% \fpevalc allows to evaluate floating point calculation for scaled parameters, e.g. \setSomeStretchFactor{\fpevalc{0,6 * \customscale}}
+\ExplSyntaxOn
+\cs_new_eq:NN \fpevalc \fp_eval:n
+\ExplSyntaxOff
+
+%% No indentation of paragraphs
+\setlength{\parindent}{0mm}
+
+%% We want to allow large inter-words space 
+%% to avoid overfull boxes in two-columns rubrics.
+\sloppy
+
+%%%%%%%%%%%%%%% GREGORIO CONFIG %%%%%%%%%%%%%%%
+
+\usepackage[forcecompile]{gregoriotex}
+
+%% this limits how much scores can stretch vertically
+%% when they are forced to adhere to the bottom of a page (i.e followed by \pagebreak)
+%% in practice, it does not seem to work, strangely.
+%\grechangedim{baselineskip}{65pt plus 1pt minus 5pt}{scalable}
+
+%% text above lines shall be of color gregoriocolor
+\grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize\itshape}
+%% fine-tuning of space beween the staff and the text above lines
+\newcommand{\altraise}{-0.4mm} %% default is -0.1cm
+\grechangedim{abovelinestextraise}{\altraise}{scalable}
+\grechangedim{abovelinestextheight}{10mm}{scalable}
+
+%% fine-tuning of space between the staff and the lyrics
+\newcommand{\textraise}{2.8ex} %% default is 3.48471 ex
+\grechangedim{spacelinestext}{\textraise}{scalable}
+
+%% fine-tuning of space between the initial and the annotations
+\newcommand{\annraise}{0mm} %% default is -0.2mm
+\grechangedim{annotationraise}{\annraise}{scalable}
+
+%% fine-tuning the behavior of text placed under bars. We use the so-called "new algorithm" which
+%% places the bar in the middle of surrounding notes, and the text in the middle of surrounding text.
+%% however, we restrict drastically the deviation of the text from the position of the bar.
+\grechangedim{maxbaroffsettextleft}{0.5mm}{scalable}
+\grechangedim{maxbaroffsettextright}{0.5mm}{scalable}
+
+%% in case we show NABC, font selection
+\gresetnabcfont{gregall}{9} 
+
+%% \officepartannotation converts a letter (IHARPT) into the office part to be printed as annotation,
+%% storing the result into \result.
+
+\newcommand{\result}{}
+\newcommand{\lookup}[3]{%
+  \IfSubStr{#2}{#1}{ \renewcommand{\result}{#3} }{}%
+}%
+\newcommand{\officepartannotation}[1]{%
+  \renewcommand{\result}{#1}%
+  \lookup{#1}{T}{}%
+  \lookup{#1}{H}{Hymn.}%
+  \lookup{#1}{A}{Ant.}%
+  \lookup{#1}{P}{}%
+  \lookup{#1}{R}{Resp.}%
+  \lookup{#1}{I}{Invit.}%
+  \result%
+}%
+
+%% header capture setup for the mode, with indexation of the score
+%% IMPORTANT NOTE: giving mode info is necessary for a score to be indexed.
+%% in this context, the mode may not be left blank in the gabc, as in: "mode:;",
+%% but must have some sort of text going on, as in: "mode:~;" which will produce the expected result
+\newcommand{\defaultannotationshift}{-2mm}
+\newcommand{\indexnamebuffer}{}
+\newcommand{\piecenamebuffer}{}
+\newcommand{\modeannotation}[1]{
+  \greannotation{\hspace{\defaultannotationshift}#1}
+  \ifblank{\piecenamebuffer}{}{% if the indexed name of the piece is not given, no indexation effort is made
+    \ifthenelse{\equal{R}{\indexnamebuffer}}{%
+      \index[\indexnamebuffer]{\piecenamebuffer{}@#1 & \piecenamebuffer}
+    }{
+	  % if the piece is not of the given office_part, no indexation effort is made
+    }
+  }
+}
+\gresetheadercapture{mode}{modeannotation}{string}
+
+%% outputs a score with no label, indexing, initials or annotations
+%% for 
+\newcommand{\unindexedscore}[1]{
+  \gresetinitiallines{0}
+  %% the use of a directory called "gabc" is linked
+  %% to the management of gabc files by the website: do not change 
+  %% without also changing the website static files structure
+  \gregorioscore{\subfix{nocturnale-romanum/gabc/#1}}
+  \gresetinitiallines{1}
+}
+
+%% this removes instances of \newline from a string.
+%% used in order to allow new lines in the indexed name of a piece, 
+%% but not have those new lines in the \@currentlabelname for reference purposes
+\begin{luacode*}
+function delete_newline ( s )
+   s = string.gsub ( s, 'newline', '')
+   s = string.gsub ( s, 'hspace', '')
+   s = string.gsub ( s, '4mm', '')
+   s = string.gsub ( s, 'protect', '')
+   s = string.gsub ( s, 'hbox', '')
+   s = string.gsub ( s, [[\]], '')
+   s = string.gsub ( s, "{}", '')
+   tex.sprint ( s )
+end
+\end{luacode*}
+
+%% outputs a score with label, indexing, and annotations. no initials if [n] is passed
+\makeatletter
+\newcommand{\gscore}[5][y]{
+  %% #1 (passed as option) : y = initial, n = no initial
+  %% #2 : name of the score file, should be a code, e.g. Q4F4A3 or 1225N1R1
+  %% #3 : office-part among the values: T, H, A, P, R, I (toni communes, hy., ant., psalmus, resp., invit.)
+  %% #4 : if applicable, a number between 1 and 9 (rank of the ant./resp.) - else: empty
+  %% #5 : the indexed name of the piece
+  
+  %% this prevents page breaks between the phantom section and its label, and the actual score.
+  %\needspace{2\baselineskip} 
+  %% but for Liber Responsorialis specifically, we do explicit typesetting of every page, so it is actually harmful, preventing voluntary orphans
+  \protected@edef\@currentlabelname{\directlua{delete_newline(\luastring{#5})}}
+  \phantomsection
+  \label{#2}
+  %% we add the office part, and number of that ant. or resp. in the current office, if applicable
+  %% todo : the negative hspace is here because somehow the initial and annotation (first line only) are misaligned by 1mm _with this initial font size_.
+  %% this should probably be fixed in a more elegant way.
+  \greannotation[c]{\hspace{-1.4mm}\hspace{\defaultannotationshift}\officepartannotation{#3}#4}
+  %% if #5 (indexed name) is blank, nothing is indexed.
+  %% this is for pieces that are repetitions of another piece (antiphons after psalms)
+  \ifblank{#5}{
+    \renewcommand{\indexnamebuffer}{}
+    \renewcommand{\piecenamebuffer}{}
+  }{
+    \renewcommand{\indexnamebuffer}{#3}
+    \renewcommand{\piecenamebuffer}{#5}
+	\ifthenelse{\equal{R}{\indexnamebuffer}}{
+	% in this case, the mode is added to the index entry, and therefore indexation will be done by the header capture
+	}{
+	  \index[#3]{#5}
+	}
+  }
+  %% if optional arg #1 has been passed as 'n', set no initial
+  \ifx n#1\gresetinitiallines{0}\fi
+  %% the use of a directory called "gabc" is linked
+  %% to the management of gabc files by the website: do not change 
+  %% without also changing the website static files structure
+  \gregorioscore{\subfix{nocturnale-romanum/gabc/#2}}
+  %% if optional arg #1 has been passed as 'n', unset no initial
+  \ifx n#1\gresetinitiallines{1}\fi
+  \vspace{1mm}
+}
+\makeatother
+
+%%% We select if we want to show NABC. Here, we do.
+
+\gresetnabc{1}{visible}
+\gresetnabc{2}{invisible}
+
+%% Uncomment BOTH lines to print without rsigns
+%\gresethepisema{break}
+%\greprintsigns{all}{disable}
+%% Uncomment this to print without nabc
+%\grechangestyle{nabc}{\color{white}}
+
+%%%%%%%%%%%%%%% FONTS %%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% Main font
+\setmainfont[Ligatures=TeX, Scale=\customscale]{Charis SIL}
+\setstretch{\fpevalc{1.05 * \customscale}}
+
+%%%%%%%%%%%%%%% Score initials
+%% \initialsize resizes the initials, with one argument (size in points)
+\newcommand{\initialsize}[1]{
+    \grechangestyle{initial}{\fontspec{Zallman Caps}\fontsize{#1}{#1}\selectfont}
+}
+%% default initial size is 32 points
+\newcommand{\defaultinitialsize}{28}
+\initialsize{\defaultinitialsize}
+
+%% spacing before and after initials to kern the Zallman Caps.
+%% this should be changed if we move away from Zallman Caps.
+\newcommand{\initialspace}[2]{
+  \grechangedim{afterinitialshift}{#2}{scalable}
+  \grechangedim{beforeinitialshift}{#1}{scalable}
+}
+%% default space before and after initials is 0mm to the left and 2mm to the right.
+\newcommand{\defaultinitialspace}{\initialspace{0mm}{-\defaultannotationshift}}
+\defaultinitialspace{}
+
+%%%%%%%%%%%%%%% Score annotations
+\grechangestyle{annotation}{\small}
+
+%%%%%%%%%%%%%%% GRAPHICAL ELEMENTS %%%%%%%%%%%%%%%
+
+%% V/, R/, A/ and + signs for in-line use (\vv \rr \aa \cc)
+\newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/ outside rubrics
+\newcommand{\vv}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.\nolinebreak[4]\hspace{\specialcharhsep}\nolinebreak[4]}}
+\newcommand{\rr}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.\nolinebreak[4]\hspace{\specialcharhsep}\nolinebreak[4]}}
+\renewcommand{\aa}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.\nolinebreak[4]\hspace{\specialcharhsep}\nolinebreak[4]}}
+\newcommand{\cc}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}\symbol{"2720}~}}
+%% Same special characters, for in-score use (<sp>V/ R/ A/ +</sp>)
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
+\gresetspecial{+}{{\fontspec[Scale=\customscale]{FreeSerif}†~}}
+\gresetspecial{*}{\gresixstar}
+\gresetspecial{cross}{\textcolor{gregoriocolor}{\fontspec[Scale=\customscale]{FreeSerif}\symbol{"2720}}}
+\gresetspecial{labiacross}{\textcolor{gregoriocolor}{+}}
+%% Same special characters, for use in rubrics (no space, and no red command since it will be reddified with the rest)
+\newcommand{\vvrub}{{℣.~}} %%% BEWARE if we change the main font away from Charis SIL this command WILL be broken
+\newcommand{\rrrub}{{\fontspec[Scale=\customscale]{Charis SIL}℟.~}}
+\newcommand{\aarub}{{\fontspec[Scale=\customscale]{Charis SIL}\Abar.~}}
+
+%% the asterisk as found in the mediants of text-only psalms
+\newcommand{\psstar}{\GreSpecial{*}}
+\newcommand{\pscross}{\GreSpecial{+}}
+%% also, most psalms do not call those but use † and * - todo
+
+%% Roman Numerals
+\usepackage{modroman}
+\newcommand{\Rnum}[1]{\nbRoman{#1}}
+\newcommand{\rnum}[1]{\nbshortroman{#1}}
+
+%% Macro to print versicles
+\newcommand{\versiculus}[2]{\par\vv #1 \\ \rr #2\par}
+
+\newcommand{\versiculustpall}[2]
+	{\versiculus{#1 \rubric{(T.P.} Allelúia.\rubric{)}}{#2 \rubric{(T.P.} Allelúia.\rubric{)}}}
+
+%% Macro to print rubrics
+\newcommand{\rubric}[1]{\textcolor{gregoriocolor}{\emph{#1}}}
+
+%% Macro to print the name of a score in normal characters inside a \rubric
+\newcommand{\normaltext}[1]{{\normalfont\normalcolor #1}}
+\newcommand{\scorename}[1]{\normaltext{\nameref{M-#1}}}
+
+%% Macro to print a full reference to a responsory
+%% #1 is the R/ number in the feast, #2 is the R/ code, #3 is an optional additional text, like "sine Gloria Patri".
+\newcommand{\respref}[3]{\rubric{%
+\rrrub #1 \scorename{#2}, pag.\ \pageref{M-#2}%
+\if\relax\detokenize{#3}\relax%
+.%
+\else%
+, #3.%
+\fi%
+}\par}
+
+\newcommand{\resprefcumgp}[2]
+	{\respref{#1}{#2}{sed cum \normaltext{Glória Patri} in fine}}
+	
+\newcommand{\resprefsinegp}[2]
+	{\respref{#1}{#2}{sine \normaltext{Glória Patri} in fine}}
+	
+\newcommand{\respnocturnref}[2]
+	{\rubric{Tria Responsoria ut in \Rnum{#1} Nocturno Dominicæ præcedentis, pag.\ \pageref{M-#2}.}\par}
+
+%% Macro to print the common rubric that signals the Te Deum
+\newcommand{\tedeumrubric}{\rubric{Lectione ultima peracta Hymnus \normaltext{Te Deum} cantatur.}}
+
+%% Macro to print the common rubric that signals the Paschaltide three-psalm one-antiphon rule
+\newcommand{\tptresrubric}{\rubric{Tempore Paschali tres Psalmi sub hac Antiphona dicuntur.}}
+
+%% Macro to print a rubric when a nocturn title is at the bottom of a page.
+\newcommand{\utinfrarubric}{{\centering\rubric{Ut infra.}\par}}
+
+%% Macros to print various rubrics related to commons
+\newcommand{\respdetemp}{Responsoria de Tempore.}
+\newcommand{\apexrubric}{Commune Apostolorum, pag.\ \pageref{M-APEX}.}
+\newcommand{\aptprubric}{Commune Apostolorum Tempore Paschali, pag.\ \pageref{M-APTP}.}
+\newcommand{\apvelrubric}{Commune Apostolorum, pag.\ \pageref{M-APEX} extra Tempus Paschale, aut \pageref{M-APTP} Tempore Paschali.}
+\newcommand{\umexrubric}{Commune unius Martyris, pag.\ \pageref{M-UMEX}.}
+\newcommand{\pmexrubric}{Commune plurimorum Martyrum, pag.\ \pageref{M-PMEX}.}
+\newcommand{\umvelrubric}{Commune unius Martyris, pag.\ \pageref{M-UMEX} extra Tempus Paschale, aut \pageref{M-MRTP} Tempore Paschali.}
+\newcommand{\mrtprubric}{Commune Martyrum Tempore Paschali, pag.\ \pageref{M-MRTP}.}
+\newcommand{\coporubric}{Commune Confessoris Pontificis, pag.\ \pageref{M-COPO}.}
+\newcommand{\conprubric}{Commune Confessoris non Pontificis, pag.\ \pageref{M-CONP}.}
+\newcommand{\copodorubric}{Commune Confessoris Pontificis, pag.\ \pageref{M-COPO}, pro Doctore.}
+\newcommand{\conpdorubric}{Commune Confessoris non Pontificis, pag.\ \pageref{M-CONP}, pro Doctore.}
+\newcommand{\vnrubric}{Commune Virginum, pag.\ \pageref{M-MU}, pro non Martyre.}
+\newcommand{\vmrubric}{Commune Virginum, pag.\ \pageref{M-MU}, pro Martyre.}
+\newcommand{\nnrubric}{Commune non Virginum, pag.\ \pageref{M-MU}, pro non Martyre.}
+\newcommand{\nmrubric}{Commune non Virginum, pag.\ \pageref{M-MU}, pro non Martyre.}
+\newcommand{\cbmvrubric}{Commune Beatæ Mariæ Virgnis, pag.\ \pageref{M-CBMV}.}
+\newcommand{\cdedrubric}{Commune Dedicationis Ecclesiæ, pag.\ \pageref{M-CDED}.}
+
+%% Macro to print a separator
+\newcommand{\sep}{{\centering\greseparator{3}{20}\par}}
+
+%% Macro to insert vertical space, such that there be only six staves with NABC on a page, where typically there are seven.
+\newcommand{\sixlinesvspace}{\vspace*{18mm}}
+%% Macro to insert vertical space, such that there be only three staves with NABC on a page, where typically there are seven.
+\newcommand{\threelinesvspace}{\vspace*{16\baselineskip}}
+%% Macro to insert vertical space, such that there be only three staves with NABC and a nocturn title
+\newcommand{\threeplustitlevspace}{\vspace*{70mm}}
+%% Macro to insert vertical space, such that there be only five staves with NABC and a nocturn title
+\newcommand{\fiveplustitlevspace}{\vspace*{22mm}}
+
+%%%%%%%%%%%%%%% TABLE OF CONTENTS CONFIG %%%%%%%%
+
+\setlength{\cftbeforetoctitleskip}{0cm}
+\renewcommand{\cfttoctitlefont}{\hspace*{\fill}\Large\sc}
+%% this, combined with the hspace above, is for centering the title. \centering does not work
+\renewcommand{\cftaftertoctitle}{\hspace*{\fill}\vfill\thispagestyle{empty}}
+%% this defines a vspace that is manually inserted between some items in the TOC
+\newcommand{\tocspace}{\addtocontents{toc}{\vspace{\baselineskip}}}
+
+%%%%%%%%%%%%%%% COLUMN MANAGEMENT %%%%%%%%%%%%%%%
+
+\usepackage{multicol}
+\usepackage{parcolumns}
+\usepackage{paracol}
+\setlength\columnseprule{0.4pt}
+\setlength{\multicolsep}{6pt plus 2pt minus 1.5pt}
+
+%% Macro to print a psalm on two columns.
+\newcommand{\psalmus}[2]{
+	\vspace{0.5\baselineskip}
+	\needspace{5\baselineskip}
+	\phantomsection
+	\label{Psalm#1_#2}
+	\index[P]{#1 (mode #2)}
+	\smalltitle{Psalmus #1}
+	\begin{multicols}{2}
+	\begin{itemize}[
+		label=\null, 
+		leftmargin=0pt, 
+		itemindent=0pt, 
+		labelsep=0pt, 
+		labelwidth=0pt, 
+		rightmargin=0pt, 
+		parsep=0pt, 
+		itemsep=0pt]
+	\input{psalmi/#1_#2.tex}
+	\end{itemize}
+	\end{multicols}
+}
+
+\newcommand{\twocolrubric}[2]{
+	\begin{parcolumns}[rulebetween]{2}
+	\colchunk{%
+      \rubric{#1}
+	}
+	\colchunk{%
+	  \rubric{#2} 
+    }
+	\end{parcolumns}
+}
+
+%%%%%%%%%%%%%%% HEADER STYLES %%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{20pt}
+\fancyhead[RO]{\small\rightmark\hspace{1cm}\thepage}
+\fancyhead[LE]{\small\thepage\hspace{1cm}\leftmark}
+
+% this command is called every time the left and right header texts are set (e.g. by calling \feast)
+% the hyphenpenalty override is neede only on older versions of gregorio which do not reset it correctly after typesetting the score.
+% see https://tex.stackexchange.com/questions/581013/lualatex-hyphenation-issue-in-fancyhdr-with-gregoriotex-and-multicols-latin-te
+\newcommand{\setheaders}[2]{
+	\renewcommand{\rightmark}{\hyphenpenalty=50{\sc#2}}
+	\renewcommand{\leftmark}{\hyphenpenalty=50{\sc#1}}
+}
+\setheaders{}{}
+
+%%%%%%%%%%%%%%% TITLE STYLES %%%%%%%%%%%%%%%
+
+%% Titles are centered and small-caps
+\titleformat{\chapter}[block]{\Large\filcenter\sc}{}{}{}
+\titleformat{\section}[block]{\large\filcenter\sc}{}{}{}
+\titleformat{\subsection}[block]{\filcenter\sc}{}{}{}
+\setcounter{secnumdepth}{0}
+%% Fine-tuning of space around titles
+\titlespacing*{\paragraph}{0pt}{1ex}{.6ex}
+
+%% Typesets all titles throughout the NR except Nocturn titles and a few special titles.
+%% Using a continuation is necessary because there are 11 arguments.
+%% Only \feast, \nocturn, \intermediatetitle and \smalltitle should ever be used.
+\newcommand{\feast}[6]{
+  %% #1: feast code, e.g. 1225 or A1F1
+  %% #2: feast title
+  %% #3: left header title
+  %% #4: right header title
+  %% #5: title level
+    %% title level 1 : full page width, a few major feasts + titles of temporale, sanctorale, etc.
+	%% title level 2 : all feasts, sundays and major ferias
+	%% title level 3 : ferias
+  %% #6: incipit date (goes above feast title)
+  %% cont'd #1: 1954 rank
+  %% cont'd #2: 1960 rank
+  %% cont'd #3: name of the feast as it shows up in the index
+  %% cont'd #4: 1945 feast-wide rubrics
+  %% cont'd #5: 1960 feast-wide rubrics
+
+  %% needspace: should be barely more than the vertical space for the titles, rubrics excluded.
+  %% this is to ensure that the page does not get cut after the title or the phantomsection.
+  \needspace{8\baselineskip}
+  %% phantomsection is to allow the label to attach to the title and not the previous counter object.
+  \phantomsection
+  \label{#1}
+  \begin{center}
+  %% we typeset a line for the date if the date is not blank
+  \ifblank{#6}{}{
+    {\large #6}\\%
+  }%
+  %% the actual title
+  \ifx 1#5{\setstretch{1.2}\sc\huge #2\par}\fi
+  \ifx 2#5{\Large #2\par}\fi
+  \ifx 3#5{\large #2\par}\fi
+  \end{center}
+  %% If this is a level 1 title, empty pagestyle
+  \ifx 1#5\thispagestyle{empty}\fi
+  
+  %% we define the header titles manually
+  \setheaders{#3}{#4}
+  
+  %% moving on to a continuation macro to unpack the last 5 arguments
+  \feastcontinued
+}
+\newcommand{\feastcontinued}[5]
+{
+  %% we name the last 5 arguments
+  \def\oldrank{#1}%
+  \def\newrank{#2}%
+  \def\indexfeastname{#3}%
+  \def\oldrubric{#4}%
+  \def\newrubric{#5}%
+  %% we index the feast if the indexing name is given
+  \ifblank{#3}{}{
+	\index[F]{\indexfeastname}
+  }
+  %% we typeset a two-column rank & rubrics block if one rank is filled in
+  %% if the left rubric is filled in, we add a rule between the columns
+  \ifblank{#5}{\def\ourrule{}}{\def\ourrule{rulebetween}}
+  \ifblank{#1}{}{\vspace{-2mm}%
+    \begin{parcolumns}[\ourrule]{2}
+	\colchunk{%
+      {\centering\oldrank\par}\rubric{\oldrubric}}%
+	\colchunk{%
+	  {\centering\newrank\par}\rubric{\newrubric}}%
+	\end{parcolumns}
+	\vspace{2mm}
+  }
+}
+
+\newcommand{\smalltitle}[1]{
+  \needspace{5\baselineskip}
+  \par{\centering\textbf{#1}\par}
+}
+
+\newcommand{\intermediatetitle}[1]{
+  \vspace*{0.4\baselineskip}
+  {\centering \large #1\par}
+  \vspace*{0.4\baselineskip}
+}
+
+\newcommand{\nocturn}[1]{
+  \intermediatetitle{In \Rnum{#1} Nocturno}
+}
+
+%% command to wrap printindex and set the headers for indices
+\newcommand{\cprintindex}[2]{
+	\setheaders{Indices}{#2}
+	\pagestyle{fancy}
+	\thispagestyle{empty}
+	\printindex[#1]
+}
+
+%%%%%%%%%%%%%%% SUBFILES %%%%%%%%%%%%%%%
+
+\usepackage{xr}
+\usepackage{subfiles}
+
+%% When we start a new subfile (new chapter), 
+%% we start on a new page (with blank filling on the previous page) and create a corresponding label.
+\newcommand{\customsubfile}[1]{\newpage\label{#1}\thispagestyle{empty}\subfile{#1}}
