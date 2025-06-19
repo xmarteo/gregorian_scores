@@ -8,7 +8,8 @@
 \usepackage[paperwidth=148mm, paperheight=210mm]{geometry}
 
 \usepackage{fontspec}
-\usepackage[medievallatin, french]{babel}
+\usepackage[nolocalmarks]{polyglossia}
+\setdefaultlanguage[variant=french, frenchitemlabels=false]{french}
 \usepackage{fancyhdr}
 \usepackage{paracol}
 \usepackage{expl3}
@@ -43,12 +44,6 @@ headsep=3mm,
 %% Used in those commands (e.g. everything FontSpec) that use a scale parameter.
 \newcommand{\customscale}{1}
 
-%% Provide the command \fpeval as a copy of the code-level \fp_eval:n.
-%% \fpeval allows to evaluate floating point calculation for scaled parameters, e.g. \setSomeStretchFactor{\fpeval{0,6 * \customscale}}
-\ExplSyntaxOn
-\cs_new_eq:NN \fpeval \fp_eval:n
-\ExplSyntaxOff
-
 %% No indentation of paragraphs
 \setlength{\parindent}{0mm}
 
@@ -61,7 +56,8 @@ headsep=3mm,
 \usepackage[autocompile]{gregoriotex}
 
 %% disable NABC a the request of A. Guyard who will add SG neumes by hand
-\gresetnabc{1}{invisible} 
+%\gresetnabc{1}{invisible} 
+\gresetnabc{1}{visible}
 
 %% text above lines shall be of color gregoriocolor
 \grechangestyle{abovelinestext}{\color{gregoriocolor}\footnotesize}
@@ -112,7 +108,8 @@ headsep=3mm,
 \gresetheadercapture{mode}{modeannotation}{string}
 
 %% the space above lines for scores with neumes
-\newcommand{\neumespace}{10mm}
+%\newcommand{\neumespace}{10mm}
+\newcommand{\neumespace}{0mm}
 
 %% outputs a score with no initials or annotations
 %% for 
@@ -144,12 +141,12 @@ headsep=3mm,
 %%%%%%%%%%%%%%% Main font
 \setmainfont[Ligatures=TeX, Scale=\customscale]{Charis SIL}
 %\setmainfont[Ligatures=TeX, Scale=\customscale]{TeXGyreBonum-Regular}
-\setstretch{\fpeval{1.05 * \customscale}}
+\setstretch{1.05}
 
 %%%%%%%%%%%%%%% Score initials
 %% \initialsize resizes the initials, with one argument (size in points)
 \newcommand{\initialsize}[1]{
-    \grechangestyle{initial}{\fontspec{Zallman}\fontsize{#1}{#1}\selectfont}
+    \grechangestyle{initial}{\fontspec{Zallman Caps}\fontsize{#1}{#1}\selectfont}
 }
 %% default initial size is 32 points
 \newcommand{\defaultinitialsize}{32}
@@ -795,7 +792,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{1}{Première leçon}{Job 7 : 16-21\\~}
 
-\gscore{ODEFN1R1_dcrochu}{R}{1}
+\gscore{ODEFN1R1}{R}{1}
 ~\\
 \trans{\rr Je crois que mon Rédempteur est vivant, et qu'au dernier jour je ressusciterai de la terre,
 † et que, dans ma chair, je verrai Dieu, mon Sauveur.\\
@@ -804,7 +801,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{2}{Deuxième leçon}{Job 10 : 1-7}
 
-\gscore{ODEFN1R2_dcrochu}{R}{2}
+\gscore{ODEFN1R2}{R}{2}
 ~\\
 \trans{\rr Toi qui as délivré du tombeau Lazare déjà fétide,
 † Toi, Seigneur, donne-leur le repos et le lieu du pardon.\\
@@ -813,7 +810,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{3}{Troisième leçon}{Job 10 : 8-12}
 
-\gscore{ODEFN1R3_dcrochu}{R}{3}
+\gscore{ODEFN1R3}{R}{3}
 ~\\
 \trans{\rr Seigneur, quand Tu viendras juger la terre, où me mettrai-je à l'abri de Ton visage irrité ?
 † Car j'ai beaucoup péché dans ma vie.\\
@@ -853,7 +850,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{4}{Quatrième leçon}{Job 13 : 22-28}
 
-\gscore{ODEFN2R1_dcrochu}{R}{4}
+\gscore{ODEFN2R1}{R}{4}
 ~\\
 \trans{\rr Souviens-Toi de moi, mon Dieu, car ma vie est un souffle ;
 † et que le regard de l’homme ne m’examine pas.\\
@@ -862,7 +859,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{5}{Cinquième leçon}{Job 14 : 1-6}
 
-\gscore{ODEFN2R2_dcrochu}{R}{5}
+\gscore{ODEFN2R2}{R}{5}
 ~\\
 \trans{\rr Malheur à moi, Seigneur, car j'ai beaucoup péché dans ma vie : que ferai-je, malheureux ? Où pourrai-je fuir, sinon vers Toi, mon Dieu ?
 † Aie pitié de moi, quand Tu viendras au dernier jour.\\
@@ -871,7 +868,7 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{6}{Sixième leçon}{Job 14 : 13-16}
 
-\gscore{ODEFN2R3_dcrochu}{R}{6}
+\gscore{ODEFN2R3}{R}{6}
 ~\\
 \trans{\rr Ne Te rappelle pas, Seigneur, mes péchés,
 † quand Tu viendras juger ce monde par le feu.\\
@@ -909,16 +906,20 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{7}{Septième leçon}{Job 17 : 1-3, 11-15}
 
-\gscore{ODEFN3R1_dcrochu}{R}{7}
+\gscore{ODEFN3R1}{R}{7}
 ~\\
 \trans{\rr En moi qui pêche chaque jour et n'en fais pas pénitence, la crainte de la mort met le trouble :
 † puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.\\
 \vv Seigneur, par Ton Nom, donne-moi le salut, et dans Ta puissance, délivre-moi,
 † puisqu'en enfer il n'y a plus de délivrance, aie pitié de moi, mon Dieu, et sauve-moi.}
 
+\newpage
+
 \lesson{8}{Huitième leçon}{Job 19 : 20-27}
 
-\gscore{ODEFN3R2_dcrochu}{R}{8}
+\vspace{-1mm}
+\gscore{ODEFN3R2}{R}{8}
+
 ~\\
 \trans{\rr Seigneur, ne me juge pas selon mes actes ; je n'ai rien fait de digne en Ta présence ; c'est pourquoi je supplie Ta Majesté,
 † pour que Tu effaces, ô Dieu, mon iniquité.\\
@@ -927,11 +928,12 @@ Dieu, créateur et rédempteur de tous les fidèles, accorde aux âmes de Tes se
 
 \lesson{9}{Neuvième leçon}{Job 10 : 18-22}
 
-\pagebreak
-\rubric{On chante ce répons si l'on a chanté seulement le troisième nocturne.}
-\gscore{ODEFN3R3a_dcrochu}{R}{9}
+\newpage
 
-\pagebreak
+\rubric{On chante ce répons si l'on a chanté seulement le troisième nocturne.}
+\gscore{ODEFN3R3a}{R}{9}
+
+~
 
 \trans{\rr Délivre-moi, Seigneur, des chemins de l'enfer, 
 Toi qui as brisé les portes d'airain et visité l'enfer, et donné, pour Te voir, la lumière
@@ -939,10 +941,10 @@ Toi qui as brisé les portes d'airain et visité l'enfer, et donné, pour Te voi
 \vv Criant et disant : Tu es enfin venu, ô notre Rédempteur,
 † ceux qui étaient dans les peines des ténèbres.}
 
-~\\
+\newpage
 
 \rubric{On chante ce répons si l'on a chanté les trois nocturnes.}
-\gscore{ODEFN3R3b_dcrochu}{R}{9}
+\gscore{ODEFN3R3b}{R}{9}
 ~\\
 \trans{\rr Libère-moi, Seigneur, de la mort éternelle, en ce jour redoutable :
 † quand les cieux seront ébranlés, et la terre :
@@ -1198,7 +1200,8 @@ Sauf la dernière, toutes les réponses se disent sur ce ton :}
 \trans{\rr Secourez son âme, ô saints de Dieu : venez à sa rencontre, anges de Dieu : recevez-la, et présentez-la au Tout-Puissant. \\
 \vv Que le Christ qui t'a appelée, te reçoive, et que les anges t'introduisent dans le sein d'Abraham.}
 
-\pagebreak
+\newpage
+
 \rubric{Puis on chante :}
 
 \smallscore[n]{OR_kyrie}
