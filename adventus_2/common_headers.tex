@@ -19,7 +19,7 @@
 
 %%%%%%%%%%%% FONTS AND BASE STYLES
 \usepackage{fontspec}
-\setmainfont[Ligatures=TeX, Scale=1]{Charis SIL}
+\setmainfont[Ligatures=TeX, Scale=1]{Charis}
 \usepackage{paracol}
 \usepackage[forcecompile]{gregoriotex}
 
@@ -33,7 +33,7 @@
 \newcommand{\specialcharhsep}{3mm} % space after invoking R/ or V/ or A/ outside rubrics
 \newcommand{\vv}{%
 	{%
-		\fontspec[Scale=1]{Charis SIL}%
+		\fontspec[Scale=1]{Charis}%
 		℣.~%
 		\nolinebreak[4]%
 	}%
@@ -46,7 +46,7 @@
 }
 \newcommand{\rr}{%
 	{%
-		\fontspec[Scale=1]{Charis SIL}%
+		\fontspec[Scale=1]{Charis}%
 		℟.~%
 		\nolinebreak[4]%
 	}%
@@ -66,9 +66,9 @@
 }
 
 %% Same special characters, for in-score use (<sp>V/ R/ A/ +</sp>)
-\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}℣.~}}
-\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}℟.~}}
-\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis SIL}\Abar.~}}
+\gresetspecial{V/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis}℣.~}}
+\gresetspecial{R/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis}℟.~}}
+\gresetspecial{A/}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{Charis}\Abar.~}}
 \gresetspecial{+}{{\fontspec[Scale=1]{FreeSerif}†~}}
 \gresetspecial{*}{\gresixstar}
 \gresetspecial{cross}{\textcolor{gregoriocolor}{\fontspec[Scale=1]{FreeSerif}\symbol{"2720}}}
